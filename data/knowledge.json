@@ -1,0 +1,85 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "CVE-STYLE-001",
+      "name": "Open Port Exposure",
+      "severity": "Medium",
+      "description": "Open ports can be exploited if not filtered",
+      "mitigation": "Use UFW/fail2ban to restrict access"
+    },
+    {
+      "id": "CVE-STYLE-002",
+      "name": "Weak SSH Configuration",
+      "severity": "High",
+      "description": "Brute force attacks on SSH",
+      "mitigation": "Enforce MFA, block repeated failures"
+    },
+    {
+      "id": "CVE-STYLE-003",
+      "name": "Web Directory Disclosure",
+      "severity": "Medium",
+      "description": "Gobuster/Dirb can find hidden directories leading to information disclosure",
+      "mitigation": "Disable directory listing, secure configs"
+    },
+    {
+      "id": "CVE-STYLE-004",
+      "name": "Potential Rootkit Infection",
+      "severity": "Critical",
+      "description": "rkhunter/chkrootkit may detect hidden binaries",
+      "mitigation": "Isolate system, run full scan, audit files"
+    }
+  ],
+  "attack_patterns": [
+    {
+      "pattern": "Port Scan",
+      "indicators": [
+        "Multiple SYN packets",
+        "nmap signature"
+      ],
+      "risk": "Low to Medium"
+    },
+    {
+      "pattern": "Brute Force Login",
+      "indicators": [
+        "Multiple failed logins",
+        "Same IP repeated"
+      ],
+      "risk": "High"
+    },
+    {
+      "pattern": "Web Scanning",
+      "indicators": [
+        "High number of 404s",
+        "gobuster user-agent"
+      ],
+      "risk": "Medium"
+    }
+  ],
+  "defense_strategies": [
+    {
+      "strategy": "Block Suspicious IP",
+      "tools": [
+        "ufw",
+        "fail2ban",
+        "iptables"
+      ],
+      "when": "After 5 failed attempts"
+    },
+    {
+      "strategy": "Kill Malicious Process",
+      "tools": [
+        "ps",
+        "kill"
+      ],
+      "when": "Verified malware process"
+    },
+    {
+      "strategy": "IDS Monitoring",
+      "tools": [
+        "snort",
+        "suricata"
+      ],
+      "when": "Continuous monitoring"
+    }
+  ]
+}

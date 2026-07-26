@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vrindha AI SOC - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Vrindha AI SOC System</h1>
+            <p>Ethical AI Cybersecurity | Dharma Engine + Gita Guidance</p>
+            <div class="status-bar">
+                <span id="systemStatus">Checking status...</span>
+                <span id="gitaVerse" class="gita">Loading wisdom...</span>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Command Input - Per DAY 29 Simple Dashboard -->
+            <section class="card command-card">
+                <h2>🧠 AI Command Center</h2>
+                <div class="input-group">
+                    <input type="text" id="commandInput" placeholder="Enter command: e.g., status, scan network 127.0.0.1, whois google.com, detect threats">
+                    <button onclick="sendCommand()">Send</button>
+                    <button onclick="sendCommand(true)" class="secondary">Send + Auto-Confirm</button>
+                </div>
+                <div class="quick-actions">
+                    <button onclick="quickCmd('status')">Status</button>
+                    <button onclick="quickCmd('hello')">Hello</button>
+                    <button onclick="quickCmd('scan network 127.0.0.1')">Scan Network</button>
+                    <button onclick="quickCmd('whois google.com')">Whois</button>
+                    <button onclick="quickCmd('scan vulnerabilities 127.0.0.1')">Vuln Scan</button>
+                    <button onclick="quickCmd('detect threats malware attack')">Threat Detect</button>
+                    <button onclick="quickCmd('show logs')">Show Logs</button>
+                    <button onclick="quickCmd('block ip 192.168.1.100')">Block IP</button>
+                </div>
+                <div id="commandResult" class="result-box">Results will appear here...</div>
+            </section>
+
+            <!-- System Status -->
+            <section class="card">
+                <h2>📊 System Status</h2>
+                <div id="statusDetails">Loading...</div>
+            </section>
+
+            <!-- Logs Table - Per START UP SOC Dashboard: Display logs -->
+            <section class="card">
+                <h2>📋 SIEM Logs</h2>
+                <button onclick="loadLogs()">Refresh Logs</button>
+                <div id="logsTable" class="logs-container">No logs yet...</div>
+            </section>
+
+            <!-- Alert Box -->
+            <section class="card alert-card">
+                <h2>🚨 Alerts & Threats</h2>
+                <div id="alertsBox">No alerts...</div>
+            </section>
+
+            <!-- Visualization - Attack trends, Risk over time per AI ML -->
+            <section class="card">
+                <h2>📈 Attack Trends (7 Days)</h2>
+                <canvas id="attackChart" width="400" height="200"></canvas>
+            </section>
+
+            <section class="card">
+                <h2>🎯 Most Targeted Ports</h2>
+                <canvas id="portChart" width="400" height="200"></canvas>
+            </section>
+
+            <section class="card">
+                <h2>⚠️ Risk Over Time (24h)</h2>
+                <canvas id="riskChart" width="400" height="200"></canvas>
+            </section>
+
+            <!-- Tool Verification -->
+            <section class="card">
+                <h2>🛠️ Kali Tool Stack Verification</h2>
+                <button onclick="verifyTools()">Verify Tools</button>
+                <div id="toolsStatus">Click verify to check installed tools (nmap, nikto, gobuster, etc.)</div>
+            </section>
+
+            <!-- ML Intelligence -->
+            <section class="card">
+                <h2>🤖 AI/ML Intelligence</h2>
+                <button onclick="loadMLData()">Load Intelligence</button>
+                <div id="mlData">Anomaly detection, Risk scoring, Prediction will appear here</div>
+            </section>
+
+            <!-- Gita Wisdom -->
+            <section class="card gita-card">
+                <h2>🕉️ Dharma Engine - Gita Guidance</h2>
+                <button onclick="loadGita()">New Wisdom</button>
+                <div id="gitaDetails">Ethical guidance from Bhagavad Gita will appear here. True strength lies in protecting, not exploiting.</div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Vrindha AI SOC | Ethical Hacking Ready | Startup-level Architecture | Agentic AI Powered | Blue Team Automated + Red Team Controlled</p>
+            <p>Built per Master Blueprint + 30-Day Plan + Startup Blueprint + Data Science & AI/ML Roles</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
