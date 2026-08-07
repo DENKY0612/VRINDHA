@@ -1,27 +1,15 @@
 // Vrindha Dashboard JS - Connect frontend dashboard with backend APIs per START UP API Integration Prompt
 // Requirements: Fetch logs from /logs, send commands to /command, display responses, error handling, loading states, use fetch
 
-const API_BASE = window.location.origin; // FastAPI running same origin or http://localhost:8000
+const API_BASE = window.location.origin;
 
 async function apiFetch(path, options = {}) {
-    try {
-        const res = await fetch(`${API_BASE}${path}`, {
-            headers: { 'Content-Type': 'application/json', ...options.headers },
-            ...options
-        });
-        if (!res.ok) throw new Error(`API ${path} failed: ${res.status}`);
-        return await res.json();
-    } catch (e) {
-        // Fallback to localhost:8000 if not same origin
-        try {
-            const fallback = await fetch(`http://localhost:8000${path}`, {
-                headers: { 'Content-Type': 'application/json', ...options.headers },
-                ...options
-            });
-            if (fallback.ok) return await fallback.json();
-        } catch {}
-        throw e;
-    }
+    const res = await fetch(`${API_BASE}${path}`, {
+        headers: { 'Content-Type': 'application/json', ...options.headers },
+        ...options
+    });
+    if (!res.ok) throw new Error(`API ${path} failed: ${res.status}`);
+    return await res.json();
 }
 
 async function sendCommand(autoConfirm = false) {

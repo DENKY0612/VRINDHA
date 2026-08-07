@@ -878,25 +878,27 @@ function togglePanel(){
 
 async function loadPanel(){
   try{
-    // Try Hermus endpoint first, fallback to Vrindha
-    let data;
-    try{
-      const res = await fetch('/agents/status');
-      data = await res.json();
-    } catch{
-      const res2 = await fetch('/status');
-      const d2 = await res2.json();
-      data = {
-        timestamp: new Date().toISOString(),
-        active_agents_count: d2.data ? Object.keys(d2.data).length : 7,
-        active_tasks_count: 0,
-        completed_count: 0,
-        models_in_use: ['Vrindha Brain'],
-        active_agents: [{name:'ReconAgent',model:'nmap',persona:'recon',task:'Network scanning',status:'idle',started:new Date().toISOString(),last_update:new Date().toISOString()}],
-        active_tasks: [],
-        completed_tasks: []
-      };
-    }
+    const res = await fetch('/status');
+    if(!res.ok) throw new Error(`/status failed ${res.status}`);
+    const status = await res.json();
+    const data = {
+      timestamp: new Date().toISOString(),
+      active_agents_count: status.data?.agents?.length || 0,
+      active_tasks_count: 0,
+      completed_count: 0,
+      models_in_use: ['Vrindha Brain'],
+      active_agents: (status.data?.agents || []).map(name => ({
+        name,
+        model: 'Vrindha',
+        persona: 'security',
+        task: 'Ready',
+        status: 'idle',
+        started: new Date().toISOString(),
+        last_update: new Date().toISOString()
+      })),
+      active_tasks: [],
+      completed_tasks: []
+    };
 
     let html = `<div class="card"><p>⏱️ ${data.timestamp.slice(0,19)} | System: Vrindha AI SOC</p><p style="font-size:0.8em;color:var(--text-muted)">Everything organized: 7 agents, 14 tools, 701 Gita verses, Gold #DAA520, SOC Blue #0a1931</p></div>`;
 
@@ -926,17 +928,9 @@ async function loadPanel(){
 
 // Vrindha API functions (original app.js logic)
 async function apiFetch(path, options = {}){
-  try{
-    const res = await fetch(path, {headers:{'Content-Type':'application/json', ...options.headers}, ...options});
-    if(!res.ok) throw new Error(`${path} failed ${res.status}`);
-    return await res.json();
-  }catch(e){
-    try{
-      const fallback = await fetch(`http://localhost:8000${path}`, {headers:{'Content-Type':'application/json', ...options.headers}, ...options});
-      if(fallback.ok) return await fallback.json();
-    }catch{}
-    throw e;
-  }
+  const res = await fetch(path, {headers:{'Content-Type':'application/json', ...options.headers}, ...options});
+  if(!res.ok) throw new Error(`${path} failed ${res.status}`);
+  return await res.json();
 }
 
 async function sendCommand(autoConfirm=false){

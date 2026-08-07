@@ -44,7 +44,7 @@ class Brain:
         """Classify as red/blue per blueprint"""
         cmd_lower = command.lower()
         
-        red_keywords = ["scan", "nmap", "recon", "vulnerability", "nikto", "gobuster", "dirb", "amass", "sublist3r", "whois", "wireshark", "tcpdump", "metasploit", "hashcat", "hydra", "burpsuite", "exploit", "penetration"]
+        red_keywords = ["scan", "nmap", "recon", "vulnerability", "nikto", "gobuster", "dirb", "amass", "sublist3r", "whois", "wireshark", "tcpdump", "metasploit", "hashcat", "hydra", "burpsuite", "exploit", "penetration", "hack", "crack", "bypass", "ddos", "deface"]
         blue_keywords = ["threat", "detect", "block", "protect", "defense", "monitor", "siem", "log", "alert", "status", "firewall", "endpoint", "rootkit", "anomaly", "risk"]
         
         red_score = sum(1 for kw in red_keywords if kw in cmd_lower)
@@ -161,6 +161,24 @@ class Brain:
             # Safety Layer evaluation
             safety = safety_layer.evaluate_request(command, target, mode=mode)
             
+            # A Dharma denial is final regardless of how the command was classified.
+            # This prevents harmful commands with no known tool keyword from falling
+            # through to the generic Blue Team handler.
+            if safety.get("decision") == "deny":
+                dharma = safety.get("dharma", {})
+                return {
+                    "mode": mode,
+                    "action": "denied",
+                    "status": "denied",
+                    "message": f"⛔ DENIED: {safety.get('reason')}. True strength lies in protecting, not exploiting. (Dharma Engine)",
+                    "data": {
+                        "dharma": dharma,
+                        "safety": safety,
+                        "gita_verse": dharma.get("gita_verse"),
+                        "educational": dharma.get("educational", "Use your skills to protect, not harm.")
+                    }
+                }
+
             # Memory: retrieve similar cases
             similar_cases = memory_system.retrieve_similar(command)
             
@@ -371,7 +389,9 @@ class Brain:
                 # Automated response if HIGH risk per Day 22-23
                 automated_action = None
                 if threat_result.get("risk_level") == "HIGH" or threat_result.get("threat_level") == "HIGH":
-                    automated_action = automation_actions.block_ip("192.168.1.100")  # example suspicious
+                    # Block the source found in the event when available; retain a
+                    # safe simulation address only when no source was supplied.
+                    automated_action = automation_actions.block_ip(target or "192.168.1.100")
                     # Memory
                     memory_system.save_memory({
                         "event_type": "auto_response",
@@ -408,11 +428,15 @@ class Brain:
             if "block ip" in cmd_lower:
                 ip_to_block = target or "192.168.1.100"
                 result = automation_actions.block_ip(ip_to_block)
+                succeeded = result.get("status") != "error"
                 return {
                     "mode": "blue",
                     "action": "block_ip",
-                    "status": "success",
-                    "message": f"Automated defensive action: Blocked IP {ip_to_block}",
+                    "status": "success" if succeeded else "error",
+                    "message": (
+                        f"Automated defensive action: Blocked IP {ip_to_block}"
+                        if succeeded else result.get("message", "Could not block IP")
+                    ),
                     "data": result
                 }
             
