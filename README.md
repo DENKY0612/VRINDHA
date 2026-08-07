@@ -111,18 +111,26 @@ Vrindha> exit
 ### 2. API Mode (Per Day 24-26)
 ```bash
 pip install -r requirements.txt
-uvicorn api.main:app --reload --port 8000
+cp .env.example .env
+# Replace SECRET_KEY and ADMIN_PASSWORD in .env before continuing.
+uvicorn api.main:app --port 8000
 # Open http://localhost:8000/docs for Swagger
-# Dashboard at http://localhost:8000/dashboard/
+# Dashboard and login form: http://localhost:8000/dashboard/
 ```
 
-Test API:
+Authenticated API example:
 ```bash
-curl -X POST http://localhost:8000/command -H "Content-Type: application/json" -d '{"command":"status"}'
-curl -X POST http://localhost:8000/command -H "Content-Type: application/json" -d '{"command":"scan network 127.0.0.1"}'
-curl http://localhost:8000/logs
+TOKEN=$(curl -sS -X POST http://localhost:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"YOUR_CONFIGURED_PASSWORD"}' \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
+curl -X POST http://localhost:8000/command -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" -d '{"command":"status"}'
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/logs
 curl http://localhost:8000/gita/random
 ```
+
+Red Team commands always require a second authenticated `{"command":"yes"}` request. Public active-scanning targets are denied unless the operator explicitly enables them.
 
 ### 3. Docker (Per Deployment Prompt)
 ```bash

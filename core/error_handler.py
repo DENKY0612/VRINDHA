@@ -4,6 +4,7 @@ Per MASTER BLUEPRINT: Never crash system, catch all exceptions, user-friendly er
 """
 import traceback
 import logging
+import os
 from datetime import datetime
 from typing import Dict, Any
 
@@ -29,13 +30,15 @@ class ErrorHandler:
         # Also log via python logging
         logging.error(f"Error in {context}: {e}\n{technical}")
         
-        return {
+        response = {
             "status": "error",
-            "message": f"An error occurred in {context}: {str(e)}. System continues running.",
-            "technical": technical,
+            "message": f"An internal error occurred in {context}. System continues running.",
             "timestamp": timestamp,
             "context": context
         }
+        if os.getenv("DEBUG", "false").lower() == "true":
+            response["technical"] = technical
+        return response
     
     @staticmethod
     def safe_execute(func, *args, **kwargs) -> Dict[str, Any]:

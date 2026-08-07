@@ -33,27 +33,27 @@ class Brain:
     """
     Central AI orchestrator - Vrindha
     """
-    
+
     def __init__(self):
         self.mode = "defensive"  # default per blueprint
         self.pending_confirmations = {}  # store commands awaiting confirmation
         self.last_command_id = 0
         print("[Brain] Vrindha AI SOC System initialized in DEFENSIVE MODE")
-    
+
     def classify_command(self, command: str) -> Dict:
         """Classify as red/blue per blueprint"""
         cmd_lower = command.lower()
-        
+
         red_keywords = ["scan", "nmap", "recon", "vulnerability", "nikto", "gobuster", "dirb", "amass", "sublist3r", "whois", "wireshark", "tcpdump", "metasploit", "hashcat", "hydra", "burpsuite", "exploit", "penetration", "hack", "crack", "bypass", "ddos", "deface"]
         blue_keywords = ["threat", "detect", "block", "protect", "defense", "monitor", "siem", "log", "alert", "status", "firewall", "endpoint", "rootkit", "anomaly", "risk"]
-        
+
         red_score = sum(1 for kw in red_keywords if kw in cmd_lower)
         blue_score = sum(1 for kw in blue_keywords if kw in cmd_lower)
-        
+
         # Also check explicit
         if any(x in cmd_lower for x in ["hello", "hi", "help", "status", "dashboard", "logs"]):
             return {"mode": "blue", "type": "general", "confidence": "high"}
-        
+
         if red_score > blue_score:
             return {"mode": "red", "type": "offensive", "confidence": "medium", "red_score": red_score, "blue_score": blue_score}
         elif blue_score > 0:
@@ -61,7 +61,7 @@ class Brain:
         else:
             # Default to general/blue for safety
             return {"mode": "blue", "type": "general", "confidence": "low"}
-    
+
     def extract_target(self, command: str) -> str:
         """Extract target IP/domain from command"""
         # IP regex
@@ -82,8 +82,8 @@ class Brain:
                 if "." in candidate or candidate == "localhost" or candidate == "127.0.0.1":
                     return candidate
         return ""
-    
-    def process(self, command: str, auto_confirm: bool = False, user_token: str = None) -> Dict[str, Any]:
+
+    def process(self, command: str, auto_confirm: bool = False, user_token: str = None, session_id: str = "cli") -> Dict[str, Any]:
         """
         Main process method per blueprint
         Handles pending confirmation flow
@@ -92,19 +92,25 @@ class Brain:
             command = command.strip()
             if not command:
                 return {"mode": "blue", "action": "empty", "status": "error", "message": "Empty command", "data": {}}
-            
-            # Check if this is a confirmation response to previous command
-            if command.lower() in ["yes", "y", "confirm", "proceed"] and self.pending_confirmations:
-                # Get last pending
-                last_id = max(self.pending_confirmations.keys())
-                pending = self.pending_confirmations.pop(last_id)
+
+            # Confirmations are isolated by authenticated API user (or the CLI
+            # session) so one user can never approve another user's operation.
+            pending = self.pending_confirmations.get(session_id)
+            if pending:
+                created = datetime.fromisoformat(pending["timestamp"])
+                if (datetime.now() - created).total_seconds() > 300:
+                    self.pending_confirmations.pop(session_id, None)
+                    if command.lower() in ["yes", "y", "confirm", "proceed"]:
+                        return {"mode": "red", "action": "confirmation_expired", "status": "denied", "message": "Confirmation expired; submit the original command again", "data": {}}
+                    pending = None
+            if command.lower() in ["yes", "y", "confirm", "proceed"] and pending:
+                self.pending_confirmations.pop(session_id, None)
                 return self._execute_confirmed(pending["original_command"], pending)
-            
-            if command.lower() in ["no", "n", "cancel", "abort"] and self.pending_confirmations:
-                last_id = max(self.pending_confirmations.keys())
-                self.pending_confirmations.pop(last_id)
+
+            if command.lower() in ["no", "n", "cancel", "abort"] and pending:
+                self.pending_confirmations.pop(session_id, None)
                 return {"mode": "red", "action": "cancelled", "status": "success", "message": "Action cancelled by user per Red Team safety", "data": {}}
-            
+
             # Handle basic commands per 30-day plan
             if command.lower() in ["hello", "hi"]:
                 verse = gita_engine.get_random_verse()
@@ -115,7 +121,7 @@ class Brain:
                     "message": f"Hello! I am Vrindha, your AI-powered SOC assistant. Running in DEFENSIVE MODE. {verse.get('meaning','Performing duty with protection.')}",
                     "data": {"gita_verse": verse}
                 }
-            
+
             if command.lower() == "status":
                 stats = memory_system.get_stats()
                 return {
@@ -132,7 +138,7 @@ class Brain:
                         "gita_status": "loaded" if gita_engine.loaded else "not loaded"
                     }
                 }
-            
+
             if "help" in command.lower():
                 return {
                     "mode": "blue",
@@ -141,7 +147,7 @@ class Brain:
                     "message": self.get_help_text(),
                     "data": {}
                 }
-            
+
             # Zero Trust check first
             zt_result = zero_trust_engine.evaluate_command(command)
             if zt_result.get("access_decision") == "deny" and zt_result.get("trust_score", 100) < 20:
@@ -152,15 +158,15 @@ class Brain:
                     "message": f"Zero Trust Engine denied command. Trust score: {zt_result.get('trust_score')}. Alerts: {zt_result.get('alerts')}",
                     "data": zt_result
                 }
-            
+
             # Classify
             classification = self.classify_command(command)
             mode = classification["mode"]
             target = self.extract_target(command)
-            
+
             # Safety Layer evaluation
             safety = safety_layer.evaluate_request(command, target, mode=mode)
-            
+
             # A Dharma denial is final regardless of how the command was classified.
             # This prevents harmful commands with no known tool keyword from falling
             # through to the generic Blue Team handler.
@@ -181,32 +187,32 @@ class Brain:
 
             # Memory: retrieve similar cases
             similar_cases = memory_system.retrieve_similar(command)
-            
+
             # Planning engine suggestions
             plan = planning_engine.plan(command)
-            
+
             # Route based on mode
             if mode == "red":
-                return self._handle_red_team(command, target, classification, safety, similar_cases, plan, auto_confirm, user_token)
+                return self._handle_red_team(command, target, classification, safety, similar_cases, plan, auto_confirm, user_token, session_id)
             else:
                 return self._handle_blue_team(command, target, classification, safety, similar_cases, plan)
-                
+
         except Exception as e:
             err = ErrorHandler.handle_exception(e, "Brain.process")
             return {
                 "mode": "unknown",
                 "action": "error",
                 "status": "error",
-                "message": f"Brain error: {e}",
+                "message": "Brain could not process the command",
                 "data": err,
                 "gita_guidance": gita_engine.get_ethical_guidance("defense")
             }
-    
-    def _handle_red_team(self, command: str, target: str, classification: Dict, safety: Dict, similar: Dict, plan: Dict, auto_confirm: bool, user_token) -> Dict:
+
+    def _handle_red_team(self, command: str, target: str, classification: Dict, safety: Dict, similar: Dict, plan: Dict, auto_confirm: bool, user_token, session_id: str) -> Dict:
         """Red Team → Manual Only per blueprint"""
         # Dharma check already in safety
         dharma = safety.get("dharma", {})
-        
+
         if safety.get("decision") == "deny":
             return {
                 "mode": "red",
@@ -220,41 +226,38 @@ class Brain:
                     "educational": dharma.get("educational", "Use your skills to protect, not harm.")
                 }
             }
-        
-        # If requires confirmation (always for red team per blueprint)
-        if safety.get("requires_confirmation") or not auto_confirm:
-            self.last_command_id += 1
-            self.pending_confirmations[self.last_command_id] = {
-                "original_command": command,
+
+        # Red Team operations always require a separate confirmation request.
+        # The legacy auto_confirm argument is intentionally ignored.
+        self.last_command_id += 1
+        self.pending_confirmations[session_id] = {
+            "original_command": command,
+            "target": target,
+            "classification": classification,
+            "safety": safety,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        # Build what will happen explanation
+        preview = self._build_red_preview(command, target)
+
+        return {
+            "mode": "red",
+            "action": "confirmation_required",
+            "status": "awaiting_confirmation",
+            "message": f"🔴 RED TEAM MODE - Manual Approval Required per Safety Blueprint\n\nI will: {preview}\nTarget: {target or 'not specified, will use 127.0.0.1 for safety'}\nSafety: {safety.get('reason')}\nRisk: {dharma.get('risk_level','medium')}\n\nDo you want to proceed? (yes/no)",
+            "data": {
+                "pending_id": self.last_command_id,
+                "preview": preview,
                 "target": target,
-                "classification": classification,
                 "safety": safety,
-                "timestamp": datetime.now().isoformat()
+                "dharma": dharma,
+                "similar_cases": similar,
+                "plan": plan,
+                "gita_verse": dharma.get("gita_verse")
             }
-            
-            # Build what will happen explanation
-            preview = self._build_red_preview(command, target)
-            
-            return {
-                "mode": "red",
-                "action": "confirmation_required",
-                "status": "awaiting_confirmation",
-                "message": f"🔴 RED TEAM MODE - Manual Approval Required per Safety Blueprint\n\nI will: {preview}\nTarget: {target or 'not specified, will use 127.0.0.1 for safety'}\nSafety: {safety.get('reason')}\nRisk: {dharma.get('risk_level','medium')}\n\nDo you want to proceed? (yes/no)",
-                "data": {
-                    "pending_id": self.last_command_id,
-                    "preview": preview,
-                    "target": target,
-                    "safety": safety,
-                    "dharma": dharma,
-                    "similar_cases": similar,
-                    "plan": plan,
-                    "gita_verse": dharma.get("gita_verse")
-                }
-            }
-        else:
-            # Auto-confirmed (via auto_confirm flag) - execute
-            return self._execute_confirmed(command, {"target": target, "classification": classification, "safety": safety})
-    
+        }
+
     def _build_red_preview(self, command: str, target: str) -> str:
         cmd_lower = command.lower()
         if "nmap" in cmd_lower or "scan network" in cmd_lower:
@@ -274,22 +277,22 @@ class Brain:
         if "hashcat" in cmd_lower:
             return "Suggest hashcat command (no auto-run) and explain risks per strict control"
         return f"Execute recon action for command '{command}' with safety timeout"
-    
+
     def _execute_confirmed(self, command: str, context: Dict) -> Dict:
         """Execute after user confirmation"""
         try:
             target = context.get("target") or self.extract_target(command) or "127.0.0.1"
             cmd_lower = command.lower()
-            
+
             # Lazy imports to avoid circular
             from agents.recon_agent import recon_agent
             from agents.vuln_agent import vuln_agent
             from agents.threat_agent import threat_agent
             from agents.siem_agent import siem_agent
-            
+
             result_data = {}
             message = ""
-            
+
             # Route to appropriate agent per 30-day and startup blueprints
             if "scan network" in cmd_lower or "nmap" in cmd_lower:
                 result_data = recon_agent.run(target)
@@ -329,7 +332,13 @@ class Brain:
                 # Generic recon
                 result_data = recon_agent.run(target)
                 message = f"Recon scan on {target}"
-            
+
+            execution_status = result_data.get("status") if isinstance(result_data, dict) else None
+            if execution_status == "simulated":
+                message = f"[SIMULATION] {message}; no system change was made"
+            elif execution_status == "error":
+                message = f"Tool execution failed: {message}"
+
             # Memory save
             memory_system.save_memory({
                 "event_type": "red_team_scan",
@@ -339,17 +348,17 @@ class Brain:
                 "risk_level": "Medium",
                 "timestamp": datetime.now().isoformat()
             })
-            
+
             # Log to SIEM
             try:
                 from database.db import add_log
                 add_log(command, str(result_data)[:2000], "Medium")
             except:
                 pass
-            
+
             # Threat analysis on result
             threat_analysis = threat_agent.analyze(str(result_data))
-            
+
             return {
                 "mode": "red",
                 "action": "executed",
@@ -368,24 +377,24 @@ class Brain:
                 "mode": "red",
                 "action": "execution_failed",
                 "status": "error",
-                "message": f"Execution failed after confirmation: {e}",
+                "message": "Execution failed after confirmation",
                 "data": err
             }
-    
+
     def _handle_blue_team(self, command: str, target: str, classification: Dict, safety: Dict, similar: Dict, plan: Dict) -> Dict:
         """Blue Team → CAN be automated per blueprint"""
         try:
             from agents.threat_agent import threat_agent
             from agents.siem_agent import siem_agent
             from automation.actions import automation_actions
-            
+
             cmd_lower = command.lower()
-            
+
             # Threat detection
             if any(k in cmd_lower for k in ["threat", "attack", "breach", "malware"]):
                 # Analyze text for threat levels per Day 17
                 threat_result = threat_agent.analyze(command)
-                
+
                 # Automated response if HIGH risk per Day 22-23
                 automated_action = None
                 if threat_result.get("risk_level") == "HIGH" or threat_result.get("threat_level") == "HIGH":
@@ -400,7 +409,7 @@ class Brain:
                         "outcome": str(automated_action),
                         "risk_level": "HIGH"
                     })
-                
+
                 return {
                     "mode": "blue",
                     "action": "threat_detection",
@@ -414,7 +423,7 @@ class Brain:
                         "gita_guidance": gita_engine.get_ethical_guidance("defense")
                     }
                 }
-            
+
             if "log" in cmd_lower or "siem" in cmd_lower:
                 logs = siem_agent.get_logs()
                 return {
@@ -424,22 +433,23 @@ class Brain:
                     "message": f"Retrieved {len(logs.get('logs',[])) if isinstance(logs, dict) else 'logs'} from SIEM",
                     "data": logs
                 }
-            
+
             if "block ip" in cmd_lower:
                 ip_to_block = target or "192.168.1.100"
                 result = automation_actions.block_ip(ip_to_block)
-                succeeded = result.get("status") != "error"
+                result_status = result.get("status")
+                succeeded = result_status != "error"
+                message = result.get("message", "Could not block IP")
+                if succeeded and result_status != "simulated":
+                    message = f"Automated defensive action: Blocked IP {ip_to_block}"
                 return {
                     "mode": "blue",
                     "action": "block_ip",
                     "status": "success" if succeeded else "error",
-                    "message": (
-                        f"Automated defensive action: Blocked IP {ip_to_block}"
-                        if succeeded else result.get("message", "Could not block IP")
-                    ),
+                    "message": message,
                     "data": result
                 }
-            
+
             if "firewall" in cmd_lower or "fail2ban" in cmd_lower:
                 from automation.firewall import firewall_module
                 result = firewall_module.check_and_block()
@@ -450,7 +460,7 @@ class Brain:
                     "message": "Firewall auto-response check completed",
                     "data": result
                 }
-            
+
             if "rootkit" in cmd_lower or "rkhunter" in cmd_lower or "chkrootkit" in cmd_lower:
                 from automation.rootkit_scanner import rootkit_scanner
                 result = rootkit_scanner.scan()
@@ -461,7 +471,7 @@ class Brain:
                     "message": "Endpoint rootkit scan completed",
                     "data": result
                 }
-            
+
             if "ids" in cmd_lower or "snort" in cmd_lower or "suricata" in cmd_lower:
                 from automation.ids_monitor import ids_monitor
                 result = ids_monitor.monitor()
@@ -472,7 +482,7 @@ class Brain:
                     "message": "IDS monitoring completed - Blue Team automated",
                     "data": result
                 }
-            
+
             if "anomaly" in cmd_lower or "risk" in cmd_lower:
                 from ml.anomaly_detector import anomaly_detector
                 from ml.risk_scoring import risk_scoring
@@ -486,7 +496,7 @@ class Brain:
                     "message": f"Anomaly score: {anomaly.get('anomaly_score')} | Risk: {risk.get('risk_score')}",
                     "data": {"anomaly": anomaly, "risk": risk}
                 }
-            
+
             # IAM check
             if "login" in cmd_lower or "auth" in cmd_lower or "brute force" in cmd_lower:
                 iam_result = iam_module.analyze_logs(command)
@@ -497,7 +507,7 @@ class Brain:
                     "message": "IAM analysis completed",
                     "data": iam_result
                 }
-            
+
             # Default blue response
             return {
                 "mode": "blue",
@@ -512,7 +522,7 @@ class Brain:
                     "gita_verse": gita_engine.get_random_verse()
                 }
             }
-            
+
         except Exception as e:
             err = ErrorHandler.handle_exception(e, "Brain._handle_blue_team")
             return {
@@ -522,7 +532,7 @@ class Brain:
                 "message": f"Blue team handling error: {e}",
                 "data": err
             }
-    
+
     def get_help_text(self) -> str:
         return """
 Vrindha AI SOC - Help

@@ -1,8 +1,1 @@
-{
-  "admin": {
-    "username": "admin",
-    "password_hash": "$2b$12$1xq9Bpl62.1rbgU0YBS6Nej2yBAYjTnTkCOJDZDmByqzTxfH5GHAS",
-    "role": "admin",
-    "created": "2026-07-26T13:58:41.478572"
-  }
-}
+{}
