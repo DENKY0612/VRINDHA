@@ -126,7 +126,7 @@ Vrindha AI SOC System
 │
 ├── 🌐 API Layer - api/
 │   ├── main.py - FastAPI, CORSMiddleware, endpoints /command /logs /status /login /gita/random /dashboard-data /ml/* /tools/verify
-│   ├── auth.py - JWT, hash_password (bcrypt fallback sha256), authenticate_user(), create_access_token(), verify_token(), default admin/admin123
+│   ├── auth.py - JWT, bcrypt password hashing, environment-provisioned administrator, expiring token verification
 │   └── routes.py - modular
 │
 ├── 🖥️ Dashboard - dashboard/
@@ -517,7 +517,7 @@ pip install sublist3r
 python3 -c "from database.db import init_db; init_db()"
 # Creates database/vrindha.db with logs, threats, blocked_ips
 # Creates database/memory.db for Super Intelligence Memory
-# Creates logs/log.txt + database/users.json admin/admin123
+# Creates logs/log.txt; provision users with ADMIN_USERNAME and ADMIN_PASSWORD
 ```
 
 **Step 5 Run (see Usage section)**
@@ -657,7 +657,7 @@ curl http://localhost:8000/dashboard-data
 
 **Login (JWT per Authentication Prompt):**
 ```bash
-curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"username":"admin","password":"admin123"}'
+curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"username":"admin","password":"$ADMIN_PASSWORD"}'
 # Returns {access_token: ..., token_type: bearer}
 # Use token:
 curl http://localhost:8000/status -H "Authorization: Bearer <token>"
@@ -668,7 +668,7 @@ curl http://localhost:8000/status -H "Authorization: Bearer <token>"
 - Features per SOC Dashboard Prompt: Display logs, Show alerts, Show system status, Trigger commands, Dashboard panel, Logs table, Alert box, Command input, Backend Integration Connect to FastAPI endpoints, Axios/fetch API, Error handling, Loading states
 - Our implementation adds: Attack trends Chart.js line, Most Targeted Ports bar, Risk Over Time area, Tool Verification, ML Intelligence, Gita card
 - Quick action buttons: Status, Hello, Scan Network, Whois, Vuln Scan, Threat Detect, Show Logs, Block IP
-- Command input + Send + Send+Auto-Confirm (auto_confirm=true bypasses confirmation for testing)
+- Login controls + authenticated command input; Red Team confirmation always requires a separate yes/no request
 
 ---
 
@@ -677,18 +677,18 @@ curl http://localhost:8000/status -H "Authorization: Bearer <token>"
 | Endpoint | Method | Description | Auth | Blueprint Source |
 |----------|--------|-------------|------|------------------|
 | `/` | GET | Root, running info, endpoints list | No | FastAPI Setup |
-| `/status` | GET | System status via Brain status | Optional JWT | Command Endpoint Day25 |
-| `/command` | POST | Run AI command Body {command, auto_confirm, target} | Optional JWT | POST /command Day25 |
-| `/logs` | GET | Fetch logs ?limit=50 | Optional JWT | GET /logs Day25 |
-| `/login` | POST | JWT login Body {username,password} default admin/admin123 | No | Authentication Prompt |
+| `/status` | GET | System status via Brain status | Bearer JWT required | Command Endpoint Day25 |
+| `/command` | POST | Run AI command Body {command}; send yes/no separately for Red Team confirmation | Bearer JWT required | POST /command Day25 |
+| `/logs` | GET | Fetch logs ?limit=50 | Bearer JWT required | GET /logs Day25 |
+| `/login` | POST | JWT login Body {username,password} credentials provisioned from environment | No | Authentication Prompt |
 | `/gita/random` | GET | Random Gita verse | No | Gita Engine |
 | `/gita/verse/{chapter}/{verse}` | GET | Specific verse | No | Gita Engine |
-| `/dashboard-data` | GET | Viz + recent logs + status + gita | Optional JWT | SOC Dashboard |
-| `/ml/anomaly` | POST | Anomaly detection Body {command/text} | Optional JWT | Anomaly Detection |
-| `/ml/risk` | POST | Risk scoring Body {ip, events} | Optional JWT | Risk Scoring |
-| `/ml/predict` | GET | Threat prediction from logs | Optional JWT | Prediction Model |
-| `/ml/pipeline` | GET | Data pipeline clean_data + CSV export | Optional JWT | Data Foundation |
-| `/tools/verify` | GET | Verify tool stack installed/missing | Optional JWT | Tool Verification |
+| `/dashboard-data` | GET | Viz + recent logs + status + gita | Bearer JWT required | SOC Dashboard |
+| `/ml/anomaly` | POST | Anomaly detection Body {command/text} | Bearer JWT required | Anomaly Detection |
+| `/ml/risk` | POST | Risk scoring Body {ip, events} | Bearer JWT required | Risk Scoring |
+| `/ml/predict` | GET | Threat prediction from logs | Bearer JWT required | Prediction Model |
+| `/ml/pipeline` | GET | Data pipeline clean_data + CSV export | Bearer JWT required | Data Foundation |
+| `/tools/verify` | GET | Verify tool stack installed/missing | Bearer JWT required | Tool Verification |
 | `/dashboard/` | GET | Static dashboard files | No | Dashboard Mount |
 
 **Request Example:**
@@ -742,7 +742,7 @@ POST /command
 
 **Features per SOC Dashboard Prompt + AI/ML Dashboard Intelligence:**
 - **Header:** Vrindha AI SOC System title, status bar systemStatus + gitaVerse
-- **Command Card (grid span 2):** Input field, Send, Send+Auto-Confirm, Quick action buttons Status Hello Scan Network Whois Vuln Scan Threat Detect Show Logs Block IP, Result box pre-wrap monospace
+- **Command Card (grid span 2):** Login fields, command input, Send, Quick action buttons Status Hello Scan Network Whois Vuln Scan Threat Detect Show Logs Block IP, Result box pre-wrap monospace
 - **System Status Card:** StatusDetails from /status
 - **SIEM Logs Card:** logsTable, Refresh Logs button, last 30 logs
 - **Alerts Card:** alertsBox, Threat Level Indicators, Automated Action
@@ -778,7 +778,7 @@ RUN pip3 install -r requirements.txt --break-system-packages
 COPY . .
 RUN mkdir -p logs database data
 EXPOSE 8000
-ENV SECRET_KEY=vrindha-super-secret-change-me DATABASE_URL=sqlite:///./database/vrindha.db
+Pass SECRET_KEY and administrator credentials at runtime; no credentials are baked into the image
 HEALTHCHECK --interval=30s --timeout=10s CMD curl -f http://localhost:8000/status || exit 1
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```

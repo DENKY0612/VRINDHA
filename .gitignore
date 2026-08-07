@@ -18,6 +18,7 @@ dist/
 build/
 *.egg-info/
 uploads/
+data/training_data.csv
 *.pdf
 *.txt
 !requirements.txt

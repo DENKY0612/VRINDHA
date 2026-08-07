@@ -445,7 +445,7 @@ This dashboard organizes <b>everything</b> from your project: Core Brain, Red Te
 │   └── visualization.py - generate_attack_trends() 7 days, port_stats(), risk_over_time() 24h, get_all_dashboard_data()
 ├── api/ (3 files)
 │   ├── main.py - FastAPI POST /command GET /logs GET /status POST /login JWT GET /dashboard-data GET /gita/random POST /ml/anomaly POST /ml/risk GET /ml/predict /ml/pipeline /tools/verify + CORS + static mount dashboard
-│   ├── auth.py - JWT authentication, hash_password bcrypt fallback sha256, authenticate_user(), create_access_token(), verify_token(), default admin/admin123
+│   ├── auth.py - JWT authentication, bcrypt password hashing, environment-provisioned administrator, expiring token verification
 │   └── routes.py - modular
 ├── database/ (2 files)
 │   ├── db.py - SQLite vrindha.db logs(id,timestamp,command,result,risk_level,action,mode), threats, blocked_ips, init_db(), add_log(), get_logs(), get_logs_by_risk()
@@ -477,10 +477,16 @@ This dashboard organizes <b>everything</b> from your project: Core Brain, Red Te
 <span class="kawaii">(◕‿◕)</span> <b>Core Brain Flow:</b> User Command → Intent Analysis → Dharma Engine → Classify Red/Blue → Red→Authorization→Ask Confirmation (yes/no) → Execute Manual, Blue→Threat Detection→Auto Respond if HIGH → Log Everything → Memory + SIEM
 </div>
 <div class="card gold">
+<div class="input-group" style="margin-bottom:10px">
+<input type="text" id="loginUsername" autocomplete="username" placeholder="Username">
+<input type="password" id="loginPassword" autocomplete="current-password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button onclick="logout()" class="secondary">Logout</button>
+<span id="authStatus">Not authenticated</span>
+</div>
 <div class="input-group">
-<input type="text" id="commandInput" placeholder="Enter command: e.g., status, scan network 127.0.0.1, whois google.com, detect threats">
+<input type="text" id="commandInput" placeholder="Enter command: e.g., status, scan network 127.0.0.1, detect threats">
 <button onclick="sendCommand()">Send</button>
-<button onclick="sendCommand(true)" class="secondary">Auto-Confirm</button>
 </div>
 <div class="quick-actions">
 <button onclick="quickCmd('status')">Status</button>
@@ -878,25 +884,27 @@ function togglePanel(){
 
 async function loadPanel(){
   try{
-    // Try Hermus endpoint first, fallback to Vrindha
-    let data;
-    try{
-      const res = await fetch('/agents/status');
-      data = await res.json();
-    } catch{
-      const res2 = await fetch('/status');
-      const d2 = await res2.json();
-      data = {
-        timestamp: new Date().toISOString(),
-        active_agents_count: d2.data ? Object.keys(d2.data).length : 7,
-        active_tasks_count: 0,
-        completed_count: 0,
-        models_in_use: ['Vrindha Brain'],
-        active_agents: [{name:'ReconAgent',model:'nmap',persona:'recon',task:'Network scanning',status:'idle',started:new Date().toISOString(),last_update:new Date().toISOString()}],
-        active_tasks: [],
-        completed_tasks: []
-      };
-    }
+    const res = await fetch('/status');
+    if(!res.ok) throw new Error(`/status failed ${res.status}`);
+    const status = await res.json();
+    const data = {
+      timestamp: new Date().toISOString(),
+      active_agents_count: status.data?.agents?.length || 0,
+      active_tasks_count: 0,
+      completed_count: 0,
+      models_in_use: ['Vrindha Brain'],
+      active_agents: (status.data?.agents || []).map(name => ({
+        name,
+        model: 'Vrindha',
+        persona: 'security',
+        task: 'Ready',
+        status: 'idle',
+        started: new Date().toISOString(),
+        last_update: new Date().toISOString()
+      })),
+      active_tasks: [],
+      completed_tasks: []
+    };
 
     let html = `<div class="card"><p>⏱️ ${data.timestamp.slice(0,19)} | System: Vrindha AI SOC</p><p style="font-size:0.8em;color:var(--text-muted)">Everything organized: 7 agents, 14 tools, 701 Gita verses, Gold #DAA520, SOC Blue #0a1931</p></div>`;
 
@@ -924,22 +932,42 @@ async function loadPanel(){
   }
 }
 
-// Vrindha API functions (original app.js logic)
+// Vrindha API functions
+let authToken = sessionStorage.getItem('vrindhaToken') || '';
+function authHeaders(){ return authToken ? {Authorization:`Bearer ${authToken}`} : {}; }
+function escapeHtml(value){
+  return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+}
 async function apiFetch(path, options = {}){
-  try{
-    const res = await fetch(path, {headers:{'Content-Type':'application/json', ...options.headers}, ...options});
-    if(!res.ok) throw new Error(`${path} failed ${res.status}`);
-    return await res.json();
-  }catch(e){
-    try{
-      const fallback = await fetch(`http://localhost:8000${path}`, {headers:{'Content-Type':'application/json', ...options.headers}, ...options});
-      if(fallback.ok) return await fallback.json();
-    }catch{}
-    throw e;
+  const res = await fetch(path, {headers:{'Content-Type':'application/json', ...authHeaders(), ...options.headers}, ...options});
+  if(!res.ok){
+    let detail = '';
+    try{ detail = (await res.json()).detail || ''; }catch{}
+    throw new Error(detail || `${path} failed ${res.status}`);
   }
+  return await res.json();
+}
+async function login(){
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+  try{
+    const res = await fetch('/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password})});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || 'Login failed');
+    authToken = data.access_token;
+    sessionStorage.setItem('vrindhaToken', authToken);
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('authStatus').textContent = `Authenticated as ${data.user}`;
+    loadLogs(); loadCharts();
+  }catch(error){ document.getElementById('authStatus').textContent = error.message; }
+}
+function logout(){
+  authToken=''; sessionStorage.removeItem('vrindhaToken');
+  document.getElementById('authStatus').textContent='Not authenticated';
 }
 
-async function sendCommand(autoConfirm=false){
+async function sendCommand(){
+  const autoConfirm = false;
   const input = document.getElementById('commandInput');
   const resultBox = document.getElementById('commandResult');
   const cmd = input.value.trim();
@@ -988,7 +1016,7 @@ async function loadLogs(){
     else{
       container.innerHTML = logs.map(log=>{
         const l = typeof log==='string'?log:`${log.timestamp} | ${log.command} => ${log.result?.slice(0,100)} | RISK: ${log.risk_level}`;
-        return `<div style="border-bottom:1px solid #1e293b;padding:5px;font-size:0.8em">${l}</div>`;
+        return `<div style="border-bottom:1px solid #1e293b;padding:5px;font-size:0.8em">${escapeHtml(l)}</div>`;
       }).join('');
     }
   }catch(e){

@@ -1,37 +1,13 @@
-# Vrindha AI SOC System - Requirements
-# Core
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.0.0
-python-multipart>=0.0.6
-
-# Security / Auth per START UP auth prompt
-python-jose[cryptography]>=3.3.0
-passlib[bcrypt]>=1.7.4
-bcrypt>=4.0.1
-
-# Database
-# sqlite3 is builtin, but for future PostgreSQL:
-# psycopg2-binary>=2.9.9
-# sqlalchemy>=2.0.0
-
-# Data Science / AI ML Intelligence Layer per work for AI ML.pdf + data science.pdf
-pandas>=2.0.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
-# TensorFlow or PyTorch for advanced prediction (optional, heavy)
-# tensorflow>=2.14.0
-# torch>=2.1.0
-# Visualization not in backend but for future:
-# matplotlib>=3.7.0
-# seaborn>=0.12.0
-
-# PDF parsing (already used PyPDF2 for project, but keep)
-PyPDF2>=3.0.0
-
-# Utilities
-python-dotenv>=1.0.0
-requests>=2.31.0
-
-# Kali tools are system packages, not pip:
-# nmap, wireshark, nikto, gobuster, dirb, amass, sublist3r, tcpdump, hashcat, snort, suricata, rkhunter, chkrootkit, fail2ban, ufw, wazuh, ossec
+# Compatible release ranges. Regenerate a fully locked deployment file in CI.
+fastapi>=0.104,<1
+uvicorn[standard]>=0.24,<1
+pydantic>=2,<3
+python-multipart>=0.0.6,<1
+python-jose[cryptography]>=3.3,<4
+bcrypt>=4,<6
+pandas>=2,<4
+numpy>=1.24,<3
+scikit-learn>=1.3,<2
+PyPDF2>=3,<4
+python-dotenv>=1,<2
+requests>=2.31,<3

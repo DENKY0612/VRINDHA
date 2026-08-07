@@ -5,6 +5,7 @@ Actions: Block IP (iptables), Kill process, Send alert
 Rules: Do not execute destructive commands, confirm before high-risk actions
 BLUE TEAM CAN be automated
 """
+import ipaddress
 import subprocess
 import shutil
 from datetime import datetime
@@ -15,9 +16,18 @@ class AutomationActions:
     def block_ip(self, ip: str) -> Dict:
         """Block IP using firewall (iptables/ufw) - Safe Mode"""
         try:
-            # Validate IP
+            # Validate the address before it is interpolated into a firewall preview
+            # (and before a future implementation executes the command).
             if not ip:
                 return {"status": "error", "action": "block_ip", "message": "No IP provided"}
+            try:
+                validated_ip = str(ipaddress.ip_address(ip))
+            except (ValueError, TypeError):
+                return {
+                    "status": "error",
+                    "action": "block_ip",
+                    "message": f"Invalid IP address: {ip}"
+                }
             
             # Try ufw if available (safer)
             if shutil.which("ufw"):
@@ -26,8 +36,8 @@ class AutomationActions:
                 return {
                     "status": "simulated",
                     "action": "block_ip",
-                    "ip": ip,
-                    "message": f"[SIMULATION] Would execute: sudo ufw deny from {ip} (or iptables -A INPUT -s {ip} -j DROP). Automated Blue Team response.",
+                    "ip": validated_ip,
+                    "message": f"[SIMULATION] Would execute: sudo ufw deny from {validated_ip} (or iptables -A INPUT -s {validated_ip} -j DROP). Automated Blue Team response.",
                     "tool": "ufw",
                     "timestamp": datetime.now().isoformat(),
                     "risk": "High threat auto-response per blueprint allowed"
@@ -36,8 +46,8 @@ class AutomationActions:
                 return {
                     "status": "simulated",
                     "action": "block_ip",
-                    "ip": ip,
-                    "message": f"[SIMULATION] Would execute: sudo iptables -A INPUT -s {ip} -j DROP",
+                    "ip": validated_ip,
+                    "message": f"[SIMULATION] Would execute: sudo iptables -A INPUT -s {validated_ip} -j DROP",
                     "tool": "iptables",
                     "timestamp": datetime.now().isoformat()
                 }
@@ -45,8 +55,8 @@ class AutomationActions:
                 return {
                     "status": "simulated",
                     "action": "block_ip",
-                    "ip": ip,
-                    "message": f"[SIMULATION] No firewall tool found (ufw/iptables). Would block {ip}. Install: sudo apt install ufw",
+                    "ip": validated_ip,
+                    "message": f"[SIMULATION] No firewall tool found (ufw/iptables). Would block {validated_ip}. Install: sudo apt install ufw",
                     "timestamp": datetime.now().isoformat()
                 }
         except Exception as e:
