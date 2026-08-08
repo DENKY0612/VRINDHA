@@ -1,0 +1,393 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 6,
+      "name": "Dhyana Yoga",
+      "englishName": "Yoga of Meditation",
+      "description": "Krishna teaches Arjuna about meditation and the practice of yoga discipline.  This chapter focuses on the techniques and benefits of meditation, the nature of the mind, the importance of self-discipline, the obstacles to meditation, and how to overcome them.  It is considered one of the most practical chapters for meditation practitioners.",
+      "totalVerses": 47,
+      "theme": "The practice of meditation, mind control, self-discipline, and the attainment of inner peace and self-realization through systematic yoga",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Dhyana Yoga - Yoga of Meditation and Concentration"
+    },
+    "verses":   [
+      {
+      "verseNumber": 1,
+      "speaker": "Sri Krishna",
+      "sanskrit": "श्रीभगवानुवाच | अनाश्रितः कर्मफलं कार्यं कर्म करोति यः | स संन्यासी च योगी च न निरग्निर्न चाक्रियः ||",
+      "transliteration": "śrī-bhagavān uvāca | anāśritaḥ karma-phalaṃ kāryaṃ karma karoti yaḥ | sa sannyāsī ca yogī ca na niragnir na cākriyaḥ ||",
+      "english_translation": "The Blessed Lord said: One who performs their duty without attachment to the results is a true renunciate and yogi, not one who merely gives up action.",
+      "meaning": "True renunciation lies in selfless action, not in abandoning work."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यं संन्यासमिति प्राहुर्योगं तं विद्धि पाण्डव | न ह्यसंन्यस्तसंकल्पो योगी भवति कश्चन ||",
+        "transliteration": "yaṃ sannyāsam iti prāhur yogaṃ taṃ viddhi pāṇḍava | na hy asannyasta-saṅkalpo yogī bhavati kaścana ||",
+        "english_translation": "What is called renunciation is the same as yoga. One cannot become a yogi without giving up desires.",
+        "meaning": "Letting go of desires is essential for spiritual discipline."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आरुरुक्षोर्मुनेर्योगं कर्म कारणमुच्यते | योगारूढस्य तस्यैव शमः कारणमुच्यते ||",
+        "transliteration": "ārurukṣor muner yogaṃ karma kāraṇam ucyate | yogārūḍhasya tasyaiva śamaḥ kāraṇam ucyate ||",
+        "english_translation": "For one seeking to attain yoga, action is the means; for one established in yoga, tranquility is the means.",
+        "meaning": "Action leads to discipline; once achieved, inner peace becomes the focus."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यदा हि नेन्द्रियार्थेषु न कर्मस्वनुषज्जते | सर्वसंकल्पसंन्यासी योगारूढस्तदोच्यते ||",
+        "transliteration": "yadā hi nendriyārtheṣu na karmasv anuṣajjate | sarva-saṅkalpa-sannyāsī yogārūḍhas tadocyate ||",
+        "english_translation": "When one is no longer attached to sense objects or actions, they are said to be established in yoga.",
+        "meaning": "Detachment marks spiritual maturity."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "उद्धरेदात्मनाऽत्मानं नात्मानमवसादयेत् | आत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः ||",
+        "transliteration": "uddhared ātmanātmānaṃ nātmānam avasādayet | ātmaiva hy ātmano bandhur ātmaiva ripur ātmanaḥ ||",
+        "english_translation": "One should uplift oneself by one's own mind, not degrade oneself. The mind can be a friend or an enemy.",
+        "meaning": "Self-discipline determines whether the mind helps or harms us."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "बन्धुरात्मात्मनस्तस्य येनात्मैवात्मना जितः | अनात्मनस्तु शत्रुत्वे वर्तेतात्मैव शत्रुवत् ||",
+        "transliteration": "bandhur ātmātmanas tasya yenātmaivātmanā jitaḥ | anātmanas tu śatrutve vartetātmaiva śatruvat ||",
+        "english_translation": "For one who has conquered the mind, it is a friend; for one who has not, it remains an enemy.",
+        "meaning": "Control over mind leads to inner support; lack of control leads to conflict."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "जितात्मनः प्रशान्तस्य परमात्मा समाहितः | शीतोष्णसुखदुःखेषु तथा मानापमानयोः ||",
+        "transliteration": "jitātmanaḥ praśāntasya paramātmā samāhitaḥ | śītoṣṇa-sukha-duḥkheṣu tathā mānāpamānayoḥ ||",
+        "english_translation": "One who has conquered the mind remains peaceful in heat and cold, pleasure and pain, honor and dishonor.",
+        "meaning": "A disciplined mind brings stability in all situations."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ज्ञानविज्ञानतृप्तात्मा कूटस्थो विजितेन्द्रियः | युक्त इत्युच्यते योगी समलोष्टाश्मकाञ्चनः ||",
+        "transliteration": "jñāna-vijñāna-tṛptātmā kūṭastho vijitendriyaḥ | yukta ity ucyate yogī sama-loṣṭāśma-kāñcanaḥ ||",
+        "english_translation": "A yogi who is satisfied with knowledge and realization sees a clod, stone, and gold as the same.",
+        "meaning": "True wisdom removes distinctions and attachments."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सुहृन्मित्रार्युदासीनमध्यस्थद्वेष्यबन्धुषु | साधुष्वपि च पापेषु समबुद्धिर्विशिष्यते ||",
+        "transliteration": "suhṛn-mitrāry-udāsīna-madhyastha-dveṣya-bandhuṣu | sādhuṣv api ca pāpeṣu sama-buddhir viśiṣyate ||",
+        "english_translation": "One who has equal regard for friend, enemy, neutral, and all others is considered superior.",
+        "meaning": "Equanimity toward all beings is a mark of spiritual progress."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "योगी युञ्जीत सततमात्मानं रहसि स्थितः | एकाकी यतचित्तात्मा निराशीरपरिग्रहः ||",
+        "transliteration": "yogī yuñjīta satatam ātmānaṃ rahasi sthitaḥ | ekākī yata-cittātmā nirāśīr aparigrahaḥ ||",
+        "english_translation": "A yogi should constantly practice meditation in solitude, controlling mind and body, free from desires and possessions.",
+        "meaning": "Regular disciplined meditation in simplicity leads to spiritual growth."
+      },
+      {
+      "verseNumber": 11,
+      "speaker": "Sri Krishna",
+      "sanskrit": "शुचौ देशे प्रतिष्ठाप्य स्थिरमासनमात्मनः | नात्युच्छ्रितं नातिनीचं चैलाजिनकुशोत्तरम् ||",
+      "transliteration": "śucau deśe pratiṣṭhāpya sthiram āsanam ātmanaḥ | nātyucchritaṃ nātinīcaṃ cailājina-kuśottaram ||",
+      "english_translation": "In a clean place, establish a firm seat, neither too high nor too low, covered with cloth, deer skin, and kusa grass.",
+      "meaning": "Krishna describes the proper setup for meditation—clean, stable, and balanced."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तत्रैकाग्रं मनः कृत्वा यतचित्तेन्द्रियक्रियः | उपविश्यासने युञ्ज्याद्योगमात्मविशुद्धये ||",
+        "transliteration": "tatraikāgraṃ manaḥ kṛtvā yata-cittendriya-kriyaḥ | upaviśyāsane yuñjyād yogam ātma-viśuddhaye ||",
+        "english_translation": "Sitting there, focusing the mind and controlling thoughts and senses, one should practice yoga for self-purification.",
+        "meaning": "Meditation requires concentration and control of mind and senses."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "समं कायशिरोग्रीवं धारयन्नचलं स्थिरः | संप्रेक्ष्य नासिकाग्रं स्वं दिशश्चानवलोकयन् ||",
+        "transliteration": "samaṃ kāya-śiro-grīvaṃ dhārayann acalaṃ sthiraḥ | saṃprekṣya nāsikāgraṃ svaṃ diśaś cānavalokayan ||",
+        "english_translation": "Keeping the body, head, and neck straight and steady, and gazing at the tip of the nose without looking around.",
+        "meaning": "Proper posture and focus are essential for meditation."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रशान्तात्मा विगतभीर्ब्रह्मचारिव्रते स्थितः | मनः संयम्य मच्चित्तो युक्त आसीत मत्परः ||",
+        "transliteration": "praśāntātmā vigata-bhīr brahmacāri-vrate sthitaḥ | manaḥ saṃyamya mac-citto yukta āsīta mat-paraḥ ||",
+        "english_translation": "With a peaceful mind, free from fear, practicing celibacy, controlling the mind, and focusing on Me, one should sit in meditation.",
+        "meaning": "Meditation requires calmness, discipline, and focus on the divine."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "युञ्जन्नेवं सदात्मानं योगी नियतमानसः | शान्तिं निर्वाणपरमां मत्संस्थामधिगच्छति ||",
+        "transliteration": "yuñjann evaṃ sadātmānaṃ yogī niyata-mānasaḥ | śāntiṃ nirvāṇa-paramāṃ mat-saṃsthām adhigacchati ||",
+        "english_translation": "Thus practicing constantly, the yogi with controlled mind attains peace and ultimate liberation in Me.",
+        "meaning": "Consistent meditation leads to supreme peace and union with the divine."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "नात्यश्नतस्तु योगोऽस्ति न चैकान्तमनश्नतः | न चाति स्वप्नशीलस्य जाग्रतो नैव चार्जुन ||",
+        "transliteration": "nātyaśnatas tu yogo 'sti na caikāntam anaśnataḥ | na cāti-svapna-śīlasya jāgrato naiva cārjuna ||",
+        "english_translation": "Yoga is not for one who eats too much or too little, nor for one who sleeps too much or too little.",
+        "meaning": "Moderation in lifestyle is essential for successful meditation."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "युक्ताहारविहारस्य युक्तचेष्टस्य कर्मसु | युक्तस्वप्नावबोधस्य योगो भवति दुःखहा ||",
+        "transliteration": "yuktāhāra-vihārasya yukta-ceṣṭasya karmasu | yukta-svapnāvabodhasya yogo bhavati duḥkha-hā ||",
+        "english_translation": "For one who is balanced in eating, recreation, work, and sleep, yoga becomes a destroyer of sorrow.",
+        "meaning": "Balanced living supports spiritual growth and removes suffering."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यदा विनियतं चित्तमात्मन्येवावतिष्ठते | निःस्पृहः सर्वकामेभ्यो युक्त इत्युच्यते तदा ||",
+        "transliteration": "yadā viniyataṃ cittam ātmany evāvatiṣṭhate | niḥspṛhaḥ sarva-kāmebhyo yukta ity ucyate tadā ||",
+        "english_translation": "When the controlled mind rests in the self alone, free from desires, one is said to be established in yoga.",
+        "meaning": "Freedom from desires and inner focus define true yoga."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यथा दीपो निवातस्थो नेङ्गते सोपमा स्मृता | योगिनो यतचित्तस्य युञ्जतो योगमात्मनः ||",
+        "transliteration": "yathā dīpo nivāta-stho neṅgate sopamā smṛtā | yogino yata-cittasya yuñjato yogam ātmanaḥ ||",
+        "english_translation": "Like a lamp in a windless place does not flicker, so is the disciplined mind of a yogi in meditation.",
+        "meaning": "A steady mind is the ideal state in meditation."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यत्रोपरमते चित्तं निरुद्धं योगसेवया | यत्र चैवात्मनात्मानं पश्यन्नात्मनि तुष्यति ||",
+        "transliteration": "yatroparamate cittaṃ niruddhaṃ yoga-sevayā | yatra caivātmanātmānaṃ paśyann ātmani tuṣyati ||",
+        "english_translation": "When the mind is restrained through meditation and one sees the self within and is satisfied in the self.",
+        "meaning": "Meditation leads to self-realization and inner satisfaction."
+      },
+      {
+      "verseNumber": 21,
+      "speaker": "Sri Krishna",
+      "sanskrit": "सुखमात्यन्तिकं यत्तद्बुद्धिग्राह्यमतीन्द्रियम् | वेत्ति यत्र न चैवायं स्थितश्चलति तत्त्वतः ||",
+      "transliteration": "sukham ātyantikaṃ yat tad buddhi-grāhyam atīndriyam | vetti yatra na caivāyaṃ sthitaś calati tattvataḥ ||",
+      "english_translation": "The yogi experiences supreme happiness, grasped by the intellect and beyond the senses; once established, one never departs from it.",
+      "meaning": "True spiritual bliss is beyond senses and once realized, it remains stable."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यं लब्ध्वा चापरं लाभं मन्यते नाधिकं ततः | यस्मिन्स्थितो न दुःखेन गुरुणापि विचाल्यते ||",
+        "transliteration": "yaṃ labdhvā cāparaṃ lābhaṃ manyate nādhikaṃ tataḥ | yasmin sthito na duḥkhena guruṇāpi vicālyate ||",
+        "english_translation": "Having attained this, one considers no other gain greater; being established in it, one is not shaken even by great sorrow.",
+        "meaning": "Spiritual realization brings unshakable stability and fulfillment."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तं विद्याद्दुःखसंयोगवियोगं योगसंज्ञितम् | स निश्चयेन योक्तव्यो योगोऽनिर्विण्णचेतसा ||",
+        "transliteration": "taṃ vidyād duḥkha-saṃyoga-viyogaṃ yoga-saṃjñitam | sa niścayena yoktavyo yogo 'nirviṇṇa-cetasā ||",
+        "english_translation": "Know that yoga is the disconnection from union with sorrow; it should be practiced with determination and without discouragement.",
+        "meaning": "Yoga is freedom from suffering and requires steady effort."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सङ्कल्पप्रभवान्कामांस्त्यक्त्वा सर्वानशेषतः | मनसैवेन्द्रियग्रामं विनियम्य समन्ततः ||",
+        "transliteration": "saṅkalpa-prabhavān kāmāṃs tyaktvā sarvān aśeṣataḥ | manasaivendriya-grāmaṃ viniyamya samantataḥ ||",
+        "english_translation": "Abandoning all desires born of thoughts and controlling the senses from all sides by the mind.",
+        "meaning": "Control over thoughts and senses is essential for meditation."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Sri Krishna",
+        "sanskrit": "शनैः शनैरुपरमेद्बुद्ध्या धृतिगृहीतया | आत्मसंस्थं मनः कृत्वा न किञ्चिदपि चिन्तयेत् ||",
+        "transliteration": "śanaiḥ śanair uparamed buddhyā dhṛti-gṛhītayā | ātma-saṃsthaṃ manaḥ kṛtvā na kiñcid api cintayet ||",
+        "english_translation": "Gradually, step by step, with firm intellect, one should bring the mind under control and focus it on the self.",
+        "meaning": "Meditation requires patience and gradual control of the mind."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यतो यतो निश्चरति मनश्चञ्चलमस्थिरम् | ततस्ततो नियम्यैतदात्मन्येव वशं नयेत् ||",
+        "transliteration": "yato yato niścarati manaś cañcalam asthiram | tatas tato niyamyaitad ātmany eva vaśaṃ nayet ||",
+        "english_translation": "Wherever the restless mind wanders, one should bring it back under control and direct it toward the self.",
+        "meaning": "Repeated practice is needed to control the wandering mind."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रशान्तमनसं ह्येनं योगिनं सुखमुत्तमम् | उपैति शान्तरजसं ब्रह्मभूतमकल्मषम् ||",
+        "transliteration": "praśānta-manasaṃ hy enaṃ yoginaṃ sukham uttamam | upaiti śānta-rajasam brahma-bhūtam akalmaṣam ||",
+        "english_translation": "Supreme happiness comes to the yogi whose mind is peaceful, whose passions are calmed, and who is free from sin.",
+        "meaning": "A calm and pure mind leads to true happiness."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Sri Krishna",
+        "sanskrit": "युञ्जन्नेवं सदात्मानं योगी विगतकल्मषः | सुखेन ब्रह्मसंस्पर्शमत्यन्तं सुखमश्नुते ||",
+        "transliteration": "yuñjann evaṃ sadātmānaṃ yogī vigata-kalmaṣaḥ | sukhena brahma-saṃsparśam atyantaṃ sukham aśnute ||",
+        "english_translation": "Thus practicing constantly, the yogi, free from impurities, attains supreme happiness through union with Brahman.",
+        "meaning": "Continuous practice leads to ultimate spiritual bliss."
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सर्वभूतस्थमात्मानं सर्वभूतानि चात्मनि | ईक्षते योगयुक्तात्मा सर्वत्र समदर्शनः ||",
+        "transliteration": "sarva-bhūta-stham ātmānaṃ sarva-bhūtāni cātmani | īkṣate yoga-yuktātmā sarvatra sama-darśanaḥ ||",
+        "english_translation": "A yogi sees the self in all beings and all beings in the self, maintaining equal vision everywhere.",
+        "meaning": "True realization brings unity and equality in perception."
+      },
+      {
+        "verseNumber": 30,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यो मां पश्यति सर्वत्र सर्वं च मयि पश्यति | तस्याहं न प्रणश्यामि स च मे न प्रणश्यति ||",
+        "transliteration": "yo māṃ paśyati sarvatra sarvaṃ ca mayi paśyati | tasyāhaṃ na praṇaśyāmi sa ca me na praṇaśyati ||",
+        "english_translation": "One who sees Me everywhere and everything in Me is never separated from Me, nor am I ever separated from them.",
+        "meaning": "Seeing the divine in everything leads to eternal connection with God."
+      },
+      {
+      "verseNumber": 31,
+      "speaker": "Sri Krishna",
+      "sanskrit": "सर्वभूतस्थितं यो मां भजत्येकत्वमास्थितः | सर्वथा वर्तमानोऽपि स योगी मयि वर्तते ||",
+      "transliteration": "sarva-bhūta-sthitaṃ yo māṃ bhajaty ekatvam āsthitaḥ | sarvathā vartamāno 'pi sa yogī mayi vartate ||",
+      "english_translation": "The yogi who worships Me as present in all beings lives in Me, regardless of his mode of life.",
+      "meaning": "Seeing the divine in all beings connects one constantly with God."
+      },
+      {
+        "verseNumber": 32,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आत्मौपम्येन सर्वत्र समं पश्यति योऽर्जुन | सुखं वा यदि वा दुःखं स योगी परमो मतः ||",
+        "transliteration": "ātmaupamyena sarvatra samaṃ paśyati yo 'rjuna | sukhaṃ vā yadi vā duḥkhaṃ sa yogī paramo mataḥ ||",
+        "english_translation": "One who sees the happiness and suffering of all beings as his own is considered the highest yogi.",
+        "meaning": "Empathy and equality define the highest spiritual state."
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | योऽयं योगस्त्वया प्रोक्तः साम्येन मधुसूदन | एतस्याहं न पश्यामि चञ्चलत्वात्स्थितिं स्थिराम् ||",
+        "transliteration": "arjuna uvāca | yo 'yaṃ yogas tvayā proktaḥ sāmyena madhusūdana | etasyāhaṃ na paśyāmi cañcalatvāt sthitiṃ sthirām ||",
+        "english_translation": "Arjuna said: This yoga of equanimity you describe seems impractical to me because the mind is restless.",
+        "meaning": "Arjuna expresses doubt about controlling the restless mind."
+      },
+      {
+        "verseNumber": 34,
+        "speaker": "Arjuna",
+        "sanskrit": "चञ्चलं हि मनः कृष्ण प्रमाथि बलवद्दृढम् | तस्याहं निग्रहं मन्ये वायोरिव सुदुष्करम् ||",
+        "transliteration": "cañcalaṃ hi manaḥ kṛṣṇa pramāthi balavad dṛḍham | tasyāhaṃ nigrahaṃ manye vāyor iva su-duṣkaram ||",
+        "english_translation": "The mind is restless, turbulent, strong, and stubborn; controlling it seems as difficult as controlling the wind.",
+        "meaning": "Arjuna highlights the difficulty of mastering the mind."
+      },
+      {
+        "verseNumber": 35,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | असंशयं महाबाहो मनो दुर्निग्रहं चलम् | अभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते ||",
+        "transliteration": "śrī-bhagavān uvāca | asaṃśayaṃ mahā-bāho mano durnigrahaṃ calam | abhyāsena tu kaunteya vairāgyeṇa ca gṛhyate ||",
+        "english_translation": "The Blessed Lord said: The mind is indeed difficult to control, but it can be controlled through practice and detachment.",
+        "meaning": "Consistent practice and detachment are the keys to controlling the mind."
+      },
+      {
+        "verseNumber": 36,
+        "speaker": "Sri Krishna",
+        "sanskrit": "असंयतात्मना योगो दुष्प्राप इति मे मतिः | वश्यात्मना तु यतता शक्योऽवाप्तुमुपायतः ||",
+        "transliteration": "asaṃyatātmanā yogo duṣprāpa iti me matiḥ | vaśyātmanā tu yatatā śakyo 'vāptum upāyataḥ ||",
+        "english_translation": "Yoga is difficult for one who lacks self-control, but it is attainable for one who strives with discipline.",
+        "meaning": "Self-discipline is essential for achieving yoga."
+      },
+      {
+        "verseNumber": 37,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | अयतिः श्रद्धयोपेतो योगाच्चलितमानसः | अप्राप्य योगसंसिद्धिं कां गतिं कृष्ण गच्छति ||",
+        "transliteration": "arjuna uvāca | ayatiḥ śraddhayopeto yogāc calita-mānasaḥ | aprāpya yoga-saṃsiddhiṃ kāṃ gatiṃ kṛṣṇa gacchati ||",
+        "english_translation": "Arjuna said: What happens to one who starts with faith but fails to attain perfection in yoga due to a restless mind?",
+        "meaning": "Arjuna asks about the fate of an unsuccessful yogi."
+      },
+      {
+        "verseNumber": 38,
+        "speaker": "Arjuna",
+        "sanskrit": "कच्चिन्नोभयविभ्रष्टश्छिन्नाभ्रमिव नश्यति | अप्रतिष्ठो महाबाहो विमूढो ब्रह्मणः पथि ||",
+        "transliteration": "kaccin nobhaya-vibhraṣṭaś chinnābhram iva naśyati | apratiṣṭho mahā-bāho vimūḍho brahmaṇaḥ pathi ||",
+        "english_translation": "Does such a person perish like a scattered cloud, lost from both paths and without support?",
+        "meaning": "Arjuna fears failure in both worldly and spiritual pursuits."
+      },
+      {
+        "verseNumber": 39,
+        "speaker": "Arjuna",
+        "sanskrit": "एतन्मे संशयं कृष्ण छेत्तुमर्हस्यशेषतः | त्वदन्यः संशयस्यास्य छेत्ता न ह्युपपद्यते ||",
+        "transliteration": "etan me saṃśayaṃ kṛṣṇa chettum arhasy aśeṣataḥ | tvad anyaḥ saṃśayasyāsya chettā na hy upapadyate ||",
+        "english_translation": "Please dispel this doubt completely, O Krishna, for none other than you can do so.",
+        "meaning": "Arjuna seeks clarity from Krishna about spiritual uncertainty."
+      },
+      {
+        "verseNumber": 40,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | पार्थ नैवेह नामुत्र विनाशस्तस्य विद्यते | न हि कल्याणकृत्कश्चिद्दुर्गतिं तात गच्छति ||",
+        "transliteration": "śrī-bhagavān uvāca | pārtha naiveha nāmutra vināśas tasya vidyate | na hi kalyāṇa-kṛt kaścid durgatiṃ tāta gacchati ||",
+        "english_translation": "The Blessed Lord said: One who does good never comes to harm, neither in this world nor the next.",
+        "meaning": "Krishna reassures that sincere spiritual effort is never wasted."
+      },
+      {
+      "verseNumber": 41,
+      "speaker": "Sri Krishna",
+      "sanskrit": "प्राप्य पुण्यकृतां लोकानुषित्वा शाश्वतीः समाः | शुचीनां श्रीमतां गेहे योगभ्रष्टोऽभिजायते ||",
+      "transliteration": "prāpya puṇya-kṛtāṃ lokān uṣitvā śāśvatīḥ samāḥ | śucīnāṃ śrīmatāṃ gehe yoga-bhraṣṭo 'bhijāyate ||",
+      "english_translation": "The unsuccessful yogi, after enjoying heavenly worlds, is born in a pure and prosperous family.",
+      "meaning": "Spiritual effort never goes to waste; it continues in future lives."
+      },
+      {
+        "verseNumber": 42,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अथवा योगिनामेव कुले भवति धीमताम् | एतद्धि दुर्लभतरं लोके जन्म यदीदृशम् ||",
+        "transliteration": "athavā yoginām eva kule bhavati dhīmatām | etad dhi durlabhataram loke janma yad īdṛśam ||",
+        "english_translation": "Or one is born into a family of wise yogis, which is even rarer.",
+        "meaning": "A higher birth provides better conditions for spiritual progress."
+      },
+      {
+        "verseNumber": 43,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तत्र तं बुद्धिसंयोगं लभते पौर्वदेहिकम् | यतते च ततो भूयः संसिद्धौ कुरुनन्दन ||",
+        "transliteration": "tatra taṃ buddhi-saṃyogaṃ labhate paurva-dehikam | yatate ca tato bhūyaḥ saṃsiddhau kuru-nandana ||",
+        "english_translation": "There, one regains the knowledge from the previous life and strives again for perfection.",
+        "meaning": "Past spiritual efforts help continue the journey."
+      },
+      {
+        "verseNumber": 44,
+        "speaker": "Sri Krishna",
+        "sanskrit": "पूर्वाभ्यासेन तेनैव ह्रियते ह्यवशोऽपि सः | जिज्ञासुरपि योगस्य शब्दब्रह्मातिवर्तते ||",
+        "transliteration": "pūrvābhyāsena tenaiva hriyate hy avaśo 'pi saḥ | jijñāsur api yogasya śabda-brahmātivartate ||",
+        "english_translation": "By previous practice, one is naturally drawn to yoga, even without conscious effort.",
+        "meaning": "Spiritual habits carry forward across lifetimes."
+      },
+      {
+        "verseNumber": 45,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रयत्नाद्यतमानस्तु योगी संशुद्धकिल्बिषः | अनेकजन्मसंसिद्धस्ततो याति परां गतिम् ||",
+        "transliteration": "prayatnād yatamānas tu yogī saṃśuddha-kilbiṣaḥ | aneka-janma-saṃsiddhas tato yāti parāṃ gatim ||",
+        "english_translation": "With effort, the yogi becomes purified of sins and, after many births, attains the highest goal.",
+        "meaning": "Persistent effort leads to ultimate liberation."
+      },
+      {
+        "verseNumber": 46,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तपस्विभ्योऽधिको योगी ज्ञानिभ्योऽपि मतोऽधिकः | कर्मिभ्यश्चाधिको योगी तस्माद्योगी भवार्जुन ||",
+        "transliteration": "tapasvibhyo 'dhiko yogī jñānibhyo 'pi mato 'dhikaḥ | karmibhyaś cādhiko yogī tasmād yogī bhavārjuna ||",
+        "english_translation": "The yogi is superior to ascetics, scholars, and those who perform rituals; therefore, become a yogi.",
+        "meaning": "Krishna emphasizes the importance of the path of yoga."
+      },
+      {
+        "verseNumber": 47,
+        "speaker": "Sri Krishna",
+        "sanskrit": "योगिनामपि सर्वेषां मद्गतेनान्तरात्मना | श्रद्धावान्भजते यो मां स मे युक्ततमो मतः ||",
+        "transliteration": "yoginām api sarveṣāṃ mad-gatenāntar-ātmanā | śraddhāvān bhajate yo māṃ sa me yuktatamo mataḥ ||",
+        "english_translation": "Among all yogis, the one who worships Me with faith and devotion is the highest.",
+        "meaning": "Devotion combined with yoga is considered the सर्वोत्तम (highest) path."
+      }
+    ]
+  }
+}

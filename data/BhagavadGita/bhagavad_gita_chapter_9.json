@@ -1,0 +1,289 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 9,
+      "name": "Raja Vidya Raja Guhya Yoga",
+      "englishName": "Yoga of Royal Knowledge and Royal Secret",
+      "description": "Krishna reveals the most confidential knowledge about devotion (bhakti), explaining the supreme nature of God and the path of loving devotion. This chapter emphasizes that God is both immanent and transcendent, and that sincere devotion leads to liberation.",
+      "totalVerses": 34,
+      "theme": "Supreme knowledge, devotion (bhakti), and realization of the divine presence in all existence",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Bhakti Yoga - Yoga of Devotion"
+    },
+    "verses": [
+      {
+        "verseNumber": 1,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | इदं तु ते गुह्यतमं प्रवक्ष्याम्यनसूयवे | ज्ञानं विज्ञानसहितं यज्ज्ञात्वा मोक्ष्यसेऽशुभात् ||",
+        "transliteration": "śrī-bhagavān uvāca | idaṃ tu te guhyatamaṃ pravakṣyāmy anasūyave | jñānaṃ vijñāna-sahitaṃ yaj jñātvā mokṣyase 'śubhāt ||",
+        "english_translation": "The Blessed Lord said: I shall now reveal to you the most secret knowledge along with realization, knowing which you will be freed from evil.",
+        "meaning": "Krishna begins teaching the highest spiritual wisdom."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sri Krishna",
+        "sanskrit": "राजविद्या राजगुह्यं पवित्रमिदमुत्तमम् | प्रत्यक्षावगमं धर्म्यं सुसुखं कर्तुमव्ययम् ||",
+        "transliteration": "rāja-vidyā rāja-guhyaṃ pavitram idam uttamam | pratyakṣāvagamaṃ dharmyaṃ susukhaṃ kartum avyayam ||",
+        "english_translation": "This is the king of knowledge and secrets, pure, easy to practice, and eternal.",
+        "meaning": "Bhakti is the highest and simplest path."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अश्रद्दधानाः पुरुषा धर्मस्यास्य परन्तप | अप्राप्य मां निवर्तन्ते मृत्युसंसारवर्त्मनि ||",
+        "transliteration": "aśraddadhānāḥ puruṣā dharmasyāsya parantapa | aprāpya māṃ nivartante mṛtyu-saṃsāra-vartmani ||",
+        "english_translation": "Those without faith do not attain Me and remain in the cycle of death.",
+        "meaning": "Faith is essential for spiritual progress."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मया ततमिदं सर्वं जगदव्यक्तमूर्तिना | मत्स्थानि सर्वभूतानि न चाहं तेष्ववस्थितः ||",
+        "transliteration": "mayā tatam idaṃ sarvaṃ jagad avyakta-mūrtinā | mat-sthāni sarva-bhūtāni na cāhaṃ teṣv avasthitaḥ ||",
+        "english_translation": "I pervade the entire universe in an unmanifest form.",
+        "meaning": "God exists everywhere beyond visible form."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न च मत्स्थानि भूतानि पश्य मे योगमैश्वरम् | भूतभृन्न च भूतस्थो ममात्मा भूतभावनः ||",
+        "transliteration": "na ca mat-sthāni bhūtāni paśya me yogam aiśvaram | bhūta-bhṛn na ca bhūta-stho mamātmā bhūta-bhāvanaḥ ||",
+        "english_translation": "Yet beings are not in Me; behold My divine mystery.",
+        "meaning": "God transcends even His creation."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यथाकाशस्थितो नित्यं वायुः सर्वत्रगो महान् | तथा सर्वाणि भूतानि मत्स्थानीत्युपधारय ||",
+        "transliteration": "yathākāśa-sthito nityaṃ vāyuḥ sarvatra-go mahān | tathā sarvāṇi bhūtāni mat-sthānīty upadhāraya ||",
+        "english_translation": "As air moves everywhere in space, so all beings exist in Me.",
+        "meaning": "Krishna explains the relationship between creation and Himself."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सर्वभूतानि कौन्तेय प्रकृतिं यान्ति मामिकाम् | कल्पक्षये पुनस्तानि कल्पादौ विसृजाम्यहम् ||",
+        "transliteration": "sarva-bhūtāni kaunteya prakṛtiṃ yānti māmikām | kalpa-kṣaye punas tāni kalpādau visṛjāmy aham ||",
+        "english_translation": "At the end of a cycle, all beings return to My nature, and I create them again.",
+        "meaning": "Creation and dissolution are cyclical."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रकृतिं स्वामवष्टभ्य विसृजामि पुनः पुनः | भूतग्राममिमं कृत्स्नमवशं प्रकृतेर्वशात् ||",
+        "transliteration": "prakṛtiṃ svām avaṣṭabhya visṛjāmi punaḥ punaḥ | bhūta-grāmam imaṃ kṛtsnam avaśaṃ prakṛter vaśāt ||",
+        "english_translation": "I repeatedly create beings according to nature.",
+        "meaning": "The universe operates under divine law."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न च मां तानि कर्माणि निबध्नन्ति धनञ्जय | उदासीनवदासीनमसक्तं तेषु कर्मसु ||",
+        "transliteration": "na ca māṃ tāni karmāṇi nibadhnanti dhanañjaya | udāsīna-vad āsīnam asaktaṃ teṣu karmasu ||",
+        "english_translation": "These actions do not bind Me, as I remain unattached.",
+        "meaning": "God acts without attachment."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मयाध्यक्षेण प्रकृतिः सूयते सचराचरम् | हेतुनानेन कौन्तेय जगद्विपरिवर्तते ||",
+        "transliteration": "mayādhyakṣeṇa prakṛtiḥ sūyate sa-carācaram | hetunānena kaunteya jagad viparivartate ||",
+        "english_translation": "Under My supervision, nature produces all moving and non-moving beings.",
+        "meaning": "Krishna is the guiding force behind nature."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अवजानन्ति मां मूढा मानुषीं तनुमाश्रितम् | परं भावमजानन्तो मम भूतमहेश्वरम् ||",
+        "transliteration": "avajānanti māṃ mūḍhā mānuṣīṃ tanum āśritam | paraṃ bhāvam ajānanto mama bhūta-maheśvaram ||",
+        "english_translation": "Fools disregard Me when I appear in human form.",
+        "meaning": "Ignorance hides divine understanding."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मोघाशा मोघकर्माणो मोघज्ञाना विचेतसः | राक्षसीमासुरीं चैव प्रकृतिं मोहिनीं श्रिताः ||",
+        "transliteration": "moghāśā mogha-karmāṇo mogha-jñānā vicetasaḥ | rākṣasīm āsurīṃ caiva prakṛtiṃ mohinīṃ śritāḥ ||",
+        "english_translation": "Those with false hopes and deluded minds follow demonic nature.",
+        "meaning": "Wrong understanding leads to negative tendencies."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "महात्मानस्तु मां पार्थ दैवीं प्रकृतिमाश्रिताः | भजन्त्यनन्यमनसो ज्ञात्वा भूतादिमव्ययम् ||",
+        "transliteration": "mahātmānas tu māṃ pārtha daivīṃ prakṛtim āśritāḥ | bhajanty ananya-manaso jñātvā bhūtādim avyayam ||",
+        "english_translation": "Great souls worship Me with pure devotion.",
+        "meaning": "True devotees recognize divine nature."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सततं कीर्तयन्तो मां यतन्तश्च दृढव्रताः | नमस्यन्तश्च मां भक्त्या नित्ययुक्ता उपासते ||",
+        "transliteration": "satataṃ kīrtayanto māṃ yatantaś ca dṛḍha-vratāḥ | namasyantaś ca māṃ bhaktyā nitya-yuktā upāsate ||",
+        "english_translation": "Constantly glorifying Me, devoted souls worship Me with determination.",
+        "meaning": "Continuous devotion strengthens spiritual connection."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ज्ञानयज्ञेन चाप्यन्ये यजन्तो मामुपासते | एकत्वेन पृथक्त्वेन बहुधा विश्वतोमुखम् ||",
+        "transliteration": "jñāna-yajñena cāpy anye yajanto mām upāsate | ekatvena pṛthaktvena bahudhā viśvato-mukham ||",
+        "english_translation": "Others worship Me through knowledge, seeing Me as one or many forms.",
+        "meaning": "Different paths ultimately lead to the same divine."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अहं क्रतुरहं यज्ञः स्वधाहमहमौषधम् | मन्त्रोऽहमहमेवाज्यमहमग्निरहं हुतम् ||",
+        "transliteration": "ahaṃ kratur ahaṃ yajñaḥ svadhāham aham auṣadham | mantro 'ham aham evājyam aham agnir ahaṃ hutam ||",
+        "english_translation": "I am the ritual, the sacrifice, the offering, the mantra, the fire, and the act of offering.",
+        "meaning": "Krishna is present in every aspect of spiritual practice."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "पिताहमस्य जगतो माता धाता पितामहः | वेद्यं पवित्रमोङ्कार ऋक्साम यजुरेव च ||",
+        "transliteration": "pitāham asya jagato mātā dhātā pitāmahaḥ | vedyaṃ pavitram oṃkāra ṛk sāma yajur eva ca ||",
+        "english_translation": "I am the father, mother, sustainer, and the sacred syllable Om.",
+        "meaning": "Krishna is the origin and support of all existence."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "गतिर् भर्ता प्रभुः साक्षी निवासः शरणं सुहृत् | प्रभवः प्रलयः स्थानं निधानं बीजमव्ययम् ||",
+        "transliteration": "gatir bhartā prabhuḥ sākṣī nivāsaḥ śaraṇaṃ suhṛt | prabhavaḥ pralayaḥ sthānaṃ nidhānaṃ bījam avyayam ||",
+        "english_translation": "I am the goal, the sustainer, the witness, the refuge, and the origin and dissolution of all.",
+        "meaning": "Krishna is both the source and support of life."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तपाम्यहमहं वर्षं निगृह्णाम्युत्सृजामि च | अमृतं चैव मृत्युश्च सदसच्चाहमर्जुन ||",
+        "transliteration": "tapāmy aham ahaṃ varṣaṃ nigṛhṇāmy utsṛjāmi ca | amṛtaṃ caiva mṛtyuś ca sad asac cāham arjuna ||",
+        "english_translation": "I give heat, send rain, and am both immortality and death.",
+        "meaning": "Krishna governs all natural and existential processes."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "त्रैविद्या मां सोमपाः पूतपापा यज्ञैरिष्ट्वा स्वर्गतिं प्रार्थयन्ते | ते पुण्यमासाद्य सुरेन्द्रलोकमश्नन्ति दिव्यान्दिवि देवभोगान् ||",
+        "transliteration": "trai-vidyā māṃ soma-pāḥ pūta-pāpā yajñair iṣṭvā svarga-tiṃ prārthayante | te puṇyam āsādya surendra-lokam aśnanti divyān divi deva-bhogān ||",
+        "english_translation": "Those who perform rituals seek heaven and enjoy divine pleasures.",
+        "meaning": "Ritualistic worship leads to temporary rewards."
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ते तं भुक्त्वा स्वर्गलोकं विशालं क्षीणे पुण्ये मर्त्यलोकं विशन्ति | एवं त्रयीधर्ममनुप्रपन्ना गतागतं कामकामा लभन्ते ||",
+        "transliteration": "te taṃ bhuktvā svarga-lokaṃ viśālaṃ kṣīṇe puṇye martya-lokaṃ viśanti | evaṃ trayī-dharmam anuprapannā gatāgataṃ kāma-kāmā labhante ||",
+        "english_translation": "After enjoying heaven, they return to earth when merit is exhausted.",
+        "meaning": "Temporary gains lead to repeated cycles of birth."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते | तेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम् ||",
+        "transliteration": "ananyāś cintayanto māṃ ye janāḥ paryupāsate | teṣāṃ nityābhiyuktānāṃ yoga-kṣemaṃ vahāmy aham ||",
+        "english_translation": "Those who worship Me with devotion—I take care of their needs.",
+        "meaning": "God protects and provides for devoted souls."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "येऽप्यन्यदेवताभक्ता यजन्ते श्रद्धयान्विताः | तेऽपि मामेव कौन्तेय यजन्त्यविधिपूर्वकम् ||",
+        "transliteration": "ye 'py anya-devatā-bhaktā yajante śraddhayānvitāḥ | te 'pi mām eva kaunteya yajanty avidhi-pūrvakam ||",
+        "english_translation": "Even those who worship other gods actually worship Me, though indirectly.",
+        "meaning": "All worship ultimately reaches the divine."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अहं हि सर्वयज्ञानां भोक्ता च प्रभुरेव च | न तु मामभिजानन्ति तत्त्वेनातश्च्यवन्ति ते ||",
+        "transliteration": "ahaṃ hi sarva-yajñānāṃ bhoktā ca prabhur eva ca | na tu mām abhijānanti tattvenātaś cyavanti te ||",
+        "english_translation": "I am the enjoyer of all sacrifices, but those who do not know Me fall.",
+        "meaning": "Understanding the divine is essential."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यान्ति देवव्रता देवान्पितॄन्यान्ति पितृव्रताः | भूतानि यान्ति भूतेज्या यान्ति मद्याजिनोऽपि माम् ||",
+        "transliteration": "yānti deva-vratā devān pitṝn yānti pitṛ-vratāḥ | bhūtāni yānti bhūtejyā yānti mad-yājino 'pi mām ||",
+        "english_translation": "Worshippers of gods go to them, but My devotees come to Me.",
+        "meaning": "Devotion to Krishna leads to the highest goal."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sri Krishna",
+        "sanskrit": "पत्रं पुष्पं फलं तोयं यो मे भक्त्या प्रयच्छति | तदहं भक्त्युपहृतमश्नामि प्रयतात्मनः ||",
+        "transliteration": "patraṃ puṣpaṃ phalaṃ toyaṃ yo me bhaktyā prayacchati | tad ahaṃ bhakty-upahṛtam aśnāmi prayatātmanaḥ ||",
+        "english_translation": "Whoever offers Me a leaf, flower, fruit, or water with devotion—I accept it.",
+        "meaning": "Simple offerings with devotion are sufficient."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यत्करोषि यदश्नासि यज्जुहोषि ददासि यत् | यत्तपस्यसि कौन्तेय तत्कुरुष्व मदर्पणम् ||",
+        "transliteration": "yat karoṣi yad aśnāsi yaj juhoṣi dadāsi yat | yat tapasyasi kaunteya tat kuruṣva mad-arpaṇam ||",
+        "english_translation": "Whatever you do, offer it to Me.",
+        "meaning": "All actions should be dedicated to God."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Sri Krishna",
+        "sanskrit": "शुभाशुभफलैरेवं मोक्ष्यसे कर्मबन्धनैः | संन्यासयोगयुक्तात्मा विमुक्तो मामुपैष्यसि ||",
+        "transliteration": "śubhāśubha-phalair evaṃ mokṣyase karma-bandhanaiḥ | sannyāsa-yoga-yuktātmā vimukto mām upaiṣyasi ||",
+        "english_translation": "You will be freed from karma and reach Me.",
+        "meaning": "Surrendering actions leads to liberation."
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Sri Krishna",
+        "sanskrit": "समोऽहं सर्वभूतेषु न मे द्वेष्योऽस्ति न प्रियः | ये भजन्ति तु मां भक्त्या मयि ते तेषु चाप्यहम् ||",
+        "transliteration": "samo 'haṃ sarva-bhūteṣu na me dveṣyo 'sti na priyaḥ | ye bhajanti tu māṃ bhaktyā mayi te teṣu cāpy aham ||",
+        "english_translation": "I am equal to all, but devoted souls are in Me and I am in them.",
+        "meaning": "God is impartial but close to devotees."
+      },
+      {
+        "verseNumber": 30,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अपि चेत्सुदुराचारो भजते मामनन्यभाक् | साधुरेव स मन्तव्यः सम्यग्व्यवसितो हि सः ||",
+        "transliteration": "api cet su-durācāro bhajate mām ananya-bhāk | sādhur eva sa mantavyaḥ samyag vyavasito hi saḥ ||",
+        "english_translation": "Even a sinner who worships Me with devotion is considered righteous.",
+        "meaning": "Devotion transforms a person."
+      },
+      {
+        "verseNumber": 31,
+        "speaker": "Sri Krishna",
+        "sanskrit": "क्षिप्रं भवति धर्मात्मा शश्वच्छान्तिं निगच्छति | कौन्तेय प्रतिजानीहि न मे भक्तः प्रणश्यति ||",
+        "transliteration": "kṣipraṃ bhavati dharmātmā śaśvac-chāntiṃ nigacchati | kaunteya pratijānīhi na me bhaktaḥ praṇaśyati ||",
+        "english_translation": "My devotee quickly becomes righteous and never perishes.",
+        "meaning": "Devotion ensures spiritual protection."
+      },
+      {
+        "verseNumber": 32,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मां हि पार्थ व्यपाश्रित्य येऽपि स्यु: पापयोनयः | स्त्रियो वैश्यास्तथा शूद्रास्तेऽपि यान्ति परां गतिम् ||",
+        "transliteration": "māṃ hi pārtha vyapāśritya ye 'pi syuḥ pāpa-yonayaḥ | striyo vaiśyās tathā śūdrās te 'pi yānti parāṃ gatim ||",
+        "english_translation": "Even those of humble origin attain the supreme through devotion.",
+        "meaning": "Devotion is open to all."
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Sri Krishna",
+        "sanskrit": "किं पुनर्ब्राह्मणाः पुण्या भक्ता राजर्षयस्तथा | अनित्यमसुखं लोकमिमं प्राप्य भजस्व माम् ||",
+        "transliteration": "kiṃ punar brāhmaṇāḥ puṇyā bhaktā rājarṣayas tathā | anityam asukhaṃ lokam imaṃ prāpya bhajasva mām ||",
+        "english_translation": "This world is temporary and full of suffering; worship Me.",
+        "meaning": "Focus on the eternal, not the temporary."
+      },
+      {
+        "verseNumber": 34,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मन्मना भव मद्भक्तो मद्याजी मां नमस्कुरु | मामेवैष्यसि युक्त्वैवमात्मानं मत्परायणः ||",
+        "transliteration": "man-manā bhava mad-bhakto mad-yājī māṃ namaskuru | mām evaiṣyasi yuktvaivam ātmānaṃ mat-parāyaṇaḥ ||",
+        "english_translation": "Fix your mind on Me, be devoted, and you will surely reach Me.",
+        "meaning": "Complete devotion leads to union with the divine."
+      }
+    ]
+  }
+}

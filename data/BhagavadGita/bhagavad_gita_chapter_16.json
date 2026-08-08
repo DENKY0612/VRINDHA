@@ -1,0 +1,209 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 16,
+      "name": "Daivasura Sampad Vibhaga Yoga",
+      "englishName": "Yoga of the Division between Divine and Demoniac Qualities",
+      "description": "Krishna explains the divine (daivi) and demoniac (asuri) qualities in human beings. He highlights virtues that lead to liberation and vices that lead to bondage and suffering.",
+      "totalVerses": 24,
+      "theme": "Understanding divine and demoniac traits and their impact on spiritual progress",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Ethical and Moral Analysis Yoga"
+    },
+    "verses": [
+      {
+        "verseNumber": 1,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | अभयं सत्त्वसंशुद्धिर्ज्ञानयोगव्यवस्थितिः | दानं दमश्च यज्ञश्च स्वाध्यायस्तप आर्जवम् ||",
+        "transliteration": "śrī-bhagavān uvāca | abhayaṃ sattva-saṃśuddhir jñāna-yoga-vyavasthitiḥ | dānaṃ damaś ca yajñaś ca svādhyāyas tapa ārjavam ||",
+        "english_translation": "Fearlessness, purity of heart, steadfastness in knowledge, charity, self-control, and sincerity are divine qualities.",
+        "meaning": "Krishna begins listing divine virtues."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अहिंसा सत्यमक्रोधस्त्यागः शान्तिरपैशुनम् | दया भूतेष्वलोलुप्त्वं मार्दवं ह्रीरचापलम् ||",
+        "transliteration": "ahiṃsā satyam akrodhas tyāgaḥ śāntir apaiśunam | dayā bhūteṣv aloluptvaṃ mārdavaṃ hrīr acāpalam ||",
+        "english_translation": "Non-violence, truthfulness, absence of anger, compassion, and gentleness are divine traits.",
+        "meaning": "Moral virtues define divine nature."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तेजः क्षमा धृतिः शौचमद्रोहो नातिमानिता | भवन्ति सम्पदं दैवीमभिजातस्य भारत ||",
+        "transliteration": "tejaḥ kṣamā dhṛtiḥ śaucam adroho nātimānitā | bhavanti sampadaṃ daivīm abhijātasya bhārata ||",
+        "english_translation": "Energy, forgiveness, fortitude, purity, and humility are divine qualities.",
+        "meaning": "Divine nature includes strength with humility."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "दम्भो दर्पोऽभिमानश्च क्रोधः पारुष्यमेव च | अज्ञानं चाभिजातस्य पार्थ सम्पदमासुरीम् ||",
+        "transliteration": "dambho darpo 'bhimānaś ca krodhaḥ pāruṣyam eva ca | ajñānaṃ cābhijātasya pārtha sampadam āsurīm ||",
+        "english_translation": "Hypocrisy, arrogance, anger, harshness, and ignorance are demoniac qualities.",
+        "meaning": "Negative traits lead to downfall."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "दैवी सम्पद्विमोक्षाय निबन्धायासुरी मता | मा शुचः सम्पदं दैवीमभिजातोऽसि पाण्डव ||",
+        "transliteration": "daivī sampad vimokṣāya nibandhāyāsurī matā | mā śucaḥ sampadaṃ daivīm abhijāto 'si pāṇḍava ||",
+        "english_translation": "Divine qualities lead to liberation; demoniac qualities to bondage.",
+        "meaning": "Choose virtues for freedom."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "द्वौ भूतसर्गौ लोकेऽस्मिन्दैव आसुर एव च | दैवो विस्तरशः प्रोक्त आसुरं पार्थ मे शृणु ||",
+        "transliteration": "dvau bhūta-sargau loke 'smin daiva āsura eva ca | daivo vistaraśaḥ prokta āsuraṃ pārtha me śṛṇu ||",
+        "english_translation": "There are two types of beings: divine and demoniac.",
+        "meaning": "Human nature is dual."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रवृत्तिं च निवृत्तिं च जना न विदुरासुराः | न शौचं नापि चाचारो न सत्यं तेषु विद्यते ||",
+        "transliteration": "pravṛttiṃ ca nivṛttiṃ ca janā na vidur āsurāḥ | na śaucaṃ nāpi cācāro na satyaṃ teṣu vidyate ||",
+        "english_translation": "Demoniac people do not understand right and wrong.",
+        "meaning": "Lack of moral clarity."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "असत्यमप्रतिष्ठं ते जगदाहुरनीश्वरम् | अपरस्परसम्भूतं किमन्यत्कामहैतुकम् ||",
+        "transliteration": "asatyam apratiṣṭhaṃ te jagad āhur anīśvaram | aparaspara-sambhūtaṃ kim anyat kāma-haitukam ||",
+        "english_translation": "They say the world is without truth or God, driven only by desire.",
+        "meaning": "Materialistic worldview."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "एतां दृष्टिमवष्टभ्य नष्टात्मानोऽल्पबुद्धयः | प्रभवन्त्युग्रकर्माणः क्षयाय जगतोऽहिताः ||",
+        "transliteration": "etāṃ dṛṣṭim avaṣṭabhya naṣṭātmāno 'lpa-buddhayaḥ | prabhavanty ugra-karmāṇaḥ kṣayāya jagato 'hitāḥ ||",
+        "english_translation": "Holding such views, they engage in destructive actions.",
+        "meaning": "Wrong beliefs lead to harm."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "काममाश्रित्य दुष्पूरं दम्भमानमदान्विताः | मोहाद्गृहीत्वासद्ग्राहान्प्रवर्तन्तेऽशुचिव्रताः ||",
+        "transliteration": "kāmam āśritya duṣpūraṃ dambha-māna-madānvitāḥ | mohād gṛhītvāsad-grāhān pravartante 'śuci-vratāḥ ||",
+        "english_translation": "Driven by insatiable desire and pride, they follow impure practices.",
+        "meaning": "Desire leads to corruption."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Sri Krishna",
+        "sanskrit": "चिन्तामपरिमेयां च प्रलयान्तामुपाश्रिताः | कामोपभोगपरमा एतावदिति निश्चिताः ||",
+        "transliteration": "cintām aparimeyāṃ ca pralayāntām upāśritāḥ | kāmopabhoga-paramā etāvad iti niścitāḥ ||",
+        "english_translation": "They are consumed by endless worries and pleasure-seeking.",
+        "meaning": "Material focus causes anxiety."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आशापाशशतैर्बद्धाः कामक्रोधपरायणाः | ईहन्ते कामभोगार्थमन्यायेनार्थसञ्चयान् ||",
+        "transliteration": "āśā-pāśa-śatair baddhāḥ kāma-krodha-parāyaṇāḥ | īhante kāma-bhogārtham anyāyenārtha-sañcayān ||",
+        "english_translation": "Bound by desires and anger, they accumulate wealth unjustly.",
+        "meaning": "Attachment leads to unethical actions."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इदमद्य मया लब्धमिमं प्राप्स्ये मनोरथम् | इदमस्तीदमपि मे भविष्यति पुनर्धनम् ||",
+        "transliteration": "idam adya mayā labdham imaṃ prāpsye manoratham | idam astīdam api me bhaviṣyati punar dhanam ||",
+        "english_translation": "They think: I have gained this today and will gain more tomorrow.",
+        "meaning": "Endless greed mindset."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "असौ मया हतः शत्रुर्हनिष्ये चापरानपि | ईश्वरोऽहमहं भोगी सिद्धोऽहं बलवान्सुखी ||",
+        "transliteration": "asau mayā hataḥ śatrur haniṣye cāparān api | īśvaro 'ham ahaṃ bhogī siddho 'haṃ balavān sukhī ||",
+        "english_translation": "They think: I am powerful, I am the enjoyer, I am successful.",
+        "meaning": "Ego dominates their thinking."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आढ्योऽभिजनवानस्मि कोऽन्योऽस्ति सदृशो मया | यक्ष्ये दास्यामि मोदिष्य इत्यज्ञानविमोहिताः ||",
+        "transliteration": "āḍhyo 'bhijanavān asmi ko 'nyo 'sti sadṛśo mayā | yakṣye dāsyāmi modiṣya ity ajñāna-vimohitāḥ ||",
+        "english_translation": "They think: I am wealthy and superior; none is equal to me.",
+        "meaning": "Ignorance leads to arrogance."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अनेकचित्तविभ्रान्ता मोहजालसमावृताः | प्रसक्ताः कामभोगेषु पतन्ति नरकेऽशुचौ ||",
+        "transliteration": "aneka-citta-vibhrāntā moha-jāla-samāvṛtāḥ | prasaktāḥ kāma-bhogeṣu patanti narake 'śucau ||",
+        "english_translation": "Confused by many thoughts and trapped in delusion, they fall into impure states.",
+        "meaning": "Mental chaos leads to downfall."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आत्मसम्भाविताः स्तब्धा धनमानमदान्विताः | यजन्ते नामयज्ञैस्ते दम्भेनाविधिपूर्वकम् ||",
+        "transliteration": "ātma-sambhāvitāḥ stabdhā dhana-māna-madānvitāḥ | yajante nāma-yajñais te dambhenāvidhi-pūrvakam ||",
+        "english_translation": "Filled with pride and arrogance, they perform rituals improperly.",
+        "meaning": "Ego corrupts even religious acts."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अहंकारं बलं दर्पं कामं क्रोधं च संश्रिताः | मामात्मपरदेहेषु प्रद्विषन्तोऽभ्यसूयकाः ||",
+        "transliteration": "ahaṃkāraṃ balaṃ darpaṃ kāmaṃ krodhaṃ ca saṃśritāḥ | mām ātma-para-deheṣu pradviṣanto 'bhyasūyakāḥ ||",
+        "english_translation": "Driven by ego, power, desire, and anger, they hate the divine in others.",
+        "meaning": "Ego separates one from truth."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तानहं द्विषतः क्रूरान्संसारेषु नराधमान् | क्षिपाम्यजस्रमशुभानासुरीष्वेव योनिषु ||",
+        "transliteration": "tān ahaṃ dviṣataḥ krūrān saṃsāreṣu narādhamān | kṣipāmy ajasram aśubhān āsurīṣv eva yoniṣu ||",
+        "english_translation": "Such cruel and hateful people are repeatedly reborn in lower states.",
+        "meaning": "Negative actions lead to suffering cycles."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आसुरीं योनिमापन्ना मूढा जन्मनि जन्मनि | मामप्राप्यैव कौन्तेय ततो यान्त्यधमां गतिम् ||",
+        "transliteration": "āsurīṃ yonim āpannā mūḍhā janmani janmani | mām aprāpyaiva kaunteya tato yānty adhamāṃ gatim ||",
+        "english_translation": "Born repeatedly in demoniac conditions, they fail to reach Me.",
+        "meaning": "Ignorance blocks spiritual progress."
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Sri Krishna",
+        "sanskrit": "त्रिविधं नरकस्येदं द्वारं नाशनमात्मनः | कामः क्रोधस्तथा लोभस्तस्मादेतत्त्रयं त्यजेत् ||",
+        "transliteration": "tri-vidhaṃ narakasyedaṃ dvāraṃ nāśanam ātmanaḥ | kāmaḥ krodhas tathā lobhas tasmād etat trayaṃ tyajet ||",
+        "english_translation": "Three gates to hell are desire, anger, and greed; one must abandon them.",
+        "meaning": "Control desire, anger, and greed."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "एतैर्विमुक्तः कौन्तेय तमोद्वारैस्त्रिभिर्नरः | आचरत्यात्मनः श्रेयस्ततो याति परां गतिम् ||",
+        "transliteration": "etair vimuktaḥ kaunteya tamo-dvārais tribhir naraḥ | ācaraty ātmanaḥ śreyas tato yāti parāṃ gatim ||",
+        "english_translation": "Free from these three evils, one attains the highest good.",
+        "meaning": "Self-control leads to liberation."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यः शास्त्रविधिमुत्सृज्य वर्तते कामकारतः | न स सिद्धिमवाप्नोति न सुखं न परां गतिम् ||",
+        "transliteration": "yaḥ śāstra-vidhim utsṛjya vartate kāma-kārataḥ | na sa siddhim avāpnoti na sukhaṃ na parāṃ gatim ||",
+        "english_translation": "Ignoring scriptural guidance and acting on desire leads to failure.",
+        "meaning": "Discipline is essential."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तस्माच्छास्त्रं प्रमाणं ते कार्याकार्यव्यवस्थितौ | ज्ञात्वा शास्त्रविधानोक्तं कर्म कर्तुमिहार्हसि ||",
+        "transliteration": "tasmāc chāstraṃ pramāṇaṃ te kāryākārya-vyavasthitau | jñātvā śāstra-vidhānoktaṃ karma kartum ihārhasi ||",
+        "english_translation": "Therefore, follow scriptural guidance to determine right action.",
+        "meaning": "Wisdom comes from proper knowledge and discipline."
+      }
+    ]
+  }
+}

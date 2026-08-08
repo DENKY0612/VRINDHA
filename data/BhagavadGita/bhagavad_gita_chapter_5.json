@@ -1,0 +1,248 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 5,
+      "name": "Karma Sannyasa Yoga",
+      "englishName": "Yoga of Renunciation of Action",
+      "description": "Krishna clarifies the relationship between renunciation (Sankhya) and action (Karma Yoga), teaching that both paths ultimately lead to the same goal of liberation.  He emphasizes that true renunciation means performing action without attachment and living with a serene mind, and that action performed with this understanding is superior to passive renunciation.",
+      "totalVerses": 29,
+      "theme": "Reconciliation of renunciation and action; true renunciation means detachment in action, not withdrawal from action",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Karma Sannyasa Yoga - Yoga of Renunciation through Action"
+    },
+    "verses":  [
+      {
+        "verseNumber": 1,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | संन्यासं कर्मणां कृष्ण पुनर्योगं च शंससि | यच्छ्रेय एतयोरेकं तन्मे ब्रूहि सुनिश्चितम् ||",
+        "transliteration": "arjuna uvāca | sannyāsaṃ karmaṇāṃ kṛṣṇa punar yogaṃ cha śaṃsasi | yac chreya etayor ekaṃ tan me brūhi suniśchitam ||",
+        "englishTranslation": "Arjuna said: O Krishna, You praise renunciation of actions and again the yoga of action.   Please tell me definitively which of the two is more beneficial? ",
+        "meaning": "Arjuna seeks clarity on the apparent contradiction between Krishna's teachings on renunciation in previous chapters and His emphasis on action (karma yoga).",
+        "teachingPoint": "Arjuna asks for definitive guidance on which path is superior"
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | संन्यासः कर्मयोगश्च निःश्रेयसकरावुभौ | तयोस्तु कर्मसंन्यासात्कर्मयोगो विशिष्यते ||",
+        "transliteration": "śrībhagavān uvāca | sannyāsaḥ karmayogaścha niḥśreyasa-karāv ubhau | tayos tu karma-sannyāsāt karmayogo viśiṣyate ||",
+        "englishTranslation": "The Blessed Lord said: Both renunciation of action and the yoga of action lead to liberation. But of the two, the yoga of action is superior to renunciation.",
+        "meaning": "Krishna establishes that both paths lead to the ultimate goal, but karma yoga (action with detachment) is superior because it's more practical and complete.",
+        "teachingPoint":  "Karma yoga is superior to passive renunciation"
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Krishna",
+        "sanskrit": "ज्ञेयः स नित्यसंन्यासी यो न द्वेष्टि न काङ्क्षति | निर्द्वन्द्वो हि महाबाहो सुखं बन्धात्प्रमुच्यते ||",
+        "transliteration": "jñeyaḥ sa nitya-sannyāsī yo na dveṣṭi na kāṅkṣati | nir-dvandvo hi mahābāho sukhaṃ bandhāt pramucyate ||",
+        "englishTranslation": "One who neither hates nor desires is known to be always a renunciant.   Such a person, free from all dualities, easily overcomes material bondage and is liberated, O mighty-armed Arjuna.",
+        "meaning":  "True renunciation is not about withdrawing from the world but about maintaining equanimity—neither hating nor desiring anything.",
+        "teachingPoint": "True renunciation is a state of mind, not necessarily withdrawal from action"
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Krishna",
+        "sanskrit": "साङ्ख्ययोगौ पृथग्बालाः प्रवदन्ति न पण्डिताः | एकमप्यास्थितः सम्यगुभयोर्विन्दते फलम् ||",
+        "transliteration": "sāṅkhya-yogau pṛthag bālāḥ pravadanti na paṇḍitāḥ | ekam apy āsthitaḥ samyag ubhayor vindate phalam ||",
+        "englishTranslation": "Only the ignorant see Sankhya (analytical renunciation) and Karma Yoga as different.  The wise see them as one. He who fully practices one gets the results of both.",
+        "meaning":  "The apparent difference between renunciation and action is only in the mind of the ignorant. The wise understand they lead to the same goal.",
+        "teachingPoint": "Sankhya and Yoga are ultimately the same path"
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Krishna",
+        "sanskrit": "यत्साङ्ख्यैः प्राप्यते स्थानं तद्योगैरपि गम्यते | एकं साङ्ख्यं च योगं च यः पश्यति स पश्यति ||",
+        "transliteration": "yat sāṅkhyaiḥ prāpyate sthānaṃ tad yogair api gamyate | ekaṃ sāṅkhyaṃ cha yogaṃ cha yaḥ paśyati sa paśyati ||",
+        "englishTranslation": "The supreme state that is attained by renunciation is also attained by Karma Yoga. One who sees renunciation and Karma Yoga as one truly sees.",
+        "meaning": "Both paths lead to the same state of liberation.  Those who understand this are truly wise.",
+        "teachingPoint":  "Both renunciation and karma yoga lead to the same liberation"
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Krishna",
+        "sanskrit": "संन्यासस्तु महाबाहो दुःखमाप्तुमयोगतः | योगयुक्तो मुनिर्ब्रह्म नचिरेणाधिगच्छति ||",
+        "transliteration": "sannyāsas tu mahābāho duḥkham āptum ayogataḥ | yoga-yukto munir brahma na chireṇādhigachhati ||",
+        "englishTranslation": "True renunciation is difficult to attain without yoga, O mighty-armed one. But a sage equipped with yoga soon attains Brahman (liberation).",
+        "meaning": "Passive renunciation without spiritual discipline and yoga is difficult and unreliable.  Active yoga practice leads more quickly to liberation.",
+        "teachingPoint": "Yoga practice leads more directly to liberation than passive renunciation"
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Krishna",
+        "sanskrit": "योगयुक्तो विशुद्धात्मा विजितात्मा जितेन्द्रियः | सर्वभूतात्मभूतात्मा कुर्वन्नपि न लिप्यते ||",
+        "transliteration": "yoga-yukto viśuddh ātmā vijit ātmā jit endriyaḥ | sarva bhūt ātma bhūt ātmā kurvan api na lipyate ||",
+        "englishTranslation": "One engaged in Yoga, with a purified self, self-controlled, senses conquered, united with all beings—such a person, though performing action, is not bound.",
+        "meaning": "The yogi who has purified themselves, controlled their mind and senses, and has developed a sense of unity with all beings remains unattached even while acting.",
+        "teachingPoint": "The yogi remains free from bondage while performing action"
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Krishna",
+        "sanskrit": "नैव किंचित्करोमीति युक्तो मन्यते तत्त्वविद् | पश्यन् शृण्वन् स्पृशन् जिघ्रन् अश्नन् गच्छन् स्वपन् श्वसन् ||",
+        "transliteration": "naiva kiñchit karomi iti yukto manyate tattva-vid | paśyan śṛṇvan spṛśan jighrann aśnan gachhann svapan śvasan ||",
+        "englishTranslation": "The actual truth-knower thinks: 'I do nothing at all,' and while seeing, hearing, touching, smelling, eating, moving, sleeping, breathing, and speaking.. .",
+        "meaning": "Actions belong to the body, not the true self."        
+      },
+      {
+      "verseNumber": 9,
+      "speaker": "Sri Krishna",
+      "sanskrit": "प्रलपन्विसृजन्गृह्णन्नुन्मिषन्निमिषन्नपि | इन्द्रियाणीन्द्रियार्थेषु वर्तन्त इति धारयन् ||",
+      "transliteration": "pralapan visṛjan gṛhṇann unmiṣan nimiṣann api | indriyāṇīndriyārtheṣu vartanta iti dhārayan ||",
+      "english_translation": "Speaking, releasing, grasping—knowing that senses act on objects.",
+      "meaning": "Understanding removes attachment to actions."
+      },
+      {
+      "verseNumber": 10,
+      "speaker": "Sri Krishna",
+      "sanskrit": "ब्रह्मण्याधाय कर्माणि संगं त्यक्त्वा करोति यः | लिप्यते न स पापेन पद्मपत्रमिवाम्भसा ||",
+      "transliteration": "brahmaṇy ādhāya karmāṇi saṅgaṃ tyaktvā karoti yaḥ | lipyate na sa pāpena padma-patram ivāmbhasā ||",
+      "english_translation": "One who performs actions without attachment is unaffected by sin, like a lotus leaf untouched by water.",
+      "meaning": "Selfless action keeps one pure and free."
+      },
+      {
+      "verseNumber": 11,
+      "speaker": "Sri Krishna",
+      "sanskrit": "कायेन मनसा बुद्ध्या केवलैरिन्द्रियैरपि | योगिनः कर्म कुर्वन्ति सङ्गं त्यक्त्वात्मशुद्धये ||",
+      "transliteration": "kāyena manasā buddhyā kevalair indriyair api | yoginaḥ karma kurvanti saṅgaṃ tyaktvātma-śuddhaye ||",
+      "english_translation": "The yogis perform actions with body, mind, intellect, and senses, abandoning attachment, for self-purification.",
+      "meaning": "Actions done without attachment purify the inner self."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "युक्तः कर्मफलं त्यक्त्वा शान्तिमाप्नोति नैष्ठिकीम् | अयुक्तः कामकारेण फले सक्तो निबध्यते ||",
+        "transliteration": "yuktaḥ karma-phalaṃ tyaktvā śāntim āpnoti naiṣṭhikīm | ayuktaḥ kāma-kāreṇa phale sakto nibadhyate ||",
+        "english_translation": "The disciplined person attains peace by giving up the fruits of action, while the undisciplined person becomes bound by attachment to results.",
+        "meaning": "Detachment from results leads to peace; attachment leads to bondage."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सर्वकर्माणि मनसा संन्यस्यास्ते सुखं वशी | नवद्वारे पुरे देही नैव कुर्वन्न कारयन् ||",
+        "transliteration": "sarva-karmāṇi manasā sannyasyāste sukhaṃ vaśī | nava-dvāre pure dehī naiva kurvan na kārayan ||",
+        "english_translation": "Mentally renouncing all actions, the self-controlled one dwells happily in the body, neither acting nor causing action.",
+        "meaning": "Inner renunciation allows peace even while living in the body."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न कर्तृत्वं न कर्माणि लोकस्य सृजति प्रभुः | न कर्मफलसंयोगं स्वभावस्तु प्रवर्तते ||",
+        "transliteration": "na kartṛtvaṃ na karmāṇi lokasya sṛjati prabhuḥ | na karma-phala-saṃyogaṃ svabhāvas tu pravartate ||",
+        "english_translation": "The Supreme does not create actions or the sense of doership; nature acts according to its own qualities.",
+        "meaning": "Actions arise from nature, not the true self."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "नादत्ते कस्यचित्पापं न चैव सुकृतं विभुः | अज्ञाननेनावृतं ज्ञानं तेन मुह्यन्ति जन्तवः ||",
+        "transliteration": "nādatte kasyacit pāpaṃ na caiva sukṛtaṃ vibhuḥ | ajñānenāvṛtaṃ jñānaṃ tena muhyanti jantavaḥ ||",
+        "english_translation": "The Supreme does not accept anyone’s sin or virtue; knowledge is covered by ignorance, causing delusion.",
+        "meaning": "Ignorance hides true knowledge, leading to confusion."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ज्ञानेन तु तदज्ञानं येषां नाशितमात्मनः | तेषामादित्यवज्ज्ञानं प्रकाशयति तत्परम् ||",
+        "transliteration": "jñānena tu tad ajñānaṃ yeṣāṃ nāśitam ātmanaḥ | teṣām āditya-vaj jñānaṃ prakāśayati tat param ||",
+        "english_translation": "For those whose ignorance is destroyed by knowledge, wisdom shines like the sun, revealing the Supreme.",
+        "meaning": "True knowledge removes ignorance and reveals reality."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तद्बुद्धयस्तदात्मानस्तन्निष्ठास्तत्परायणाः | गच्छन्त्यपुनरावृत्तिं ज्ञाननिर्धूतकल्मषाः ||",
+        "transliteration": "tad-buddhayas tad-ātmānas tan-niṣṭhās tat-parāyaṇāḥ | gacchanty apunar-āvṛttiṃ jñāna-nirdhūta-kalmaṣāḥ ||",
+        "english_translation": "Those whose intellect is absorbed in the Supreme attain liberation, freed from impurities by knowledge.",
+        "meaning": "Focused awareness leads to liberation."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "विद्याविनयसम्पन्ने ब्राह्मणे गवि हस्तिनि | शुनि चैव श्वपाके च पण्डिताः समदर्शिनः ||",
+        "transliteration": "vidyā-vinaya-sampanne brāhmaṇe gavi hastini | śuni caiva śva-pāke ca paṇḍitāḥ sama-darśinaḥ ||",
+        "english_translation": "The wise see equally a learned Brahmin, a cow, an elephant, a dog, and an outcaste.",
+        "meaning": "True wisdom sees equality in all beings."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इहैव तैर्जितः सर्गो येषां साम्ये स्थितं मनः | निर्दोषं हि समं ब्रह्म तस्माद्ब्रह्मणि ते स्थिताः ||",
+        "transliteration": "ihaiva tair jitaḥ sargo yeṣāṃ sāmye sthitaṃ manaḥ | nirdoṣaṃ hi samaṃ brahma tasmād brahmaṇi te sthitāḥ ||",
+        "english_translation": "Those whose minds are established in equality conquer the world here itself.",
+        "meaning": "Seeing equality leads to spiritual realization."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न प्रहृष्येत्प्रियम्प्राप्य नोद्विजेत्प्राप्य चाप्रियम् | स्थिरबुद्धिरसम्मूढो ब्रह्मविद् ब्रह्मणि स्थितः ||",
+        "transliteration": "na prahṛṣyet priyaṃ prāpya nodvijet prāpya cāpriyam | sthira-buddhir asammūḍho brahma-vid brahmaṇi sthitaḥ ||",
+        "english_translation": "One who is not elated by pleasant experiences nor disturbed by unpleasant ones is steady in wisdom.",
+        "meaning": "Emotional balance is a sign of true realization."
+      },
+      {
+      "verseNumber": 21,
+      "speaker": "Sri Krishna",
+      "sanskrit": "बाह्यस्पर्शेष्वसक्तात्मा विन्दत्यात्मनि यत्सुखम् | स ब्रह्मयोगयुक्तात्मा सुखमक्षयमश्नुते ||",
+      "transliteration": "bāhya-sparśeṣv asaktātmā vindaty ātmani yat sukham | sa brahma-yoga-yuktātmā sukham akṣayam aśnute ||",
+      "english_translation": "One whose mind is unattached to external contacts finds happiness within; such a person enjoys eternal bliss.",
+      "meaning": "True happiness comes from within, not from external sensory pleasures."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ये हि संस्पर्शजा भोगा दुःखयोनय एव ते | आद्यन्तवन्तः कौन्तेय न तेषु रमते बुधः ||",
+        "transliteration": "ye hi saṃsparśa-jā bhogā duḥkha-yonaya eva te | ādy-anta-vantaḥ kaunteya na teṣu ramate budhaḥ ||",
+        "english_translation": "Pleasures born of contact with senses are sources of suffering; they have a beginning and an end, so the wise do not delight in them.",
+        "meaning": "Sensory pleasures are temporary and ultimately lead to dissatisfaction."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "शक्नोतीहैव यः सोढुं प्राक्शरीरविमोक्षणात् | कामक्रोधोद्भवं वेगं स युक्तः स सुखी नरः ||",
+        "transliteration": "śaknotīhaiva yaḥ soḍhuṃ prāk śarīra-vimokṣaṇāt | kāma-krodhodbhavaṃ vegaṃ sa yuktaḥ sa sukhī naraḥ ||",
+        "english_translation": "One who can control the urges of desire and anger before leaving the body is a true yogi and a happy person.",
+        "meaning": "Self-control over impulses leads to happiness and spiritual growth."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "योऽन्तःसुखोऽन्तरारामस्तथान्तर्ज्योतिरेव यः | स योगी ब्रह्मनिर्वाणं ब्रह्मभूतोऽधिगच्छति ||",
+        "transliteration": "yo ’ntaḥ-sukho ’ntar-ārāmas tathāntar-jyotir eva yaḥ | sa yogī brahma-nirvāṇaṃ brahma-bhūto ’dhigacchati ||",
+        "english_translation": "One who finds joy within, who is illuminated within, attains liberation and becomes one with Brahman.",
+        "meaning": "Inner realization leads to ultimate liberation."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Sri Krishna",
+        "sanskrit": "लभन्ते ब्रह्मनिर्वाणमृषयः क्षीणकल्मषाः | छिन्नद्वैधा यतात्मानः सर्वभूतहिते रताः ||",
+        "transliteration": "labhante brahma-nirvāṇam ṛṣayaḥ kṣīṇa-kalmaṣāḥ | chinna-dvaidhā yatātmānaḥ sarva-bhūta-hite ratāḥ ||",
+        "english_translation": "Sages whose sins are destroyed, whose doubts are resolved, and who work for the welfare of all attain liberation.",
+        "meaning": "Purity, clarity, and compassion lead to liberation."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कामक्रोधवियुक्तानां यतीनां यतचेतसाम् | अभितो ब्रह्मनिर्वाणं वर्तते विदितात्मनाम् ||",
+        "transliteration": "kāma-krodha-viyuktānāṃ yatīnām yata-cetasām | abhito brahma-nirvāṇaṃ vartate viditātmanām ||",
+        "english_translation": "For those who are free from desire and anger and who control their minds, liberation exists both here and hereafter.",
+        "meaning": "Freedom from desires and control of mind leads to liberation."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sri Krishna",
+        "sanskrit": "स्पर्शान्कृत्वा बहिर्बाह्यांश्चक्षुश्चैवान्तरे भ्रुवोः | प्राणापानौ समौ कृत्वा नासाभ्यन्तरचारिणौ ||",
+        "transliteration": "sparśān kṛtvā bahir bāhyāṃś cakṣuś caivāntare bhruvoḥ | prāṇāpānau samau kṛtvā nāsābhyantara-cāriṇau ||",
+        "english_translation": "Shutting out external contacts, fixing the gaze between the eyebrows, and regulating the breath moving within the nostrils.",
+        "meaning": "This describes meditation techniques involving sense control and breath regulation."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यतेन्द्रियमनोबुद्धिर्मुनिर्मोक्षपरायणः | विगतेच्छाभयक्रोधो यः सदा मुक्त एव सः ||",
+        "transliteration": "yatendriya-mano-buddhir munir mokṣa-parāyaṇaḥ | vigata-icchā-bhaya-krodho yaḥ sadā mukta eva saḥ ||",
+        "english_translation": "A sage who has controlled mind, senses, and intellect, and is free from desire, fear, and anger, is always liberated.",
+        "meaning": "Mastery over mind and emotions leads to constant freedom."
+      }
+    ]
+  }
+}

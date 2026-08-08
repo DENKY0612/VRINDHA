@@ -1,0 +1,396 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 1,
+      "name": "Arjuna Vishada Yoga",
+      "englishName": "Yoga of Arjuna's Despair",
+      "description": "The prelude to the epic dialogue between Lord Krishna and Arjuna on the battlefield of Kurukshetra",
+      "totalVerses": 47,
+      "theme": "Arjuna's moral and emotional crisis before the battle",
+      "speakers": [
+        "Dhritarashtra",
+        "Sanjaya",
+        "Duryodhana",
+        "Arjuna"
+      ]
+    },
+    "verses":  [
+      {
+        "verseNumber": 1,
+        "speaker": "Dhritarashtra",
+        "sanskrit": "धृतराष्ट्र उवाच | धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः | मामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय ||",
+        "transliteration":  "dhṛtarāṣṭra uvāca | dharmakṣetre kurukṣetre samavetā yuyutsavaḥ | māmakāḥ pāṇḍavāścaiva kimakurvata sañjaya ||",
+        "englishTranslation": "Dhritarashtra said: O Sanjay, assembled in the holy land of Kurukshetra and desirous of battle, what did my sons and the sons of Pandu do? ",
+        "meaning": "Dhritarashtra asks Sanjaya about what his sons and the Pandavas did when they assembled for battle on the sacred field of Kurukshetra."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sanjaya",
+        "sanskrit": "सञ्जय उवाच | दृष्ट्वा तु पाण्डवानीकं व्यूढं दुर्योधनस्तदा | आचार्यमुपसङ्गम्य राजा वचनमब्रवीत् ||",
+        "transliteration": "sañjaya uvāca | dṛṣṭvā tu pāṇḍavānīkaṃ vyūḍhaṃ duryodhanastadā | ācāryamupasaṅgamya rājā vacanamabravīt ||",
+        "englishTranslation": "Sanjay said: Observing the Pandava army arranged for battle, King Duryodhana approached his teacher and spoke these words.",
+        "meaning": "Sanjaya begins his narration by describing how Duryodhana approached his teacher after seeing the Pandava army arranged in formation."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Duryodhana",
+        "sanskrit": "पश्यैतां पाण्डुपुत्राणामाचार्य महतीं चमूम् | व्यूढां द्रुपदपुत्रेण तव शिष्येण धीमता ||",
+        "transliteration": "paśyaitāṃ pāṇḍuputrāṇāmācārya mahatīṃ chamūm | vyūḍhāṃ drupadaputreṇa tava śiṣyeṇa dhīmatā ||",
+        "englishTranslation": "Behold, O Teacher, this mighty army of the sons of Pandu, arrayed by your wise disciple, the son of Drupada.",
+        "meaning": "Duryodhana draws Dronacharya's attention to the impressive military formation of the Pandavas arranged by Dhrishtadyumna, the son of Drupada."
+      },
+      {
+        "verseNumber":  4,
+        "speaker":  "Duryodhana",
+        "sanskrit": "अत्र शूरा महेष्वासा भीमार्जुनसमा युधि | युयुधानो विराटश्च द्रुपदश्च महारथः ||",
+        "transliteration": "atra śūrā maheṣvāsā bhīmārjunasamā yudhi | yuyudhāno virāṭaśca drupadaśca mahārathaḥ ||",
+        "englishTranslation": "Here are mighty bowmen equal to Bhima and Arjuna in battle - Yuyudhana, Virata, and the great warrior Drupada.",
+        "meaning":  "Duryodhana lists the skilled warriors on the Pandava side who possess great strength and archery skills."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Duryodhana",
+        "sanskrit": "धृष्टकेतुश्चेकितानः काशिराजश्च वीर्यवान् | पुरुजित्कुन्तिभोजश्च शैब्यश्च नरपुंगवः ||",
+        "transliteration": "dhṛṣṭaketuścekitānaḥ kāśirājaśca vīryavān | purujitkuntibhojaśca śaibyaśca narapuṃgavaḥ ||",
+        "englishTranslation": "Dhrishtaketu, Cekitana, the valiant King of Kashi, Purujit, Kuntibhoja, and Shaibya the best of men.",
+        "meaning": "Duryodhana continues listing more mighty warriors and kings among the Pandava forces."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Duryodhana",
+        "sanskrit": "युधामन्युश्च विक्रान्त उत्तमौजाश्च वीर्यवान् | सौभद्रो द्रौपदेयाश्च सर्व एव महारथाः ||",
+        "transliteration": "yudhāmanyuśca vikrānta uttamaujāśca vīryavān | saubhadro draupadeyāśca sarva eva mahārathāḥ ||",
+        "englishTranslation":  "Yudhamanyu the courageous, Uttamaujas the powerful, Subhadra's son, and the sons of Draupadi - all are great warriors.",
+        "meaning": "Duryodhana mentions more of the Pandava army including Abhimanyu (Subhadra's son) and the five sons of Draupadi."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Duryodhana",
+        "sanskrit": "अस्माकं तु विशिष्टा ये तान्निबोध द्विजसत्तम | नायका मम सैन्यस्य संज्ञार्थं तान्ब्रवीमि ते ||",
+        "transliteration": "asmākaṃ tu viśiṣṭā ye tānnibudha dvijasat́tama | nāykā mama sainysya | samjñārthaṃ tānbravīmi te ||",
+        "englishTranslation": "But listen, O best of the twice-born, to the names of our distinguished commanders - I shall name them to make you know.",
+        "meaning": "Duryodhana now turns to describe the commanders of his own army to impress Drona with the strength of his forces."
+      },
+      {
+        "verseNumber":  8,
+        "speaker":  "Duryodhana",
+        "sanskrit": "भवान्भीष्मश्च कर्णश्च कृपश्च समितिञ्जयः | अश्वत्थामा विकर्णश्च सौमदत्तिस्तथैव च ||",
+        "transliteration": "bhavānbhīṣmaśca karṇaśca kṛpaśca samitijñayaḥ | aśvatthāmā vikarṇaśca saumadatistathāiva ca ||",
+        "englishTranslation": "Yourself, Bhishma, Karna, Kripa - the victor in battles, Ashwatthama, Vikarna, and also Somadatta.",
+        "meaning": "Duryodhana lists the commanders of his own army including his uncle Bhishma, Karna, Drona, and others."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Duryodhana",
+        "sanskrit": "अन्ये च बहवः शूरा मदर्थे त्यक्तजीविताः | नानाशस्त्रप्रहरणाः सर्वे युद्धविशारदाः ||",
+        "transliteration": "anye ca bahavaḥ śūrā madarthe tyaktajīvitāḥ | nānāśastrapraharaṇāḥ sarve yuddhaviśāradāḥ ||",
+        "englishTranslation": "There are many other brave warriors ready to die for me, armed with various weapons and all experienced in warfare.",
+        "meaning": "Duryodhana emphasizes that his army has many other skilled warriors dedicated to his cause."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Duryodhana",
+        "sanskrit": "अपर्याप्तं तदस्माकं बलं भीष्मा भिरक्षितम् | पर्याप्तं त्विदमेतेषां बलं भीमा भिरक्षितम् ||",
+        "transliteration": "aparyāptaṃ tadasmākaṃ balaṃ bhīṣmā bhirakṣitam | paryāptaṃ tvidemet́eṣāṃ balaṃ bhīmā bhirakṣitam ||",
+        "englishTranslation": "Our army protected by Bhishma is unlimited, while the army of the Pandavas protected by Bhima is limited.",
+        "meaning": "Duryodhana expresses confidence that his forces under Bhishma are far superior to the Pandava forces."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Duryodhana",
+        "sanskrit": "अयनेषु च सर्वेषु यथाभागमवस्थिताः | भीष्ममेवाभिरक्षन्तु भवन्तः सर्व एव हि ||",
+        "transliteration": "ayaneṣu ca sarveṣu yathābhāgamavasthatāḥ | bhīṣmamevābhirakṣantu bhavantaḥ sarva eva hi ||",
+        "englishTranslation": "Therefore, all of you stationed at your respective positions on all fronts, protect Bhishma with all your might.",
+        "meaning": "Duryodhana instructs his commanders to position themselves strategically and provide strong defense at all points, especially to protect Bhishma."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sanjaya",
+        "sanskrit": "तस्य सञ्जनयन्हर्षं कुरुवृद्धः पितामहः | सिंहनादं विनद्योच्चैः शङ्खं दध्मौ प्रतापवान् ||",
+        "transliteration": "tasya sañjanayan harṣaṃ kuruvṛddhaḥ pitāmahaḥ | siṃhanādaṃ vinadyoccaiḥ śaṅkhaṃ dadhmau pratāpavān ||",
+        "englishTranslation": "To inspire Duryodhana, the great Kaurava patriarch Bhishma, roaring like a lion, blew his conch shell loudly and powerfully.",
+        "meaning": "Sanjaya describes how Bhishma, the elder of the Kaurava clan, boosted Duryodhana's morale by sounding his conch with a mighty roar."
+      },
+      {
+        "verseNumber":  13,
+        "speaker":  "Sanjaya",
+        "sanskrit": "तत:  शङ्खाश्च भेर्यश्च पणवानकगोमुखाः | सहसैवाभ्यहन्यन्त स शब्दस्तुमुलो अभवत् ||",
+        "transliteration": "tataḥ śaṅkhāśca bheryaśca paṇavānakagomukhāḥ | sahasaivābhyahanyanta sa śabdastumuló abhavat ||",
+        "englishTranslation": "Thereupon, conches, kettledrums, cymbals, and war horns sounded simultaneously, and the sound was tumultuous.",
+        "meaning":  "Sanjaya describes the grand military display as various musical instruments of war are sounded together, creating a tremendous noise."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sanjaya",
+        "sanskrit": "तत: श्वेतैर्हयैर्युक्ते महति स्यन्दने स्थितौ | माधवः पाण्डवश्चैव दिव्यौ शङ्खौ प्रदध्मतुः ||",
+        "transliteration": "tataḥ śvetairhayairyukte mahati syandane sthitau | mādhavaḥ pāṇḍavaścaiva divyau śaṅkhau pradadhmatuḥ ||",
+        "englishTranslation": "Then Lord Krishna and Arjuna, seated in their magnificent chariot drawn by white horses, blew their divine conches.",
+        "meaning": "Sanjaya describes the divine chariot of Krishna and Arjuna, drawn by white horses, from which they sound their conches."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sanjaya",
+        "sanskrit": "पाञ्चजन्यं हृषीकेशो देवदत्तं धनञ्जयः | पौण्ड्रं दध्मौ महाशङ्खं भीमकर्मा वृकोदरः ||",
+        "transliteration": "pāñchajanyaṃ hṛṣīkeśo devadattaṃ dhana janyaḥ | pauṇḍraṃ dadhmau mahāśaṅkhaṃ bhīmakaramā vṛkodraḥ ||",
+        "englishTranslation": "Lord Krishna blew his conch Panchjanya, Arjuna blew his conch Devadatta, and Bhima blew the great conch Paundra.",
+        "meaning": "Sanjaya details which famous Pandava leader sounded which conch - Krishna with Panchjanya, Arjuna with Devadatta, and Bhima with Paundra."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sanjaya",
+        "sanskrit": "अनन्तविजयं राजा कुन्तीपुत्रो युधिष्ठिरः | नकुलः सहदेवश्च सुघोषमणिपुष्पकौ ||",
+        "transliteration": "anantavijayaṃ rājā kuntīputro yudhiṣṭhiraḥ | nakulaḥ sahadevaśca sughośamaṇipuṣpakau ||",
+        "englishTranslation": "King Yudhishthira blew his conch Anantavijaya, while Nakul and Sahadeva blew their conches Sughosh and Manipushpak.",
+        "meaning": "Sanjaya describes the conches blown by the other Pandava leaders including the Pandava king Yudhishthira and his brothers."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sanjaya",
+        "sanskrit": "काश्यश्च परमेष्वासः शिखण्डी च महारथः | धृष्टद्युम्नो विराटश्च सात्यकिश्चापराजितः ||",
+        "transliteration": "kāśyaśca parameṣvāsaḥ śikhaṇḍī ca mahārathaḥ | dhṛṣṭadyumno virāṭaśca sātyakiścāparājitaḥ ||",
+        "englishTranslation":  "The King of Kashi, the great warrior Shikhandi, Dhrishtadyumna, Virata, and the invincible Satyaki also blew their conches.",
+        "meaning": "Sanjaya continues listing other important Pandava allies who sounded their conches."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sanjaya",
+        "sanskrit": "द्रुपदो द्रौपदेयाश्च सर्वशः पृथिवीपते | सौभद्रश्च महाबाहुः शङ्खान्ददध्मु पृथक् पृथक् ||",
+        "transliteration": "drupado draupadeyāśca sarvaśaḥ pṛthivīpate | saubhradaśca mahābāhuḥ śaṅkhānda dadhaṃ pṛthak pṛthak ||",
+        "englishTranslation": "O King, Drupada and his sons, and the mighty-armed Abhimanyu, all sounded their respective conches separately.",
+        "meaning": "Sanjaya describes how Drupada, the father of Draupadi, his grandsons (the Pandavas' children), and Abhimanyu each sounded their conches."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sanjaya",
+        "sanskrit": "स घोषो धार्तराष्ट्राणां हृदयानि व्यदारयत् | नभश्च पृथिवीं चैव तुमुलो व्यनुनादयन् ||",
+        "transliteration": "sa ghoṣo dhārtarāṣṭrāṇāṃ hṛdayāni vyadārayat | nabhśca pṛthivīṃ caiva tumulo vyanunādin ||",
+        "englishTranslation": "That tumultuous sound pierced the hearts of Dhritarashtra's sons and reverberated through the earth and sky.",
+        "meaning": "Sanjaya describes the effect of this great sound on Duryodhana's forces - it terrified them as it echoed across land and sky."
+      },
+      {
+        "verseNumber":  20,
+        "speaker":  "Sanjaya",
+        "sanskrit": "अथ व्यवस्थितान्दृष्ट्वा धार्तराष्ट्रान्कपिध्वजः | प्रवृत्ते शस्त्रसम्पाते धनुरुद्यम्य पाण्डवः ||",
+        "transliteration": "atha vyavasthitān dṛṣṭvā dhārtarāṣṭrān kapidhvajaḥ | pravṛtte śastrasampāte dhanurut́yamya pāṇḍavaḥ ||",
+        "englishTranslation": "Seeing the sons of Dhritarashtra standing arrayed, and when the shower of arrows had begun, Arjuna whose flag bore the emblem of the monkey took up his bow.",
+        "meaning": "Sanjaya describes how Arjuna, seeing the Kaurava army arranged and ready for battle, picked up his bow to begin the fight."
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Sanjaya",
+        "sanskrit": "तत:  शंकरं भगवान् वाक्यं इदं अब्रवीत् | प्रेक्ष्य पाण्डवानीकंव्यूढं दुर्योधनस्तदा ||",
+        "transliteration": "tataḥ śaṅkaraṃ bhagavān vākyaṃ idaṃ abravīt | prekṣya pāṇḍavānīkam vyūḍhaṃ duryodhanastadā ||",
+        "englishTranslation": "The Lord spoke to Arjuna after observing the Pandava army arrayed for battle.",
+        "meaning": "Sanjaya introduces Krishna's intervention by noting that the Lord observed the armies and prepared to speak to Arjuna."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sanjaya",
+        "sanskrit": "अर्जुन उवाच | सेनयोरुभयोर्मध्ये रथं स्थापय मेच्युत ||",
+        "transliteration":  "arjuna uvāca | senayorubhayormadhye rathaṃ sthāpaya mechyuta ||",
+        "englishTranslation": "Arjuna said: O Krishna, place my chariot between the two armies so that I can observe these warriors who desire to fight.",
+        "meaning":  "Arjuna requests Krishna to position the chariot in the middle of the battlefield so he can examine both armies before the battle begins."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Arjuna",
+        "sanskrit": "यावदेतान्निरीक्षेऽहं योद्धुकामानवस्थितान् | कैर्मया सह योद्धव्यमस्मिन्रणसमुद्यमे ||",
+        "transliteration": "yāvadetiān nirīkṣe'haṃ yoddhukāmānavasthitān | kair maya saha yoddhavyamasmín raṇasamudyame ||",
+        "englishTranslation": "I wish to see those who desire to fight me and are here for battle.  I want to know with whom I have to engage in this struggle.",
+        "meaning": "Arjuna expresses his desire to survey the warriors before engaging in battle."
+      },
+      {
+        "verseNumber":  24,
+        "speaker":  "Sanjaya",
+        "sanskrit": "एवमुक्तो हृषीकेशो गुडाकेशेन भारत | सेनयोरुभयोर्मध्ये स्थापयित्वा रथोत्तमम् ||",
+        "transliteration": "evamukto hṛṣīkeśo gudākeśena bhārata | senayorubhayormadhye sthāpayitvā rathottamam ||",
+        "englishTranslation": "Thus addressed by Arjuna, O Bharat, Krishna placed the magnificent chariot between the two armies.",
+        "meaning": "Sanjaya describes how Krishna complies with Arjuna's request and positions the chariot between the armies."
+      },
+      {
+        "verseNumber":  25,
+        "speaker":  "Sanjaya",
+        "sanskrit": "भीष्मद्रोणप्रमुखतः सर्वेषां च महीक्षिताम् | उवाच पार्थ पश्यैतान्समवेतान्कुरून्इति ||",
+        "transliteration": "bhīṣmadroṇapramukhataḥ sarveṣāṃ ca mahīkṣitām | uvāca pārtha paśyaitān samavitān kurūn iti ||",
+        "englishTranslation": "In front of Bhishma, Drona and all the other kings of the earth, Krishna said to Arjuna: 'O Partha, see how the Kurus are assembled.'",
+        "meaning": "Sanjaya describes Krishna pointing out the Kaurava forces to Arjuna, with all the great generals and kings visible."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sanjaya",
+        "sanskrit": "तत्रापश्यत्स्थितान्पार्थः पितृन्अथ पितामहान् | आच���र्यान्मातुलान्भ्रातृन्पुत्रान्पौत्रान्सखींस्तथा ||",
+        "transliteration": "tatrāpaśyat sthitān pārthaḥ pitṛn atha pitāmahān | āchāryān mātulan bhrātṛn putrān pautrān sakhīns tathā ||",
+        "englishTranslation": "Arjuna saw arrayed there his fathers, grandfathers, teachers, maternal uncles, brothers, sons, grandsons and friends.",
+        "meaning": "Sanjaya describes how Arjuna saw all his relatives and friends standing in the enemy formation, which causes his emotional disturbance."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sanjaya",
+        "sanskrit": "सौहृदान्सर्वान्पश्यन्स कृपया परयाविष्टः | दुःखितो विषीदन्नइदं वचनमब्रवीत् ||",
+        "transliteration": "sauhṛdān sarvān paśyan sa kṛpayā parayāviṣṭḥ | duḥkhito viṣīdann idaṃ vacanamabravīt ||",
+        "englishTranslation": "Seeing all his friends and relatives assembled, Arjuna was overwhelmed with great pity and spoke despondently.",
+        "meaning": "Sanjaya describes Arjuna's emotional breakdown upon seeing his loved ones arrayed as enemies."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | दृष्ट्वेमं स्वजनं कृष्ण यायातो व्यथितं मनः ||",
+        "transliteration": "arjuna uvāca | dṛṣṭvemam svajanaṃ kṛṣṇa yāyāto vyathitaṃ manaḥ ||",
+        "englishTranslation": "Arjuna said: O Krishna, seeing my kinsmen arrayed for battle, I feel my limbs quail, my mouth is parched.",
+        "meaning": "Arjuna expresses his physical and emotional distress at the prospect of fighting his own family members."
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Arjuna",
+        "sanskrit": "वेपथुश्च शरीरे मे रोमहर्षश्च जायते | गाण्डीवं स्रंसते हस्तात्त्वक्चैव परिदह्यते ||",
+        "transliteration": "vepathuśca śarīre me romaharsaśca jāyate | gāṇḍīvaṃ sraṃsate hastāt tvacaiva paridahyate ||",
+        "englishTranslation": "My body quivers, my hair stands on end, my Gandiva bow slips from my hand, and my skin is burning.",
+        "meaning": "Arjuna describes his physical symptoms of extreme distress - trembling, hair standing on end, losing grip on his bow, and burning sensation on his skin."
+      },
+      {
+        "verseNumber":  30,
+        "speaker":  "Arjuna",
+        "sanskrit": "न च शक्नोम्यवस्थातुं भ्रमतीव च मे मनः | निमित्तानि च पश्यामि विपरीतानि केशव ||",
+        "transliteration": "na ca śaknomyavasthātuṃ bhramtīva ca me manaḥ | nimittāni ca paśyāmi viparītāni keśava ||",
+        "englishTranslation": "I cannot stand firm, my mind is reeling, and O Krishna, I see omens that are all unfavorable.",
+        "meaning":  "Arjuna expresses his inability to stand and his seeing of bad omens for the battle ahead."
+      },
+      {
+        "verseNumber": 31,
+        "speaker": "Arjuna",
+        "sanskrit": "न कामये विजयं कृष्ण न च राज्यं सुखानि च | किं नो राज्येन गोविन्द किं भोगैर्जीविताय वा ||",
+        "transliteration": "na kāmaye vijayaṃ kṛṣṇa na ca rājyaṃ sukhāni ca | kiṃ no rājyena govinda kiṃ bhogairjīvitāya vā ||",
+        "englishTranslation": "I do not desire victory, O Krishna, nor kingdom nor pleasures.  What use is a kingdom to us, or enjoyments or even life itself?",
+        "meaning":  "Arjuna questions the purpose of fighting for kingdom and pleasure when it involves killing his own relatives."
+      },
+      {
+        "verseNumber": 32,
+        "speaker": "Arjuna",
+        "sanskrit": "येषामर्थे काङ्क्षितं नो राज्यं भोगाः सुखानि च | त इमे अवस्थिता युद्धे प्राणांस्त्यक्त्वा धनानि च ||",
+        "transliteration": "yeṣāmarthe kāṅkṣitaṃ no rājyaṃ bhogāḥ sukhāni ca | ta ime avasthitā yudhe prāṇāṃs tyaktvā dhanāni ca ||",
+        "englishTranslation": "For the sake of whom we desired this kingdom and its pleasures, they stand here in battle having forsaken life and wealth.",
+        "meaning": "Arjuna points out the irony that those for whom they fought for kingdom and pleasures are now ready to sacrifice their lives."
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Arjuna",
+        "sanskrit": "आचार्याः पितरः पुत्राः तथैव च पितामहाः | मातुलाः श्वशुराः पौत्राः श्यालाः समृते परः ||",
+        "transliteration": "ācāryāḥ pitaraḥ putrāḥ tathāiva ca pitāmahāḥ | mātulaḥ śvaśurāḥ pautrāḥ śyālāḥ samṛte paraḥ ||",
+        "englishTranslation": "Here are teachers, fathers, sons, and also grandfathers, maternal uncles, fathers-in-law, grandsons, brothers-in-law, and relatives.",
+        "meaning": "Arjuna lists all the family relations present in the enemy army, emphasizing the bonds of kinship he would break by fighting."
+      },
+      {
+        "verseNumber": 34,
+        "speaker": "Arjuna",
+        "sanskrit": "न कृत्वा रक्षणं हन्स्यामि घ्नतोऽपि मधुसूदन | इह लोके परलोके च न मे श्रेयः स्याद् उभयोः ||",
+        "transliteration": "na kṛtvā rakṣaṇaṃ hanyāmi ghnato'pi madhusūdana | iha loke paraloke ca na me śreyaḥ syād ubhayoḥ ||",
+        "englishTranslation": "Even if they kill me, O Madhusudana, I shall not kill them. This brings me no good in this world or hereafter.",
+        "meaning":  "Arjuna declares that he will not kill even if killed in return, as it serves no purpose in this world or the next."
+      },
+      {
+        "verseNumber":  35,
+        "speaker":  "Arjuna",
+        "sanskrit": "किं घ्नता प्राप्स्यामहं कृष्ण न त्वेव स्यादुपप्लुतम् | निहत्य धार्तराष्ट्रान्नः का प्रीतिः स्याद्जनार्दन ||",
+        "transliteration": "kiṃ ghnātā prāpsyāmahaṃ kṛṣṇa na tveva syādupaplyutam | nihatya dhārtarāṣṭrān naḥ kā prītiḥ syāj janārdana ||",
+        "englishTranslation": "What good can come from killing the sons of Dhritarashtra, O Krishna? How can we be happy after slaying them?",
+        "meaning": "Arjuna questions the benefit of killing the Kauravas and achieving victory when it will only bring sorrow."
+      },
+      {
+        "verseNumber": 36,
+        "speaker": "Arjuna",
+        "sanskrit": "यद्यप्येते न पश्यन्ति लोभोपहतचेतसः | कुलक्षयकृतं दोषं मित्रद्रोहे च पातकम् ||",
+        "transliteration": "yadvyapyete na paśyanti lobhophatacetasaḥ | kulakṣayakṛtaṃ doṣaṃ mitradrohe ca pātakam ||",
+        "englishTranslation": "Though they, blinded by greed, see no sin in destroying the family and no wrong in betraying friends, how can we fail to see the evil in this?",
+        "meaning":  "Arjuna argues that even though the Kauravas don't recognize the sin of family destruction and treachery, Krishna and he should understand these wrongs."
+      },
+      {
+        "verseNumber": 37,
+        "speaker": "Arjuna",
+        "sanskrit": "कुलक्षये प्रणश्यन्ति कुलधर्माः सनातनाः | धर्मे नष्टे कुलं कृत्स्नमधर्मोऽभिभवत्युत ||",
+        "transliteration": "kulakṣaye praṇaśyanti kuladharmāḥ sanātanāḥ | dharme naṣṭe kulaṃ kṛtsnam adharmó abhibhavty uta ||",
+        "englishTranslation": "With the destruction of family, the eternal family traditions are destroyed, and when righteousness is ruined, unrighteousness prevails.",
+        "meaning": "Arjuna explains that the destruction of family leads to the destruction of eternal dharma (righteousness) and the rise of adharma (unrighteousness)."
+      },
+      {
+        "verseNumber": 38,
+        "speaker": "Arjuna",
+        "sanskrit": "अधर्माभिभवात्कृष्ण प्रदुष्यन्ति कुलस्त्रियः | स्त्रीषु दुष्टासु वार्ष्णेय जायते वर्णसङ्करः ||",
+        "transliteration": "adharmābhibhavāt kṛṣṇa pradushyanti kulastriyaḥ | strīṣu dustāsu vārṣṇeya jāyate varṇasaṅkaraḥ ||",
+        "englishTranslation": "When unrighteousness prevails, O Krishna, the women of the family become corrupt, and from the corruption of women, O Vrisni, comes confusion of castes.",
+        "meaning": "Arjuna describes the social consequences of unrighteousness - the corruption of women and the resulting confusion of family lineages."
+      },
+      {
+        "verseNumber": 39,
+        "speaker": "Arjuna",
+        "sanskrit": "सङ्करो नरकायैव कुलघ्नानां कुलस्य च | पतन्ति पितरो ह्यर्षहि पिण्डोदकक्रियाविः ||",
+        "transliteration": "saṅkaro narakāyaiva kulaghnānāṃ kulasya ca | patanti pitaro hyarsahi piṇḍodakakriyāviḥ ||",
+        "englishTranslation": "Caste confusion brings hell to the family and to those who destroy the family.  The ancestors fall from grace lacking the offerings of rice and water.",
+        "meaning": "Arjuna explains the spiritual consequences - caste confusion leads to hell, and ancestors lose their peace without proper funeral rites."
+      },
+      {
+        "verseNumber":  40,
+        "speaker":  "Arjuna",
+        "sanskrit": "दोषैरेतैः कुलघ्नानां वर्णसङ्करकारकैः | उत्साद्यन्ते जातिधर्माः कुलधर्माश्च शाश्वताः ||",
+        "transliteration": "doṣair etaiḥ kulaghnānāṃ varṇasaṅkarakārakaiḥ | utsādyante jātidharmāḥ kuladharmāśca śāśvatāḥ ||",
+        "englishTranslation": "By these evil deeds of the family-slayers, which lead to confusion of castes, the eternal laws of family and caste are destroyed.",
+        "meaning": "Arjuna emphasizes that family destruction causes the permanent loss of eternal family and social laws."
+      },
+      {
+        "verseNumber": 41,
+        "speaker": "Arjuna",
+        "sanskrit": "उत्सन्नकुलधर्माणां मनुष्याणां जनार्दन | नरकेऽनियतः कालो भवतीत्यनुशुश्रुम ||",
+        "transliteration": "utsannakuladharmāṇāṃ manuṣyāṇāṃ janārdana | narke'niyataḥ kālo bhavatītyanuśuśruma ||",
+        "englishTranslation": "O Janardana, we have heard that those men of a destroyed family dwell in hell for an indefinite period.",
+        "meaning": "Arjuna references the scriptures that say those responsible for family destruction go to hell for an indefinite time."
+      },
+      {
+        "verseNumber": 42,
+        "speaker": "Arjuna",
+        "sanskrit": "अहो बत महत्पापं कर्तुं व्यवसिता वयम् | यद्राज्यसुखलोभेन हन्तुं स्वजनमुद्यताः ||",
+        "transliteration": "aho bata mahat pāpaṃ kartuṃ vyavasitā vayam | yad rājyasukhalobhena hantuṃ svajanam udyatāḥ ||",
+        "englishTranslation": "Alas!  We have resolved to commit a great sin - driven by desire for kingdom and pleasures to kill our own relatives.",
+        "meaning": "Arjuna expresses dismay at the graveness of the sin he and the Pandavas are about to commit."
+      },
+      {
+        "verseNumber":  43,
+        "speaker":  "Arjuna",
+        "sanskrit": "यदि माम् अप्रतीकारम् अशस्त्रं शस्त्रपाणयः | धार्तराष्ट्रा रणे हन्युः तन्मे क्षेमतरं भवेत् ||",
+        "transliteration": "yadi mām apratīkāram aśastram śastrapāṇayaḥ | dhārtarāṣṭrā raṇe hanyuḥ tanme kṣemataraṃ bhavet ||",
+        "englishTranslation": "Better would it be if the armed sons of Dhritarashtra killed me in battle while I remain unresisting and unarmed.",
+        "meaning":  "Arjuna expresses his preference to be killed without fighting rather than to kill his own kinsmen."
+      },
+      {
+        "verseNumber": 44,
+        "speaker": "Sanjaya",
+        "sanskrit": "एवमुक्त्वार्जुनः संख्ये रथोपस्थ उपाविशत् | विसृज्य सशरं चापं शोकसंविग्नमानसः ||",
+        "transliteration": "evam uktvārjunaḥ samkhye rathopastha upāviśat | visṛjya śaśaraṃ cāpaṃ śokasaṃvignamānasaḥ ||",
+        "englishTranslation":  "Having thus spoken in the battle, Arjuna sat down on the chariot, his mind overpowered by sorrow, casting aside his bow and arrows.",
+        "meaning":  "Sanjaya describes how Arjuna, overwhelmed with grief, puts down his bow and sits in the chariot, unable to continue the battle."
+      },
+      {
+        "verseNumber": 45,
+        "speaker": "Sanjaya",
+        "sanskrit": "तं तथा कृपयाविष्टम् अश्रुपूर्णाकुलेक्षणम् | विषीदन्तं इदं वाक्यं उवाच मधुसूदनः ||",
+        "transliteration": "taṃ tathā kṛpayāviṣṭam aśrupūrṇākulekṣaṇam | viṣīdantaṃ idaṃ vākyaṃ uvāca madhusūdanaḥ ||",
+        "englishTranslation": "Upon seeing Arjuna full of compassion, overwhelmed with sorrow, his eyes filled with tears, Krishna spoke to him these words.",
+        "meaning": "Sanjaya describes how Krishna observes Arjuna's despair and decides to address him, which marks the beginning of Krishna's teachings."
+      },
+      {
+        "verseNumber": 46,
+        "speaker": "Sanjaya",
+        "sanskrit": "भगवान् उवाच | कुतस्त्वा कश्मलमिदं विषमे समुपस्थितम् | अनार्यजुष्टम् अस्वर्ग्यम् अकीर्तिकरम् अर्जुन ||",
+        "transliteration": "bhagavān uvāca | kutastv kāśmalam idaṃ viṣame samupasthitam | anāryajuṣṭam asvargyam akīrtikaram arjuna ||",
+        "englishTranslation": "The Blessed Lord said:  Arjuna, how has this delusion come upon you in this hour of crisis? This is not the path of the noble; it does not lead to heaven and brings infamy.",
+        "meaning": "Krishna begins his teaching by questioning Arjuna's weakness and reminding him of his duty as a warrior, setting up for the deeper teachings to come."
+      },
+      {
+        "verseNumber": 47,
+        "speaker": "Krishna",
+        "sanskrit": "क्लैब्यं मा स्म गमः पार्थ नैतत्त्वय्युपपद्यते | क्षुद्रं हृदयदौर्बल्यं त्यक्त्वोत्तिष्ठ परंतप ||",
+        "transliteration":  "klaibyaṃ mā sma gamaḥ pārtha naitat tvayy upapadyate | kṣudraṃ hṛdayadaurbalyaṃ tyaktvottiṣṭha parantapa ||",
+        "englishTranslation": "Do not yield to cowardice, O Partha. This does not become you. Rise up and shake off this petty weakness of heart.  Arise, O vanquisher of enemies!",
+        "meaning": "Krishna concludes Chapter 1 with a powerful call to action, urging Arjuna to abandon his weaknesses and remember his warrior duty, leading into Chapter 2's teachings."
+      }
+    ]
+  }
+}

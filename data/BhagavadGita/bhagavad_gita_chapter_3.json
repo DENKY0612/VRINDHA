@@ -1,0 +1,361 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 3,
+      "name": "Karma Yoga",
+      "englishName": "Yoga of Action and Duty",
+      "description": "Krishna teaches Arjuna about the yoga of action (Karma Yoga), explaining that action is superior to inaction, and that one should perform their prescribed duties without attachment to the fruits of action.  He also discusses the role of natural inclinations (gunas) and desire.",
+      "totalVerses": 43,
+      "theme": "The path to liberation through selfless action and fulfillment of duty",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Karma Yoga - Yoga of Action"
+    },
+    "verses":  [
+      {
+      "verseNumber": 1,
+      "speaker": "Arjuna",
+      "sanskrit": "अर्जुन उवाच | ज्यायसी चेत्कर्मणस्ते मता बुद्धिर्जनार्दन | तत्किं कर्मणि घोरे मां नियोजयसि केशव ||",
+      "transliteration": "arjuna uvāca | jyāyasī cet karmaṇas te matā buddhir janārdana | tat kiṃ karmaṇi ghore māṃ niyojayasi keśava ||",
+      "english_translation": "Arjuna said: If you think knowledge is superior to action, O Krishna, why do you ask me to engage in this terrible action?",
+      "meaning": "Arjuna is confused about whether knowledge or action is the better path."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Arjuna",
+        "sanskrit": "व्यामिश्रेणेव वाक्येन बुद्धिं मोहयसीव मे | तदेकं वद निश्चित्य येन श्रेयोऽहमाप्नुयाम् ||",
+        "transliteration": "vyāmiśreṇeva vākyena buddhiṃ mohayasīva me | tad ekaṃ vada niścitya yena śreyo 'ham āpnuyām ||",
+        "english_translation": "Your words seem to confuse me; please tell me clearly what is best for me.",
+        "meaning": "Arjuna seeks a clear and decisive path."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | लोकेऽस्मिन्द्विविधा निष्ठा पुरा प्रोक्ता मयानघ | ज्ञानयोगेन सांख्यानां कर्मयोगेन योगिनाम् ||",
+        "transliteration": "śrī-bhagavān uvāca | loke 'smin dvi-vidhā niṣṭhā purā proktā mayānagha | jñāna-yogena sāṅkhyānāṃ karma-yogena yoginām ||",
+        "english_translation": "The Blessed Lord said: There are two paths—knowledge for the contemplative and action for the active.",
+        "meaning": "Krishna explains that both knowledge and action are valid spiritual paths."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न कर्मणामनारम्भान्नैष्कर्म्यं पुरुषोऽश्नुते | न च संन्यसनादेव सिद्धिं समधिगच्छति ||",
+        "transliteration": "na karmaṇām anārambhān naiṣkarmyaṃ puruṣo 'śnute | na ca sannyasanād eva siddhiṃ samadhigacchati ||",
+        "english_translation": "One cannot attain freedom from action by merely abstaining from work, nor by renunciation alone.",
+        "meaning": "Avoiding action does not lead to liberation."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न हि कश्चित्क्षणमपि जातु तिष्ठत्यकर्मकृत् | कार्यते ह्यवशः कर्म सर्वः प्रकृतिजैर्गुणैः ||",
+        "transliteration": "na hi kaścit kṣaṇam api jātu tiṣṭhaty akarma-kṛt | kāryate hy avaśaḥ karma sarvaḥ prakṛti-jair guṇaiḥ ||",
+        "english_translation": "No one can remain inactive even for a moment; everyone is driven to act by nature.",
+        "meaning": "Action is unavoidable due to natural tendencies."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कर्मेन्द्रियाणि संयम्य य आस्ते मनसा स्मरन् | इन्द्रियार्थान्विमूढात्मा मिथ्याचारः स उच्यते ||",
+        "transliteration": "karmendriyāṇi saṃyamya ya āste manasā smaran | indriyārthān vimūḍhātmā mithyācāraḥ sa ucyate ||",
+        "english_translation": "One who restrains the senses outwardly but dwells on sense objects mentally is a hypocrite.",
+        "meaning": "True control requires inner discipline, not just external restraint."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यस्त्विन्द्रियाणि मनसा नियम्यारभतेऽर्जुन | कर्मेन्द्रियैः कर्मयोगमसक्तः स विशिष्यते ||",
+        "transliteration": "yas tv indriyāṇi manasā niyamyārabhate 'rjuna | karmendriyaiḥ karma-yogam asaktaḥ sa viśiṣyate ||",
+        "english_translation": "One who controls the senses with the mind and performs action without attachment is superior.",
+        "meaning": "Selfless action with control is the right path."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "नियतं कुरु कर्म त्वं कर्म ज्यायो ह्यकर्मणः | शरीरयात्रापि च ते न प्रसिद्ध्येदकर्मणः ||",
+        "transliteration": "niyataṃ kuru karma tvaṃ karma jyāyo hy akarmaṇaḥ | śarīra-yātrāpi ca te na prasiddhyed akarmaṇaḥ ||",
+        "english_translation": "Perform your prescribed duty; action is better than inaction.",
+        "meaning": "Doing one’s duty is essential even for survival."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यज्ञार्थात्कर्मणोऽन्यत्र लोकोऽयं कर्मबन्धनः | तदर्थं कर्म कौन्तेय मुक्तसंगः समाचर ||",
+        "transliteration": "yajñārthāt karmaṇo 'nyatra loko 'yaṃ karma-bandhanaḥ | tad-arthaṃ karma kaunteya mukta-saṅgaḥ samācara ||",
+        "english_translation": "Work done as sacrifice frees one from bondage; otherwise, it binds.",
+        "meaning": "Selfless action done as a duty leads to freedom."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सहयज्ञाः प्रजाः सृष्ट्वा पुरोवाच प्रजापतिः | अनेन प्रसविष्यध्वमेष वोऽस्त्विष्टकामधुक् ||",
+        "transliteration": "saha-yajñāḥ prajāḥ sṛṣṭvā purovāca prajāpatiḥ | anena prasaviṣyadhvam eṣa vo 'stv iṣṭa-kāma-dhuk ||",
+        "english_translation": "In the beginning, the Creator created beings along with sacrifice and said: by this you shall prosper.",
+        "meaning": "Sacrifice and duty are fundamental principles of life and prosperity."
+      },
+        {
+        "verseNumber": 11,
+        "speaker": "Sri Krishna",
+        "sanskrit": "देवान्भावयतानेन ते देवा भावयन्तु वः | परस्परं भावयन्तः श्रेयः परमवाप्स्यथ ||",
+        "transliteration": "devān bhāvayatānena te devā bhāvayantu vaḥ | parasparaṃ bhāvayantaḥ śreyaḥ param avāpsyatha ||",
+        "english_translation": "Nourish the gods through sacrifice, and they will nourish you; thus supporting each other, you will attain the highest good.",
+        "meaning": "Mutual cooperation between humans and divine forces leads to prosperity and spiritual progress."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इष्टान्भोगान्हि वो देवा दास्यन्ते यज्ञभाविताः | तैर्दत्तानप्रदायैभ्यो यो भुङ्क्ते स्तेन एव सः ||",
+        "transliteration": "iṣṭān bhogān hi vo devā dāsyante yajña-bhāvitāḥ | tair dattān apradāyaibhyo yo bhuṅkte stena eva saḥ ||",
+        "english_translation": "The gods, nourished by sacrifice, will grant you desired enjoyments; one who enjoys without offering back is a thief.",
+        "meaning": "Taking without giving back disrupts the natural order."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यज्ञशिष्टाशिनः सन्तो मुच्यन्ते सर्वकिल्बिषैः | भुञ्जते ते त्वघं पापा ये पचन्त्यात्मकारणात् ||",
+        "transliteration": "yajña-śiṣṭāśinaḥ santo mucyante sarva-kilbiṣaiḥ | bhuñjate te tv aghaṃ pāpā ye pacanty ātma-kāraṇāt ||",
+        "english_translation": "The righteous who eat the remnants of sacrifice are freed from sins; those who cook for themselves alone eat sin.",
+        "meaning": "Selfless sharing purifies; selfish consumption binds."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अन्नाद्भवन्ति भूतानि पर्जन्यादन्नसम्भवः | यज्ञाद्भवति पर्जन्यो यज्ञः कर्मसमुद्भवः ||",
+        "transliteration": "annād bhavanti bhūtāni parjanyād anna-sambhavaḥ | yajñād bhavati parjanyo yajñaḥ karma-samudbhavaḥ ||",
+        "english_translation": "Beings are sustained by food; food is produced by rain; rain comes from sacrifice, and sacrifice arises from action.",
+        "meaning": "There is a natural cycle linking action, sacrifice, and sustenance."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कर्म ब्रह्मोद्भवं विद्धि ब्रह्माक्षरसमुद्भवम् | तस्मात्सर्वगतं ब्रह्म नित्यं यज्ञे प्रतिष्ठितम् ||",
+        "transliteration": "karma brahmodbhavaṃ viddhi brahmākṣara-samudbhavam | tasmāt sarva-gataṃ brahma nityaṃ yajñe pratiṣṭhitam ||",
+        "english_translation": "Know that action arises from Brahman, and Brahman arises from the imperishable; therefore Brahman is always present in sacrifice.",
+        "meaning": "All actions are rooted in the divine cosmic order."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "एवं प्रवर्तितं चक्रं नानुवर्तयतीह यः | अघायुरिन्द्रियारामो मोघं पार्थ स जीवति ||",
+        "transliteration": "evaṃ pravartitaṃ cakraṃ nānuvartayatīha yaḥ | aghāyur indriyārāmo moghaṃ pārtha sa jīvati ||",
+        "english_translation": "One who does not follow this cycle lives in vain, indulging in senses and wasting life.",
+        "meaning": "Ignoring duty and natural order leads to a meaningless life."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यस्त्वात्मरतिरेव स्यादात्मतृप्तश्च मानवः | आत्मन्येव च सन्तुष्टस्तस्य कार्यं न विद्यते ||",
+        "transliteration": "yas tv ātma-ratir eva syād ātma-tṛptaś ca mānavaḥ | ātmany eva ca santuṣṭas tasya kāryaṃ na vidyate ||",
+        "english_translation": "One who delights in the self and is satisfied within has no duties to perform.",
+        "meaning": "Self-realized individuals transcend obligations."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "नैव तस्य कृतेनार्थो नाकृतेनेह कश्चन | न चास्य सर्वभूतेषु कश्चिदर्थव्यपाश्रयः ||",
+        "transliteration": "naiva tasya kṛtenārtho nākṛteneha kaścana | na cāsya sarva-bhūteṣu kaścid artha-vyapāśrayaḥ ||",
+        "english_translation": "Such a person has nothing to gain from action or inaction and is independent of all beings.",
+        "meaning": "A realized soul is self-sufficient and independent."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तस्मादसक्तः सततं कार्यं कर्म समाचर | असक्तो ह्याचरन्कर्म परमाप्नोति पूरुषः ||",
+        "transliteration": "tasmād asaktaḥ satataṃ kāryaṃ karma samācara | asakto hy ācaran karma param āpnoti pūruṣaḥ ||",
+        "english_translation": "Therefore, perform your duty without attachment; by doing so, one attains the highest.",
+        "meaning": "Detached action leads to spiritual fulfillment."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कर्मणैव हि संसिद्धिमास्थिता जनकादयः | लोकसंग्रहमेवापि संपश्यन्कर्तुमर्हसि ||",
+        "transliteration": "karmaṇaiva hi saṃsiddhim āsthitā janakādayaḥ | loka-saṅgraham evāpi sampaśyan kartum arhasi ||",
+        "english_translation": "Even kings like Janaka attained perfection through action; you should act for the welfare of the world.",
+        "meaning": "Action done for the greater good leads to perfection."
+      },
+        {
+        "verseNumber": 21,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यद्यदाचरति श्रेष्ठस्तत्तदेवेतरो जनः | स यत्प्रमाणं कुरुते लोकस्तदनुवर्तते ||",
+        "transliteration": "yad yad ācarati śreṣṭhas tat tad evetaro janaḥ | sa yat pramāṇaṃ kurute lokas tad anuvartate ||",
+        "english_translation": "Whatever a great person does, others follow; whatever standard they set, the world follows.",
+        "meaning": "Leaders influence society through their actions."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न मे पार्थास्ति कर्तव्यं त्रिषु लोकेषु किञ्चन | नानवाप्तमवाप्तव्यं वर्त एव च कर्मणि ||",
+        "transliteration": "na me pārthāsti kartavyaṃ triṣu lokeṣu kiñcana | nānavāptam avāptavyaṃ varta eva ca karmaṇi ||",
+        "english_translation": "I have nothing to gain in all the worlds, yet I continue to act.",
+        "meaning": "Even the divine performs action for the sake of order."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यदि ह्यहं न वर्तेयं जातु कर्मण्यतन्द्रितः | मम वर्त्मानुवर्तन्ते मनुष्याः पार्थ सर्वशः ||",
+        "transliteration": "yadi hy ahaṃ na varteyaṃ jātu karmaṇy atandritaḥ | mama vartmānuvartante manuṣyāḥ pārtha sarvaśaḥ ||",
+        "english_translation": "If I did not act diligently, people would follow my example and cease action.",
+        "meaning": "Leaders must act responsibly as others imitate them."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "उत्सीदेयुरिमे लोका न कुर्यां कर्म चेदहम् | सङ्करस्य च कर्ता स्यामुपहन्यामिमाः प्रजाः ||",
+        "transliteration": "utsīdeyur ime lokā na kuryāṃ karma ced aham | saṅkarasya ca kartā syām upahanyām imāḥ prajāḥ ||",
+        "english_translation": "If I did not act, these worlds would perish, and I would be responsible for disorder.",
+        "meaning": "Action maintains order in society and the world."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सक्ताः कर्मण्यविद्वांसो यथा कुर्वन्ति भारत | कुर्याद्विद्वांस्तथासक्तश्चिकीर्षुर्लोकसंग्रहम् ||",
+        "transliteration": "saktāḥ karmaṇy avidvāṃso yathā kurvanti bhārata | kuryād vidvāṃs tathāsaktaś cikīrṣur loka-saṅgraham ||",
+        "english_translation": "The wise should act without attachment, just as the ignorant act with attachment, for the welfare of the world.",
+        "meaning": "The wise act selflessly for the benefit of society."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न बुद्धिभेदं जनयेदज्ञानां कर्मसङ्गिनाम् | जोषयेत्सर्वकर्माणि विद्वान्युक्तः समाचरन् ||",
+        "transliteration": "na buddhi-bhedaṃ janayed ajñānāṃ karma-saṅginām | joṣayet sarva-karmāṇi vidvān yuktaḥ samācaran ||",
+        "english_translation": "The wise should not disturb the minds of the ignorant but encourage them to perform their duties.",
+        "meaning": "Guide others gently without creating confusion."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रकृतेः क्रियमाणानि गुणैः कर्माणि सर्वशः | अहङ्कारविमूढात्मा कर्ताहमिति मन्यते ||",
+        "transliteration": "prakṛteḥ kriyamāṇāni guṇaiḥ karmāṇi sarvaśaḥ | ahaṅkāra-vimūḍhātmā kartāham iti manyate ||",
+        "english_translation": "All actions are performed by the qualities of nature; one deluded by ego thinks 'I am the doer'.",
+        "meaning": "Ego creates the illusion of individual doership."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तत्त्ववित्तु महाबाहो गुणकर्मविभागयोः | गुणा गुणेषु वर्तन्त इति मत्वा न सज्जते ||",
+        "transliteration": "tattva-vit tu mahā-bāho guṇa-karma-vibhāgayoḥ | guṇā guṇeṣu vartanta iti matvā na sajjate ||",
+        "english_translation": "One who knows the truth understands that actions are performed by nature and remains unattached.",
+        "meaning": "Knowledge removes attachment to action."
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Sri Krishna",
+        "sanskrit": "प्रकृतेर्गुणसम्मूढाः सज्जन्ते गुणकर्मसु | तानकृत्स्नविदो मन्दान्कृत्स्नविन्न विचालयेत् ||",
+        "transliteration": "prakṛter guṇa-sammūḍhāḥ sajjante guṇa-karmasu | tān akṛtsna-vido mandān kṛtsna-vin na vicālayet ||",
+        "english_translation": "Those deluded by nature become attached to actions; the wise should not disturb them.",
+        "meaning": "Understanding others’ limitations helps maintain harmony."
+      },
+      {
+        "verseNumber": 30,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मयि सर्वाणि कर्माणि संन्यस्याध्यात्मचेतसा | निराशीर्निर्ममो भूत्वा युध्यस्व विगतज्वरः ||",
+        "transliteration": "mayi sarvāṇi karmāṇi sannyasyādhyātma-cetasā | nirāśīr nirmamo bhūtvā yudhyasva vigata-jvaraḥ ||",
+        "english_translation": "Dedicate all actions to Me, free from desire and ego, and fight without anxiety.",
+        "meaning": "Surrender actions to the divine and act without fear or attachment."
+      },
+        {
+        "verseNumber": 31,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ये मे मतमिदं नित्यमनुतिष्ठन्ति मानवाः | श्रद्धावन्तोऽनसूयन्तो मुच्यन्ते तेऽपि कर्मभिः ||",
+        "transliteration": "ye me matam idaṃ nityam anutiṣṭhanti mānavāḥ | śraddhāvanto 'nasūyanto mucyante te 'pi karmabhiḥ ||",
+        "english_translation": "Those who follow My teachings with faith and without envy are freed from the bondage of actions.",
+        "meaning": "Faithful practice of divine teachings leads to liberation."
+      },
+      {
+        "verseNumber": 32,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ये त्वेतदभ्यसूयन्तो नानुतिष्ठन्ति मे मतम् | सर्वज्ञानविमूढांस्तान्विद्धि नष्टानचेतसः ||",
+        "transliteration": "ye tv etad abhyasūyanto nānutiṣṭhanti me matam | sarva-jñāna-vimūḍhāṃs tān viddhi naṣṭān acetasaḥ ||",
+        "english_translation": "Those who disregard these teachings, lacking faith, are deluded and lost.",
+        "meaning": "Ignoring wisdom leads to confusion and downfall."
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सदृशं चेष्टते स्वस्याः प्रकृतेर्ज्ञानवानपि | प्रकृतिं यान्ति भूतानि निग्रहः किं करिष्यति ||",
+        "transliteration": "sadṛśaṃ ceṣṭate svasyāḥ prakṛter jñānavān api | prakṛtiṃ yānti bhūtāni nigrahaḥ kiṃ kariṣyati ||",
+        "english_translation": "Even a wise person acts according to their nature; what can repression accomplish?",
+        "meaning": "Natural tendencies influence behavior despite knowledge."
+      },
+      {
+        "verseNumber": 34,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इन्द्रियस्येन्द्रियस्यार्थे रागद्वेषौ व्यवस्थितौ | तयोर्न वशमागच्छेत्तौ ह्यस्य परिपन्थिनौ ||",
+        "transliteration": "indriyasyendriyasyārthe rāga-dveṣau vyavasthitau | tayor na vaśam āgacchet tau hy asya paripanthinau ||",
+        "english_translation": "Attachment and aversion reside in the senses; one should not come under their control.",
+        "meaning": "Freedom from likes and dislikes is essential for progress."
+      },
+      {
+        "verseNumber": 35,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रेयान्स्वधर्मो विगुणः परधर्मात्स्वनुष्ठितात् | स्वधर्मे निधनं श्रेयः परधर्मो भयावहः ||",
+        "transliteration": "śreyān sva-dharmo viguṇaḥ para-dharmāt svanuṣṭhitāt | sva-dharme nidhanaṃ śreyaḥ para-dharmo bhayāvahaḥ ||",
+        "english_translation": "Better is one's own duty, even if imperfect, than another's duty well performed.",
+        "meaning": "Following one’s own path is safer and more beneficial."
+      },
+      {
+        "verseNumber": 36,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | अथ केन प्रयुक्तोऽयं पापं चरति पुरुषः | अनिच्छन्नपि वार्ष्णेय बलादिव नियोजितः ||",
+        "transliteration": "arjuna uvāca | atha kena prayukto 'yaṃ pāpaṃ carati pūruṣaḥ | anicchann api vārṣṇeya balād iva niyojitaḥ ||",
+        "english_translation": "Arjuna said: What impels a person to commit sin, even unwillingly, as if forced?",
+        "meaning": "Arjuna questions the root cause of wrongful actions."
+      },
+      {
+        "verseNumber": 37,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | काम एष क्रोध एष रजोगुणसमुद्भवः | महाशनो महापाप्मा विद्ध्येनमिह वैरिणम् ||",
+        "transliteration": "śrī-bhagavān uvāca | kāma eṣa krodha eṣa rajo-guṇa-samudbhavaḥ | mahāśano mahā-pāpmā viddhy enam iha vairiṇam ||",
+        "english_translation": "The Blessed Lord said: It is desire, born of passion, which later turns into anger—this is the enemy.",
+        "meaning": "Desire and anger are the root causes of sin."
+      },
+      {
+        "verseNumber": 38,
+        "speaker": "Sri Krishna",
+        "sanskrit": "धूमेनाव्रियते वह्निर्यथादर्शो मलेन च | यथोल्बेनावृतो गर्भस्तथा तेनेदमावृतम् ||",
+        "transliteration": "dhūmenāvriyate vahnir yathādarśo malena ca | yatholbenāvṛto garbhas tathā tenedam āvṛtam ||",
+        "english_translation": "As fire is covered by smoke and a mirror by dust, so knowledge is covered by desire.",
+        "meaning": "Desire obscures true knowledge."
+      },
+      {
+        "verseNumber": 39,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आवृतं ज्ञानमेतेन ज्ञानिनो नित्यवैरिणा | कामरूपेण कौन्तेय दुष्पूरेणानलेन च ||",
+        "transliteration": "āvṛtaṃ jñānam etena jñānino nitya-vairiṇā | kāma-rūpeṇa kaunteya duṣpūreṇānalena ca ||",
+        "english_translation": "Knowledge is covered by this constant enemy—desire—which is insatiable like fire.",
+        "meaning": "Desire is endless and destroys wisdom."
+      },
+      {
+        "verseNumber": 40,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इन्द्रियाणि मनो बुद्धिरस्याधिष्ठानमुच्यते | एतैर्विमोहयत्येष ज्ञानमावृत्य देहिनम् ||",
+        "transliteration": "indriyāṇi mano buddhir asyādhiṣṭhānam ucyate | etair vimohayaty eṣa jñānam āvṛtya dehinam ||",
+        "english_translation": "The senses, mind, and intellect are the seat of desire; through them, it deludes the soul.",
+        "meaning": "Desire operates through senses and mind to mislead the individual."
+      },
+        {
+        "verseNumber": 41,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तस्मात्त्वमिन्द्रियाण्यादौ नियम्य भरतर्षभ | पाप्मानं प्रजहि ह्येनं ज्ञानविज्ञाननाशनम् ||",
+        "transliteration": "tasmāt tvam indriyāṇy ādau niyamya bharatarṣabha | pāpmānaṃ prajahi hy enaṃ jñāna-vijñāna-nāśanam ||",
+        "english_translation": "Therefore, control the senses first and destroy this sinful desire which destroys knowledge and wisdom.",
+        "meaning": "Control over senses is the first step to overcoming desire."
+      },
+      {
+        "verseNumber": 42,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इन्द्रियाणि पराण्याहुरिन्द्रियेभ्यः परं मनः | मनसस्तु परा बुद्धिर्यो बुद्धेः परतस्तु सः ||",
+        "transliteration": "indriyāṇi parāṇy āhur indriyebhyaḥ paraṃ manaḥ | manasas tu parā buddhir yo buddheḥ paratas tu saḥ ||",
+        "english_translation": "The senses are superior to the body, the mind is superior to the senses, the intellect is superior to the mind, and the self is superior to the intellect.",
+        "meaning": "There is a hierarchy of control, with the self being the highest."
+      },
+      {
+        "verseNumber": 43,
+        "speaker": "Sri Krishna",
+        "sanskrit": "एवं बुद्धेः परं बुद्ध्वा संस्तभ्यात्मानमात्मना | जहि शत्रुं महाबाहो कामरूपं दुरासदम् ||",
+        "transliteration": "evaṃ buddheḥ paraṃ buddhvā saṃstabhyātmānam ātmanā | jahi śatruṃ mahā-bāho kāma-rūpaṃ durāsadam ||",
+        "english_translation": "Knowing the self to be superior, control the mind and conquer the enemy in the form of desire.",
+        "meaning": "Realization of the self helps defeat desire and attain control."
+      }
+    ]
+  }
+}

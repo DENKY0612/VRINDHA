@@ -1,0 +1,241 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 17,
+      "name": "Shraddha Traya Vibhaga Yoga",
+      "englishName": "Yoga of the Threefold Faith",
+      "description": "Krishna explains how faith (shraddha) varies according to the three gunas—Sattva, Rajas, and Tamas—and how it influences worship, food, sacrifice, austerity, and charity.",
+      "totalVerses": 28,
+      "theme": "Understanding faith based on gunas and its influence on actions and lifestyle",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Jnana Yoga - Analysis of Faith and Conduct"
+    },
+    "verses": [
+      {
+        "verseNumber": 1,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | ये शास्त्रविधिमुत्सृज्य यजन्ते श्रद्धयान्विताः | तेषां निष्ठा तु का कृष्ण सत्त्वमाहो रजस्तमः ||",
+        "transliteration": "arjuna uvāca | ye śāstra-vidhim utsṛjya yajante śraddhayānvitāḥ | teṣāṃ niṣṭhā tu kā kṛṣṇa sattvam āho rajas tamaḥ ||",
+        "english_translation": "Arjuna asked: Those who worship with faith but without following scriptures—what is their nature?",
+        "meaning": "Arjuna asks about faith without discipline."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | त्रिविधा भवति श्रद्धा देहिनां सा स्वभावजा | सात्त्विकी राजसी चैव तामसी चेति तां शृणु ||",
+        "transliteration": "śrī-bhagavān uvāca | tri-vidhā bhavati śraddhā dehināṃ sā svabhāva-jā | sāttvikī rājasī caiva tāmasī ceti tāṃ śṛṇu ||",
+        "english_translation": "Faith is of three kinds: Sattvic, Rajasic, and Tamasic.",
+        "meaning": "Faith reflects one's nature."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सत्त्वानुरूपा सर्वस्य श्रद्धा भवति भारत | श्रद्धामयोऽयं पुरुषो यो यच्छ्रद्धः स एव सः ||",
+        "transliteration": "sattvānurūpā sarvasya śraddhā bhavati bhārata | śraddhā-mayo 'yaṃ puruṣo yo yac chraddhaḥ sa eva saḥ ||",
+        "english_translation": "A person is defined by their faith; as one’s faith is, so are they.",
+        "meaning": "Faith shapes identity."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यजन्ते सात्त्विका देवान्यक्षरक्षांसि राजसाः | प्रेतान्भूतगणांश्चान्ये यजन्ते तामसा जनाः ||",
+        "transliteration": "yajante sāttvikā devān yakṣa-rakṣāṃsi rājasāḥ | pretān bhūta-gaṇāṃś cānye yajante tāmasā janāḥ ||",
+        "english_translation": "Sattvic people worship gods, Rajasic worship spirits, Tamasic worship ghosts.",
+        "meaning": "Faith directs worship."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अशास्त्रविहितं घोरं तप्यन्ते ये तपो जनाः | दम्भाहङ्कारसंयुक्ताः कामरागबलान्विताः ||",
+        "transliteration": "aśāstra-vihitaṃ ghoraṃ tapyante ye tapo janāḥ | dambhāhaṅkāra-saṃyuktāḥ kāma-rāga-balānvitāḥ ||",
+        "english_translation": "Those who perform severe austerities without scriptural guidance are driven by ego.",
+        "meaning": "Wrong practices lead to harm."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कर्शयन्तः शरीरस्थं भूतग्राममचेतसः | मां चैवान्तःशरीरस्थं तान्विद्ध्यासुरनिश्चयान् ||",
+        "transliteration": "karśayantaḥ śarīra-sthaṃ bhūta-grāmam acetasaḥ | māṃ caivāntaḥ-śarīra-sthaṃ tān viddhy āsura-niścayān ||",
+        "english_translation": "They harm their body and the divine within; they are demoniac.",
+        "meaning": "Self-harm is ignorance."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आहारस्त्वपि सर्वस्य त्रिविधो भवति प्रियः | यज्ञस्तपस्तथा दानं तेषां भेदमिमं शृणु ||",
+        "transliteration": "āhāras tv api sarvasya tri-vidho bhavati priyaḥ | yajñas tapas tathā dānaṃ teṣāṃ bhedam imaṃ śṛṇu ||",
+        "english_translation": "Food, sacrifice, austerity, and charity are also of three kinds.",
+        "meaning": "Lifestyle reflects gunas."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आयुःसत्त्वबलारोग्यसुखप्रीतिविवर्धनाः | रस्याः स्निग्धाः स्थिरा हृद्या आहारा सात्त्विकप्रियाः ||",
+        "transliteration": "āyuḥ-sattva-balārogya-sukha-prīti-vivardhanāḥ | rasyāḥ snigdhāḥ sthirā hṛdyā āhārā sāttvika-priyāḥ ||",
+        "english_translation": "Sattvic foods increase life, strength, health, and happiness.",
+        "meaning": "Pure food supports clarity."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "कट्वम्ललवणात्युष्णतीक्ष्णरूक्षविदाहिनः | आहारा राजसस्येष्टा दुःखशोकामयप्रदाः ||",
+        "transliteration": "kaṭv-amla-lavaṇāty-uṣṇa-tīkṣṇa-rūkṣa-vidāhinaḥ | āhārā rājasasy eṣṭā duḥkha-śokāmaya-pradāḥ ||",
+        "english_translation": "Rajasic foods are bitter, sour, salty, and cause discomfort.",
+        "meaning": "Excess stimulation leads to imbalance."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यातयामं गतरसं पूति पर्युषितं च यत् | उच्छिष्टमपि चामेध्यं भोजनं तामसप्रियम् ||",
+        "transliteration": "yāta-yāmaṃ gata-rasaṃ pūti paryuṣitaṃ ca yat | ucchiṣṭam api cāmedhyaṃ bhojanaṃ tāmasa-priyam ||",
+        "english_translation": "Tamasic foods are stale, impure, and unhealthy.",
+        "meaning": "Poor diet leads to dullness."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अफलाकाङ्क्षिभिर्यज्ञो विधिदृष्टो य इज्यते | यष्टव्यमेवेति मनः समाधाय स सात्त्विकः ||",
+        "transliteration": "aphalākāṅkṣibhir yajño vidhi-dṛṣṭo ya ijyate | yaṣṭavyam eveti manaḥ samādhāya sa sāttvikaḥ ||",
+        "english_translation": "Sacrifice done without desire for results is Sattvic.",
+        "meaning": "Selfless action is pure."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अभिसन्धाय तु फलं दम्भार्थमपि चैव यत् | इज्यते भरतश्रेष्ठ तं यज्ञं विद्धि राजसम् ||",
+        "transliteration": "abhisandhāya tu phalaṃ dambhārtham api caiva yat | ijyate bharata-śreṣṭha taṃ yajñaṃ viddhi rājasam ||",
+        "english_translation": "Sacrifice done for reward or show is Rajasic.",
+        "meaning": "Ego-driven actions lack purity."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "विधिहीनमसृष्टान्नं मन्त्रहीनमदक्षिणम् | श्रद्धाविरहितं यज्ञं तामसं परिचक्षते ||",
+        "transliteration": "vidhi-hīnam asṛṣṭānnaṃ mantra-hīnam adakṣiṇam | śraddhā-virahitaṃ yajñaṃ tāmasaṃ paricakṣate ||",
+        "english_translation": "Sacrifice without faith or proper method is Tamasic.",
+        "meaning": "Lack of discipline leads to failure."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "देवद्विजगुरुप्राज्ञपूजनं शौचमार्जवम् | ब्रह्मचर्यमहिंसा च शारीरं तप उच्यते ||",
+        "transliteration": "deva-dvija-guru-prājña-pūjanaṃ śaucam ārjavam | brahmacaryam ahiṃsā ca śārīraṃ tapa ucyate ||",
+        "english_translation": "Respect, purity, self-discipline, and non-violence are bodily austerities.",
+        "meaning": "Physical discipline builds character."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अनुद्वेगकरं वाक्यं सत्यं प्रियहितं च यत् | स्वाध्यायाभ्यसनं चैव वाङ्मयं तप उच्यते ||",
+        "transliteration": "anudvega-karaṃ vākyaṃ satyaṃ priya-hitaṃ ca yat | svādhyāyābhyasanaṃ caiva vāṅ-mayaṃ tapa ucyate ||",
+        "english_translation": "Truthful, kind speech and study are verbal austerities.",
+        "meaning": "Words should be truthful and beneficial."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मनःप्रसादः सौम्यत्वं मौनमात्मविनिग्रहः | भावसंशुद्धिरित्येतत्तपो मानसमुच्यते ||",
+        "transliteration": "manaḥ-prasādaḥ saumyatvaṃ maunam ātma-vinigrahaḥ | bhāva-saṃśuddhir ity etat tapo mānasam ucyate ||",
+        "english_translation": "Serenity, gentleness, silence, self-control, and purity of mind are mental austerities.",
+        "meaning": "Inner discipline leads to peace."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रद्धया परया तप्तं तपस्तत्त्रिविधं नरैः | अफलाकाङ्क्षिभिर्युक्तैः सात्त्विकं परिचक्षते ||",
+        "transliteration": "śraddhayā parayā taptaṃ tapas tat tri-vidhaṃ naraiḥ | aphalākāṅkṣibhir yuktaiḥ sāttvikaṃ paricakṣate ||",
+        "english_translation": "Austerity practiced with faith and without desire for results is Sattvic.",
+        "meaning": "Pure intention defines discipline."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सत्कारमानपूजार्थं तपो दम्भेन चैव यत् | क्रियते तदिह प्रोक्तं राजसं चलमध्रुवम् ||",
+        "transliteration": "satkāra-māna-pūjārthaṃ tapo dambhena caiva yat | kriyate tad iha proktaṃ rājasaṃ calam adhruvam ||",
+        "english_translation": "Austerity done for honor and recognition is Rajasic.",
+        "meaning": "Ego-driven effort is unstable."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "मूढग्राहेणात्मनो यत्पीडया क्रियते तपः | परस्योत्सादनार्थं वा तत्तामसमुदाहृतम् ||",
+        "transliteration": "mūḍha-grāheṇātmano yat pīḍayā kriyate tapaḥ | parasyotsādanārthaṃ vā tat tāmasam udāhṛtam ||",
+        "english_translation": "Austerity done with ignorance or to harm others is Tamasic.",
+        "meaning": "Wrong intention corrupts action."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "दातव्यमिति यद्दानं दीयतेऽनुपकारिणे | देशे काले च पात्रे च तद्दानं सात्त्विकं स्मृतम् ||",
+        "transliteration": "dātavyam iti yad dānaṃ dīyate 'nupakāriṇe | deśe kāle ca pātre ca tad dānaṃ sāttvikaṃ smṛtam ||",
+        "english_translation": "Charity given at the right time, place, and to a worthy person is Sattvic.",
+        "meaning": "Right giving is selfless."
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यत्तु प्रत्युपकारार्थं फलमुद्दिश्य वा पुनः | दीयते च परिक्लिष्टं तद्दानं राजसं स्मृतम् ||",
+        "transliteration": "yat tu pratyupakārārthaṃ phalam uddiśya vā punaḥ | dīyate ca parikliṣṭaṃ tad dānaṃ rājasaṃ smṛtam ||",
+        "english_translation": "Charity given expecting return is Rajasic.",
+        "meaning": "Conditional giving lacks purity."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अदेशकाले यद्दानमपात्रेभ्यश्च दीयते | असत्कृतमवज्ञातं तत्तामसमुदाहृतम् ||",
+        "transliteration": "adeśa-kāle yad dānam apātrebhyaś ca dīyate | asatkṛtam avajñātaṃ tat tāmasam udāhṛtam ||",
+        "english_translation": "Charity given at the wrong place or time is Tamasic.",
+        "meaning": "Ignorant giving causes harm."
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ॐ तत्सदिति निर्देशो ब्रह्मणस्त्रिविधः स्मृतः | ब्राह्मणास्तेन वेदाश्च यज्ञाश्च विहिताः पुरा ||",
+        "transliteration": "om tat sad iti nirdeśo brahmaṇas tri-vidhaḥ smṛtaḥ | brāhmaṇās tena vedāś ca yajñāś ca vihitāḥ purā ||",
+        "english_translation": "Om Tat Sat are the three expressions of the Absolute Truth.",
+        "meaning": "Sacred sounds represent divine truth."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तस्मादोमित्युदाहृत्य यज्ञदानतपःक्रियाः | प्रवर्तन्ते विधानोक्ताः सततं ब्रह्मवादिनाम् ||",
+        "transliteration": "tasmād om ity udāhṛtya yajña-dāna-tapaḥ-kriyāḥ | pravartante vidhānoktāḥ satataṃ brahma-vādinām ||",
+        "english_translation": "Actions begin with Om as per scriptures.",
+        "meaning": "Spiritual acts start with sacred intent."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तदित्यनभिसन्धाय फलं यज्ञतपःक्रियाः | दानक्रियाश्च विविधाः क्रियन्ते मोक्षकाङ्क्षिभिः ||",
+        "transliteration": "tad ity anabhisandhāya phalaṃ yajña-tapaḥ-kriyāḥ | dāna-kriyāś ca vividhāḥ kriyante mokṣa-kāṅkṣibhiḥ ||",
+        "english_translation": "Without attachment to results, actions are performed with 'Tat'.",
+        "meaning": "Detachment purifies action."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सद्भावे साधुभावे च सदित्येतत्प्रयुज्यते | प्रशस्ते कर्मणि तथा सच्छब्दः पार्थ युज्यते ||",
+        "transliteration": "sad-bhāve sādhu-bhāve ca sad ity etat prayujyate | praśaste karmaṇi tathā sac-chabdaḥ pārtha yujyate ||",
+        "english_translation": "‘Sat’ represents truth, goodness, and noble actions.",
+        "meaning": "Truth defines righteousness."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यज्ञे तपसि दाने च स्थितिः सदिति चोच्यते | कर्म चैव तदर्थीयं सदित्येवाभिधीयते ||",
+        "transliteration": "yajñe tapasi dāne ca sthitiḥ sad iti cocyate | karma caiva tad-arthīyaṃ sad ity evābhidhīyate ||",
+        "english_translation": "Steadiness in sacrifice, austerity, and charity is called ‘Sat’.",
+        "meaning": "Consistency reflects truth."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अश्रद्धया हुतं दत्तं तपस्तप्तं कृतं च यत् | असदित्युच्यते पार्थ न च तत्प्रेत्य नो इह ||",
+        "transliteration": "aśraddhayā hutaṃ dattaṃ tapas taptaṃ kṛtaṃ ca yat | asad ity ucyate pārtha na ca tat pretya no iha ||",
+        "english_translation": "Actions done without faith are useless both here and hereafter.",
+        "meaning": "Faith is essential for meaningful action."
+      }
+    ]
+  }
+}

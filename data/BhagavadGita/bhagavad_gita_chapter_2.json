@@ -1,0 +1,591 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 2,
+      "name": "Sankhya Yoga",
+      "englishName": "Yoga of Knowledge and Analysis",
+      "description": "Krishna teaches Arjuna the philosophy of karma yoga, the immortality of the soul, and the importance of performing one's duty without attachment to results.",
+      "totalVerses": 72,
+      "theme": "Philosophical wisdom to overcome grief and doubt through understanding the nature of the soul and the principle of duty",
+      "primaryTeacher": "Lord Krishna",
+      "students": ["Arjuna", "Sanjaya"]
+    },
+    "verses":  [
+      {
+        "verseNumber": 1,
+        "speaker": "Sanjaya",
+        "sanskrit": "सञ्जय उवाच | तं तथा कृपयाविष्टमश्रुपूर्णाकुलेक्षणम् | विषीदन्तमिदं वाक्यमुवाच मधुसूदनः ||",
+        "transliteration": "sañjaya uvāca | taṃ tathā kṛpayāviṣṭam aśrupūrṇākulekṣaṇam | viṣīdantam idaṃ vākyam uvāca madhusūdanaḥ ||",
+        "englishTranslation": "Sanjaya said: To him (Arjuna), overwhelmed with pity, distressed and with tearful eyes, Madhusudana (Krishna) spoke these words.",
+        "meaning": "Sanjaya sets the scene for Krishna's response to Arjuna's despair in the previous chapter."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | कुतस्त्वा कश्मलमिदं विषमे समुपस्थितम् | अनार्यजुष्टमस्वर्ग्यमकीर्तिकरमर्जुन ||",
+        "transliteration": "śrībhagavān uvāca | kutastvā kaśmalam idaṃ viṣame samupasthitam | anāryajuṣṭam asvargyam akīrtikaram arjuna ||",
+        "englishTranslation": "The Blessed Lord said: From where has this shameful delusion come to you at a time of crisis? It is unworthy of a noble person, does not lead to heaven, and brings disgrace, O Arjuna.",
+        "meaning": "Krishna begins by addressing Arjuna's weakness and reminding him that such behavior is unbecoming of a warrior."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Krishna",
+        "sanskrit": "क्लैब्यं मा स्म गमः पार्थ नैतत्त्वय्युपपद्यते | क्षुद्रं हृदयदौर्बल्यं त्यक्त्वोत्तिष्ठ परंतप ||",
+        "transliteration":  "klaibyaṃ mā sma gamaḥ pārtha naitat tvayy upapadyate | kṣudraṃ hṛdayadaurbalyyaṃ tyaktvottiṣṭha parantapa ||",
+        "englishTranslation": "Do not yield to weakness, O Partha!  It does not befit you.  Discard this petty faint-heartedness and arise, O conqueror of the enemy! ",
+        "meaning": "Krishna urges Arjuna to shake off his weakness and face the challenge with courage."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | कथं भीष्ममहं सङ्ख्ये द्रोणं च मधुसूदन | इषुभिः प्रतियोत्स्यामि पूजार्हावरिसूदन ||",
+        "transliteration": "arjuna uvāca | kathaṃ bhīṣmam ahaṃ saṅkhye droṇaṃ ca madhusūdana | iṣubhiḥ pratiyotsyāmi pūjārhāvari-sūdana ||",
+        "englishTranslation": "Arjuna said: O Madhusudana, how can I fight with arrows against Bhishma and Drona in battle, both worthy of worship, O destroyer of enemies?",
+        "meaning": "Arjuna expresses his reluctance to fight against his elders and gurus who deserve respect."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Arjuna",
+        "sanskrit": "गुरूनहत्वा हि महानुभावान् श्रेयो भोक्तुं भैक्ष्यमपीह लोके | हत्वार्थकामांस्तु गुरुर्निहैव भुञ्जीय भोगान् रुधिरप्रदिग्धान् ||",
+        "transliteration": "gurūn ahatvā hi mahānubhāvān | śreyo bhoktuṃ bhaikṣyam apīha loke | hatvārthakāmāṃs tu gurūn ihaiva | bhuñjīya bhogān rudhirapradigdhān ||",
+        "englishTranslation": "It is better to live in this world by begging than to slay these great teachers.  Even after gaining pleasures and wealth, everything would be stained by their blood.",
+        "meaning": "Arjuna argues that living humbly is better than enjoying comforts earned by killing his revered teachers."
+      },
+      {
+        "verseNumber":  6,
+        "speaker":  "Arjuna",
+        "sanskrit": "न चैतद्विद्मः कतरन्नो गरीयो यद्वा जयेम यदि वा नो जयेयुः | यानेव हत्वा न जिजीविषामस्तेऽवस्थिताः प्रमुखे धार्तराष्ट्राः ||",
+        "transliteration": "na caitad vidmaḥ kataran no garīyo | yad vā jayema yadi vā no jayeyuḥ | yān eva hatvā na jijīviṣāmaḥ | te 'vasthitāḥ pramukhe dhārtarāṣṭrāḥ ||",
+        "englishTranslation": "We do not know which is better, that we conquer them or they conquer us. Those sons of Dhritarashtra, after killing whom we would not wish to live, stand before us.",
+        "meaning": "Arjuna expresses his uncertainty about the outcome of the battle and his ambivalence about living after killing his enemies."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Arjuna",
+        "sanskrit": "कार्पण्यदोषोपहतस्वभावः पृच्छामि त्वां धर्मसम्मूढचेताः | यच्छ्रेयः स्यान्निश्चितं ब्रूहि तन्मे शिष्यस्तेऽहं शाधि मां त्वां प्रपन्नम् ||",
+        "transliteration": "kārpaṇya-doṣopahata-svabhāvaḥ | pṛcchāmi tvām dharma-sammūḍha-cetāḥ | yac chreyaḥ syān niścitaṃ brūhi tan me | śiṣyas te 'haṃ śādhi māṃ tvām prapannam ||",
+        "englishTranslation": "My heart is overcome by weakness, my mind is confounded about duty.  I ask You—tell me what is definitely good for me.  I am Your disciple; please instruct me, who have surrendered to You.",
+        "meaning": "Arjuna formally asks Krishna for guidance, acknowledging Krishna as his teacher and himself as a devoted student."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Arjuna",
+        "sanskrit": "न हि प्रपश्यामि ममापनुद्याद्यच्छोकमुष्योषणमिन्ध्रियाणाम् | अवाप्य भूमावसपत्नमृद्धं राज्यं सुराणामपि चाधिपत्यम् ||",
+        "transliteration": "na hi prapaśyāmi mamāpanudyād | yac chokam ucchoṣaṇam indriyāṇām | avāpya bhūmāvasapatnam ṛddhaṃ | rājyaṃ surāṇām api cādhipatyam ||",
+        "englishTranslation": "I see no means to remove this grief, which is drying up my senses, even if I were to obtain a prosperous kingdom on earth or lordship over the gods.",
+        "meaning": "Arjuna explains that no amount of worldly success or power would ease his mental anguish and confusion."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sanjaya",
+        "sanskrit": "एवमुक्त्वा हृषीकेशं गुडाकेशः परंतपः | न योत्स्य इति गोविंदमुक्त्वा तूष्णीं बभूव ह ||",
+        "transliteration":  "evam uktvā hṛṣīkeśaṃ guḍākeśaḥ parantapaḥ | na yotsya iti govindam uktvā tūṣṇīṃ babhūva ha ||",
+        "englishTranslation": "Having thus spoken to Hrishikesha (Krishna), the mighty Arjuna said to Govinda (Krishna): 'I will not fight,' and became silent.",
+        "meaning": "Sanjaya describes how Arjuna declares his refusal to fight and lapses into silence, waiting for Krishna's response."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sanjaya",
+        "sanskrit": "तमुवाच हृषीकेशः प्रहसन्निव भारत | सेनयोरुभयोर्मध्ये विषीदंतमिदं वचः ||",
+        "transliteration": "tam uvāca hṛṣīkeśaḥ prahasann iva bhārata | senayorubhayormadhye viṣīdantam idaṃ vacaḥ ||",
+        "englishTranslation": "Then, O Bharata, Hrishikesha (Krishna), as if smiling, spoke these words to the despondent Arjuna while they stood between the two armies.",
+        "meaning": "Sanjaya describes Krishna's response, noting his calm demeanor and the setting where this profound teaching will take place."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | अशोच्यानन्वशोचस्त्वं प्रज्ञावादांश्च भाषसे | गतासून्गतासूंश्च नानुशोचन्ति पंडिताः ||",
+        "transliteration": "śrībhagavān uvāca | aśochyān anvaśocas tvam prajñāvādāṃś ca bhāṣase | gatāsūn gatāsūṃś ca nānuśochanti paṇḍitāḥ ||",
+        "englishTranslation": "The Blessed Lord said: You grieve for those who do not deserve grief, and yet you speak words of wisdom.  The wise grieve neither for the living nor for the dead.",
+        "meaning": "Krishna begins his teaching by pointing out the contradiction in Arjuna's argument and introducing the concept of the eternal soul."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Krishna",
+        "sanskrit": "न त्वेवाहं जातु नासं न त्वं नेमे जनाधिपाः | न चैव न भविष्यामः सर्वे वयमतः परम् ||",
+        "transliteration": "na tv evāhaṃ jātu nāsaṃ na tvam neme janādhipāḥ | na caiva na bhaviṣyāmaḥ sarve vayam ataḥ param ||",
+        "englishTranslation": "There has never been a time when I did not exist, nor you, nor these kings; nor in the future shall any of us cease to be.",
+        "meaning": "Krishna establishes the concept of eternal existence and the indestructibility of the soul."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Krishna",
+        "sanskrit": "देहिनो ऽस्मिन्यथा देहे कौमारं यौवनं जरा | तथा देहांतरप्राप्तिर्धीरस्तत्र न मुह्यति ||",
+        "transliteration": "dehino 'smin yathā dehe kaumāraṃ yauvanam jarā | tathā dehāntaraprāptir dhīras tatra na muhyati ||",
+        "englishTranslation": "Just as the embodied soul continuously passes through childhood, youth, and old age, similarly it passes into another body.  A wise man is not deluded by this.",
+        "meaning": "Krishna explains the concept of the transmigration of the soul through different bodies, like changing clothes."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Krishna",
+        "sanskrit": "मात्रास्पर्शास्तु कौंतेय शीतोष्णसुखदुःखदाः | आगमापायिनो ऽनित्यास्तांस्तितिक्षस्व भारत ||",
+        "transliteration": "mātrāsparśās tu kaunтeya śītoṣṇa-sukha-duḥkha-dāḥ | āgamāpāyino 'nityās tāṃs titikṣasva bhārata ||",
+        "englishTranslation": "O son of Kunti, the contact between the senses and the sense objects gives rise to fleeting experiences of happiness and distress.  These are non-permanent and come and go like the seasons.  Learn to tolerate them, O Bharata.",
+        "meaning": "Krishna teaches that sensory experiences are temporary and transient, and that one should develop equanimity toward them."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Krishna",
+        "sanskrit": "यं हि न व्यथयन्त्येते पुरुषं क्षरवर्षभौ | समदुःखसुखं धीरं स अमृतत्वाय कल्पते ||",
+        "transliteration": "yaṃ hi na vyathayantyte purus्खं क्षara-varṣa-bhau | sama-duḥkha-sukhaṃ dhīraṃ sa amṛtatvāya kalpate ||",
+        "englishTranslation": "The steadfast person who is not tormented by these pairs of opposites—happiness and distress—is fit for liberation, O Arjuna.",
+        "meaning":  "Krishna explains that equanimity in facing both pleasure and pain is the mark of a wise and spiritually advanced person."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Krishna",
+        "sanskrit": "नासतो विद्यते भावो नाभावो विद्यते सतः | उभयोरपि दृष्टोऽन्तस्त्वनयोस्तत्त्वदर्शिभिः ||",
+        "transliteration": "nāsato vidyate bhāvo nābhāvo vidyate sataḥ | ubhayorapi dṛṣṭo 'ntas tvanyos tattva-darśibhiḥ ||",
+        "englishTranslation":  "The non-existent does not come into being, and the existent does not cease to be. This conclusion is derived by those who perceive the truth.",
+        "meaning": "Krishna introduces the principle of the immutability of being—what truly exists cannot be destroyed, and what does not exist cannot be created."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Krishna",
+        "sanskrit": "अविनाशि तु तद्विद्धि येन सर्वमिदं ततम् | विनाशं अव्ययस्यास्य न कश्चित्कर्तुमर्हति ||",
+        "transliteration": "avināśi tu tad viddhi yen sarvam idaṃ tatam | vināśaṃ avyayasyāsya na kaśchit kartum arhati ||",
+        "englishTranslation": "Know that which pervades all this universe is indestructible. No one is able to bring about the destruction of the immutable soul.",
+        "meaning": "Krishna establishes that the soul (Atman) is eternal and indestructible, permeating all existence."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Krishna",
+        "sanskrit": "अंतवंत इमे देहा नित्यस्याऽऱ्जुन देहिनः | अनाशिनोऽप्रमेयस्य तस्मात्युध्यस्व भारत ||",
+        "transliteration": "antavant ime dehā nityasyā 'rjuna dehinaḥ | anāśino 'prameyasya tasmāt yudhyasva bhārata ||",
+        "englishTranslation": "These bodies of the embodied soul are said to be temporary, while the soul itself is eternal, immeasurable, and indestructible.  Therefore, fight, O Bharata.",
+        "meaning": "Krishna concludes this logical argument by urging Arjuna to fight, as the bodies are temporary but the soul is eternal."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Krishna",
+        "sanskrit": "य एनं वेत्ति हंतारं यश्चैनं मन्यते हतम् | उभौ तौ न विजानीतो नायं हन्ति न हन्यते ||",
+        "transliteration": "ya enaṃ vetti hantāraṃ yaś cainaṃ manyate hatam | ubhau tau na vijānīto nāyaṃ hanti na hanyate ||",
+        "englishTranslation": "He who thinks the soul can be slain and he who thinks the soul is slain—both are mistaken, for the soul neither slays nor is slain.",
+        "meaning": "Krishna clarifies that the soul is beyond the concepts of killing and being killed, transcending all physical action."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Krishna",
+        "sanskrit": "न जायते मृियते वा कदाचिन्नायं भूत्वा भविता वा न भूयः | अजो नित्यः शाश्वतोऽयं पुराणो न हन्यते हन्यमाने शरीरे ||",
+        "transliteration": "na jāyate mriyate vā kadācin nāyaṃ bhūtvā bhavitā vā na bhūyaḥ | ajo nityaḥ śāśvato 'yaṃ purāṇo na hanyate hanyamāne śarīre ||",
+        "englishTranslation": "The soul is never born, nor does it ever perish.  It is without birth, eternal, immortal, and ageless. It is not destroyed when the body is destroyed.",
+        "meaning": "Krishna provides a comprehensive description of the eternal and indestructible nature of the soul."
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Krishna",
+        "sanskrit": "वेदाविनाशिनं नित्यं य एनमजमव्ययम् | कथं स पुरुषः पार्थ कं घातयति हंति कम् ||",
+        "transliteration": "vedāvināśinaṃ nityaṃ ya enaṃ aja-avyayam | kathaṃ sa puruṣaḥ pārtha kaṃ ghātayati hanti kam ||",
+        "englishTranslation": "O Partha, how can a person who knows the soul to be indestructible, eternal, immortal, and without birth engage in warfare or cause anyone to be killed?",
+        "meaning":  "Krishna poses a rhetorical question to Arjuna, showing the logical consequence of understanding the soul's eternal nature."
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Krishna",
+        "sanskrit": "वासांसि जीर्णानि यथा विहाय नवानि गृह्णाति नरोऽपरानि | तथा शरीराणि विहाय जीर्णान्यन्यानि संयाति नवानि देही ||",
+        "transliteration": "vāsāṃsi jīrṇāni yathā vihāya navāni gṛhṇāti naro 'parāni | tathā śarīrāṇi vihāya jīrṇāny anyāni saṃyāti navāni dehī ||",
+        "englishTranslation": "As a person sheds worn-out clothes and wears new ones, likewise, at the time of death, the soul casts off its worn-out body and attains a new one.",
+        "meaning": "Krishna uses the analogy of changing clothes to explain how the soul changes bodies from one life to another."
+      },
+      {
+        "verseNumber":  23,
+        "speaker":  "Krishna",
+        "sanskrit": "नैनं छिंदंति शस्त्राणि नैनं दहति पावकः | न चैनं क्लेदयंत्यापो न शोषयति मारुतः ||",
+        "transliteration": "nainaṃ chindanti śastrāṇi nainaṃ dahati pāvakaḥ | na cainaṃ kledayant yapo na śoṣayati mārutaḥ ||",
+        "englishTranslation": "The soul cannot be cut by weapons, nor burned by fire, nor wetted by water, nor withered by the wind.",
+        "meaning": "Krishna eloquently describes how the soul is beyond the reach of all physical elements and forces."
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Krishna",
+        "sanskrit": "अच्छेद्योऽयमदाह्योऽयमक्लेद्योऽशोष्य एव च | नित्यः सर्वगतः स्थाणुरचलोऽयं सनातनः ||",
+        "transliteration": "acchedyo 'yam adāhyo 'yam akledyo 'śoṣya eva ca | nityaḥ sarva-gataḥ sthāṇur acalo 'yaṃ sanātanaḥ ||",
+        "englishTranslation": "This soul is immutable, immobile, eternal, all-pervading, immovable, and primeval.  It is said to be unchanging, immobile, and eternal.",
+        "meaning": "Krishna summarizes the qualities of the eternal soul in a powerful and poetic manner."
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Krishna",
+        "sanskrit": "अव्यक्तोऽयमचिंत्योऽयमविकार्योऽयमुच्यते | तस्मादेवं विदित्वैनं नानुशोचितुमर्हसि ||",
+        "transliteration": "avyakto 'yam acintyo 'yam vikāryo 'yam ucyate | tasmād evam viditvainaṃ nānuśochitum arhasi ||",
+        "englishTranslation": "It is said that the soul is invisible, inconceivable, and immutable.  Knowing this, you should not grieve.",
+        "meaning": "Krishna concludes his philosophical exposition on the soul and tells Arjuna that grief is unjustified given this knowledge."
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Krishna",
+        "sanskrit": "अथ चैनं नित्यजातं नित्यं वा मन्यसे मृतम् | तथापि त्वं महाबाहो नैवं शोचितुमर्हसि ||",
+        "transliteration": "atha cainaṃ nityajātaṃ nityaṃ vā manyase mṛtam | tathāpi tvam mahābāho naivaṃ śochitum arhasi ||",
+        "englishTranslation":  "Even if you believe the soul to be in a state of continuous change and continuously dying, you should not grieve. O mighty-armed one.",
+        "meaning": "Krishna addresses Arjuna even with alternative philosophies, concluding that grief is inappropriate from any perspective."
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Krishna",
+        "sanskrit": "जातस्य हि ध्रुवो मृत्युर्ध्रुवं जन्म मृतस्य च | तस्मादपरिहार्येऽर्थे न त्वं शोचितुमर्हसि ||",
+        "transliteration": "jātasya hi dhruvo mṛtyur dhruvaṃ janma mṛtasya ca | tasmād aparihārye 'rthe na tvam śochitum arhasi ||",
+        "englishTranslation": "For one who is born, death is certain, and for one who dies, birth is certain. Therefore, in a matter that is unavoidable, you should not grieve.",
+        "meaning": "Krishna teaches Arjuna about the inevitability of birth and death, and that we should accept what is inevitable."
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Krishna",
+        "sanskrit": "अव्यक्तादीनि भूतानि व्यक्तमध्यानि भारत | अव्यक्तनिधनान्येव तत्र का परिदेवना ||",
+        "transliteration": "avyaktādīni bhūtāni vyakta-madhyāni bhārata | avyakta-nidhanāny eva tatra kā paridevanā ||",
+        "englishTranslation": "All beings have an unmanifest beginning, a manifest middle state, and an unmanifest end. O Bharata, what reason is there to lament? ",
+        "meaning": "Krishna explains the cycle of manifestation and non-manifestation of all beings, questioning why one should grieve."
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Krishna",
+        "sanskrit": "आश्चर्यवत्पश्यति कश्चिदेनमाश्चर्यवद्वदति तथैव चान्यः | आश्चर्यवच्चैनमन्यः शृणोति श्रुत्वाप्येनं वेद न चैव कश्चित् ||",
+        "transliteration": "āścaryavat paśyati kaśchid enaṃ āścharyavad vадati tathāiva cānyaḥ | āścharyavat cainam anyaḥ śṛṇoti śrutvāpy enaṃ veda na caiva kaśchit ||",
+        "englishTranslation": "Some perceive the soul as a wonder, some describe it as wonderful, some hear of it as wonderful, yet even after hearing about it, none truly understand it.",
+        "meaning": "Krishna emphasizes the mysterious and transcendent nature of the soul that defies complete understanding."
+      },
+      {
+        "verseNumber": 30,
+        "speaker": "Krishna",
+        "sanskrit": "देही नित्यमवध्योऽयं देहे सर्वस्य भारत | तस्मात्सर्वाणि भूतानि न त्वं शोचितुमर्हसि ||",
+        "transliteration": "dehī nityam avadhyo 'yaṃ dehe sarvasya bhārata | tasmāt sarvāṇi bhūtāni na tvam śochitum arhasi ||",
+        "englishTranslation": "O Bharata, the embodied soul is eternally indestructible in every body. Therefore, you should not grieve for any creature.",
+        "meaning": "Krishna reiterates that the soul cannot be killed and that Arjuna should therefore not grieve for anyone."
+      },
+      {
+        "verseNumber": 31,
+        "speaker": "Krishna",
+        "sanskrit": "स्वधर्ममपि चावेक्ष्य न विकंपितुमर्हसि | यद्धर्मात्पर तरो न हि तस्मात्क्षत्रियस्य विद्यते ||",
+        "transliteration": "sva-dharmam api cāvekṣya na vikaṃpitum arhasi | yaddharmāt paro taro na hi tasmāt kṣatriyasya vidyate ||",
+        "englishTranslation": "Furthermore, considering your duty as a warrior, you should not waver.  There is no greater duty for a warrior than to fight in a righteous cause.",
+        "meaning": "Krishna now introduces the concept of duty (dharma) and tells Arjuna that fighting for a righteous cause is the highest duty of a warrior."
+      },
+      {
+        "verseNumber":  32,
+        "speaker":  "Krishna",
+        "sanskrit": "यदृच्छया चोप्पन्नं स्वर्गद्वारमपावृतम् | सुखिनः क्षत्रिया पार्थ लभंते युद्धमीदृशम् ||",
+        "transliteration": "yad-ṛcchayā chopapannaṃ svaraga-dvāram apāvṛtam | sukhinaḥ kṣatriyā pārtha labahnte yuddham īdṛśam ||",
+        "englishTranslation": "Happy are the warriors, O Partha, to whom such a righteous fight comes unsought, as an open door to heaven.",
+        "meaning": "Krishna describes the good fortune of a warrior who gets the opportunity to fight in a righteous cause."
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Krishna",
+        "sanskrit": "अथ चेत्त्वमिमं धर्म्यं संग्रामं न करिष्यसि | तत:  स्वधर्मं कीर्तिं च हित्वा पापमवाप्स्यसि ||",
+        "transliteration": "atha cet tvam imaṃ dharmyaṃ saṃgrāmaṃ na kariṣyasi | tataḥ sva-dharmaṃ kīrtiṃ ca hitvā pāpam avāpsyasi ||",
+        "englishTranslation": "But if you will not fight this righteous battle, then you will lose your duty and fame, and you will incur sin.",
+        "meaning": "Krishna warns Arjuna of the consequences of not performing his duty—he will lose his honor and incur sin."
+      },
+      {
+        "verseNumber":  34,
+        "speaker":  "Krishna",
+        "sanskrit": "अकीर्तिं चापि भूतानि कथयिष्यंति तेऽव्ययाम् | संभावितस्य चाकीर्तिर्मरणादतिरिच्यते ||",
+        "transliteration": "akīrtiṃ cāpi bhūtāni kathayiṣyanti te 'vyayām | sambhāvitasya cākīrtir maraṇād atiricyate ||",
+        "englishTranslation": "The whole world will keep talking about your eternal infamy; and to a man of honor, infamy is worse than death.",
+        "meaning":  "Krishna emphasizes that shame and infamy are worse than death for a man of honor."
+      },
+      {
+        "verseNumber": 35,
+        "speaker": "Krishna",
+        "sanskrit": "भयादरणादुपरतं मंस्यंते त्वां महारथाः | येषां च त्वं बहुमतो भूत्वा यास्यसि लाघवम् ||",
+        "transliteration": "bhayād raṇād uparataṃ manyante tvāṃ mahārathāḥ | yeṣāṃ ca tvam bahumatò bhūtvā yāsyasi lāghavam ||",
+        "englishTranslation": "The great warriors will think that you have retreated from the battle out of fear.  Those who held you in high esteem will consider you a coward.",
+        "meaning": "Krishna points out that Arjuna's refusal to fight will be interpreted as cowardice and will damage his reputation."
+      },
+      {
+        "verseNumber":  36,
+        "speaker":  "Krishna",
+        "sanskrit": "अवाच्यवादांश्च बहून्वदिष्यंति तवाहिताः | निंदंतस्तव सामर्थ्यं ततो दुःखतरं नु किम् ||",
+        "transliteration": "avāchya-vādāṃś ca bahūn vadiṣyanti tavāhitāḥ | nindantas tava sāmarthyaṃ tato duḥkhataraṃ nu kim ||",
+        "englishTranslation": "Your enemies will describe you in many unmentionable terms and ridicule your abilities.  What can be more painful than this? ",
+        "meaning": "Krishna explains how Arjuna's enemies will mock him if he withdraws from battle, which would be extremely painful."
+      },
+      {
+        "verseNumber": 37,
+        "speaker": "Krishna",
+        "sanskrit": "हतो वा प्राप्स्यसि स्वर्गं जित्वा वा भोक्ष्यसे महीम् | तस्मादुत्तिष्ठ कौंतेय युद्धाय कृतनिश्चयः ||",
+        "transliteration": "hato vā prāpsyasi svargaṃ jitvā vā bhokṣyase mahīm | tasmād uttiṣṭha kaunтeya yuddhāya kṛta-niścayaḥ ||",
+        "englishTranslation":  "If you are killed in battle, you will attain heaven; if you win, you will enjoy the kingdom.  Therefore, rise up, O Arjuna, determined to fight.",
+        "meaning":  "Krishna presents both outcomes of the battle—death leads to heaven, and victory leads to earthly kingdom—urging Arjuna to fight."
+      },
+      {
+        "verseNumber": 38,
+        "speaker": "Krishna",
+        "sanskrit": "सुखदुःखे समे कृत्वा लाभालाभौ जयाजयौ | ततो युद्धाय युज्यस्व नैवं पापमवाप्स्यसि ||",
+        "transliteration": "sukha-duḥkhe same kṛtvā lābhālābhau jayājayau | tato yuddhāya yujyasva naivaṃ pāpam avāpsyasi ||",
+        "englishTranslation": "Treating alike pleasure and pain, gain and loss, victory and defeat, engage in battle.  In this way, you will not incur sin.",
+        "meaning":  "Krishna introduces the concept of equanimity or performing action without attachment to results—one of the core teachings of the Bhagavad Gita."
+      },
+      {
+        "verseNumber":  39,
+        "speaker":  "Krishna",
+        "sanskrit": "एषा तेऽभिहिता सांख्ये बुद्धिर्योगे त्विमां शृणु | बुद्ध्या युक्तो यया पार्थ कर्मबंधं प्रहास्यसि ||",
+        "transliteration": "eṣā te 'bhihitā sāṃkhye buddhir yogе tvim āṃ ś��ṇu | buddhyā yukto yayā pārtha karma-bandhaṃ prahāsyasi ||",
+        "englishTranslation":  "I have explained the knowledge of Sankhya yoga to you.  Now listen to the knowledge of yoga (karma yoga). By understanding this yoga, you will free yourself from the bondage of karma.",
+        "meaning": "Krishna transitions from the philosophical discussion to introduce the practical path of action (karma yoga)."
+      },
+      {
+        "verseNumber": 40,
+        "speaker": "Krishna",
+        "sanskrit": "नेहाभिक्रमनाशोऽस्ति प्रत्यवायो न विद्यते | स्वल्पमप्यस्य धर्मस्य त्रायते महतो भयात् ||",
+        "transliteration": "nehābhikrama-nāśo 'sti pratyavāyo na vidyate | svalpam apy asya dharmasya trāyate mahato bhayāt ||",
+        "englishTranslation": "There is no loss or diminution in this yoga, and a little progress in this path protects one from the greatest fear.",
+        "meaning": "Krishna emphasizes that even a small effort in the path of yoga (proper action) yields great results."
+      },
+      {
+        "verseNumber": 41,
+        "speaker": "Krishna",
+        "sanskrit": "व्यवसायात्मिका बुद्धिरेकेह कुरुनंदन | बहुशाखा ह्यनंताश्च बुद्धयो अव्यवसायिनाम् ||",
+        "transliteration": "vyavasāyātmikā buddhir ekеha kuru-nandana | bahu-śākhā hy anantāśch buddhayo avyavasāyinām ||",
+        "englishTranslation": "In this yoga, the intellect is unified and singular, while those of the irresolute have many branches and endless pursuits.",
+        "meaning": "Krishna contrasts the focused mind of those on the spiritual path with the scattered mind of those without a clear purpose."
+      },
+      {
+        "verseNumber": 42,
+        "speaker": "Krishna",
+        "sanskrit": "यामिमां पुष्पितां वाचं प्रवदंत्यविपश्चितः | वेदवादरताः पार्थ नान्यदस्तीति वादिनः ||",
+        "transliteration": "yāmimāṃ puṣpitāṃ vāchṃ pravdanty avipashchitaḥ | veda-vāda-ratāḥ pārtha nānyadasțīti vādinaḥ ||",
+        "englishTranslation": "Those whose intellect is enticed by the flowery language of the Vedas and who are attracted to its ritualistic rewards, fail to concentrate on the supreme goal.",
+        "meaning": "Krishna warns against being distracted by the external and ritualistic aspects of the Vedas, urging focus on the ultimate goal."
+      },
+      {
+        "verseNumber": 43,
+        "speaker": "Krishna",
+        "sanskrit": "त्रैगुण्यविषया वेदा निस्त्रैगुण्यो भवार्जुन | निर्द्वंद्वो नित्यसत्त्वस्थो निर्योगक्षेम आत्मवान् ||",
+        "transliteration": "traiguṇya-viṣayā vedā nis-traiguṇyo bhav ārjuna | nir-dvandvo nitya-sattvastho nir-yoga-kṣema ātmavān ||",
+        "englishTranslation":  "The Vedas deal with the three modes of material nature.  O Arjuna, become transcendental to these three modes.  Free yourself from all dualities, and fixed in the eternal Truth, be unconcerned with profits and losses.",
+        "meaning":  "Krishna teaches that one should transcend the three modes of nature (gunas) and maintain equanimity in all circumstances."
+      },
+      {
+        "verseNumber": 44,
+        "speaker": "Krishna",
+        "sanskrit": "यावानर्थ उदपाने सर्वतः समुदप्लुते | तावान्सर्वेषु वेदेषु ब्राह्मणस्य विजानतः ||",
+        "transliteration": "yāvān artha udapāne sarvataḥ samudaplyute | tāvān sarvеṣu vеdеṣu brāhmaṇasya vijānataḥ ||",
+        "englishTranslation": "As much benefit as there is in a well when there is a flood everywhere, so much benefit have the Vedas for a Brahmin who understands this Truth.",
+        "meaning": "Krishna uses a metaphor to show that when one understands the ultimate truth, the detailed rituals of the Vedas become less necessary."
+      },
+      {
+        "verseNumber": 45,
+        "speaker": "Krishna",
+        "sanskrit": "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन | मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि ||",
+        "transliteration": "karmaṇy evādhikāras te mā phaleṣu kadāchana | mā karma-phala-hetur bhūr mā te sangò 'stv akarmani ||",
+        "englishTranslation": "You have the right to work only, but never to the fruits of work. Let the fruit be the reason nor let your attachment be to inaction.",
+        "meaning": "This is perhaps the most fundamental teaching of the Bhagavad Gita—one should perform one's duty without attachment to results."
+      },
+      {
+        "verseNumber": 46,
+        "speaker": "Krishna",
+        "sanskrit": "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनंजय | सिद्धयसिद्धयोः समो भूत्वा समत्वं योग उच्यते ||",
+        "transliteration": "yoga-sthaḥ kuru karmāṇi saṅgaṃ tyaktvā dhanañjaya | siddhy-asiddhyoḥ samo bhūtvā samatvam yoga ucyate ||",
+        "englishTranslation": "Perform your duty steadfastly without being attached to the results. Remain balanced in both success and failure, for yoga means perfect equanimity.",
+        "meaning":  "Krishna defines yoga as the steadfast performance of duty with equanimity toward success and failure."
+      },
+      {
+        "verseNumber": 47,
+        "speaker": "Krishna",
+        "sanskrit": "दूरेण ह्यवरं कर्म बुद्धियोगाद्धनंजय | बुद्धौ शरणमन्विच्छ कृपणाः फलहेतवः ||",
+        "transliteration": "dūreṇa hy avaraṃ karma buddhi-yogād dhānañjaya | buddhau śaraṇam anvichhash kṛpaṇāḥ phala-hetavaḥ ||",
+        "englishTranslation": "Action with attachment is far inferior to action performed with equanimity of mind. Therefore, seek refuge in the yoga of wisdom, O Arjuna.  Those who work for reward are foolish.",
+        "meaning": "Krishna emphasizes that action performed with detachment is superior to action performed with attachment to results."
+      },
+      {
+        "verseNumber": 48,
+        "speaker": "Krishna",
+        "sanskrit": "बुद्धियुक्तो जहातीह उभे सुकृतदुष्कृते | तस्माद्योगाय युज्यस्व योग:  कर्मसु कौशलम् ||",
+        "transliteration": "buddhi-yukto jahātīh ubhe sukṛta-duṣkṛte | tasmād yogāya yujyasva yogaḥ karmasu kauśalam ||",
+        "englishTranslation": "One who is equipped with the knowledge of equanimity rises above both virtuous and vicious actions.  Therefore, devote yourself to yoga, for yoga is skill in action.",
+        "meaning": "Krishna defines yoga as skill in action and says that one should devote oneself to it."
+      },
+      {
+        "verseNumber": 49,
+        "speaker": "Krishna",
+        "sanskrit": "कर्मजं बुद्धियुक्ताः फलं त्यक्त्वा मनीषिणः | जन्मबंधविनिर्मुक्ताः पदं गच्छंत्यनामयम् ||",
+        "transliteration": "karmajam buddhi-yuktāḥ phalaṃ tyaktvā manīṣiṇaḥ | janma-bandha-vinirmmuktāḥ padam gachhanti anāmayam ||",
+        "englishTranslation": "Those who are wise and equanimous in mind, who have renounced the fruits of action and who are freed from the bond of birth, attain the place free from suffering.",
+        "meaning": "Krishna describes the state of the enlightened person who has transcended the cycle of birth and death."
+      },
+      {
+        "verseNumber":  50,
+        "speaker":  "Krishna",
+        "sanskrit": "बुद्धि भेदं जनयति आज्ञानं कर्मसंगिनाम् | कुरु कर्माणि कौंतेय कर्मसङ्गो विवर्जय ||",
+        "transliteration": "buddhi bhedam janayati ajnānam karmasamginaam | kuru karmāni kaunтeya karmasanggo vivrajay ||",
+        "englishTranslation": "Ignorance causes confusion about the nature of work.  Those who are attached to the fruits of work become confused.  O son of Kunti, do your duty, but abandon attachment to the results.",
+        "meaning": "Krishna explains how ignorance and attachment lead to confusion, urging Arjuna to work without attachment."
+      },
+      {
+        "verseNumber": 51,
+        "speaker": "Krishna",
+        "sanskrit": "निष्काम कर्मयोग सिद्धिः प्राप्यते मनुष्यैः | यतः प्राप्नोति पुरुषः शांतिं परमां ततः ||",
+        "transliteration": "niṣkāma karma-yoga siddhiḥ prāpyate manuṣyaiḥ | yataḥ prāpnoti puruṣaḥ śāntiṃ paramāṃ tataḥ ||",
+        "englishTranslation": "By performing work without attachment, humans attain the highest perfection and peace. See how perfection is reached when work is done as an offering.",
+        "meaning": "Krishna establishes that perfection and peace come through performing work without selfish attachment."
+      },
+      {
+        "verseNumber":  52,
+        "speaker":  "Krishna",
+        "sanskrit": "सिद्धिं प्राप्तो यथा ब्रह्म तथाप्नोति निबोध मे | समासेन एव कौंतेय निष्ठा ज्ञानस्य या प���ा ||",
+        "transliteration": "siddhiṃ prāpto yathā brahma tathāpnoti nibodha me | samāsen eva kaunтeya niṣthā jñānasya yā parā ||",
+        "englishTranslation": "Understand that I will now describe to you the supreme wisdom, and by which all the great rishis have attained the highest perfection and reached a state similar to my own.",
+        "meaning": "Krishna prepares to describe the highest wisdom that leads to liberation and similar perfection to his own."
+      },
+      {
+        "verseNumber": 53,
+        "speaker": "Krishna",
+        "sanskrit": "बुद्धिं न्यायोपदेशेन चलित्वा आस्थानम् | इन्द्रियाणि प्रमाथीनि हरंति प्रसभं मनः ||",
+        "transliteration": "buddhiṃ nyāya-upadeshen chalitva āsthanam | indriyāṇi pramāthīni haranti prasabham manaḥ ||",
+        "englishTranslation": "When your intellect has crossed beyond the dense forest of delusion, then you will become indifferent to the scriptures and the results they promise.",
+        "meaning": "Krishna describes the transcendence of one whose intellect has gone beyond the ignorance and promises of rituals."
+      },
+      {
+        "verseNumber": 54,
+        "speaker": "Krishna",
+        "sanskrit": "श्रुतिविप्रतिपन्ना ते यदा स्थास्यति निश्चला | समाधावचला बुद्धिस्तदा योगमवाप्स्यसि ||",
+        "transliteration": "śruti-vipratipannā te yadā sthāsyati niśchalā | samādhāv achalā buddhis tadā yogam avāpsyasi ||",
+        "englishTranslation": "When your mind has transcended the confusion caused by the various Scriptures, it will remain fixed in meditation on the Self, then you will attain yoga.",
+        "meaning": "Krishna describes the state of ultimate concentration and meditation that results from transcending all doubts and confusion."
+      },
+      {
+        "verseNumber": 55,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | स्थितप्रज्ञस्य का भाषा समाधिस्थस्य केशव | स्थितधीः किं प्रभाषेत किमासीत व्रजेत किम् ||",
+        "transliteration": "arjuna uvāca | sthita-prajñasya kā bhāṣā samādhi-sthasya keśava | sthita-dhīḥ kiṃ prabhāṣeta kim āsīta vrajeta kim ||",
+        "englishTranslation": "Arjuna said: O Krishna, what are the characteristics of one who is steady in wisdom and established in meditation? How does such a steadfast person speak?  How does he sit?  How does he walk?",
+        "meaning": "Arjuna now asks Krishna for a description of the enlightened person—their characteristics, speech, and behavior."
+      },
+      {
+        "verseNumber": 56,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | प्रजहाति यदा कामान्सर्वान्पार्थ मनोगतान् | आत्मन्येवात्मना तुष्टः स्थितप्रज्ञस्तदोच्यते ||",
+        "transliteration": "śrībhagavān uvāca | prajahāti yadā kāmān sarvān pārtha manogartān | ātmany evātmanā tuṣṭaḥ sthita-prajñas tadochyate ||",
+        "englishTranslation": "The Blessed Lord said: One who abandons all worldly desires that arise in the mind and is satisfied in his own self is said to be of steady wisdom.",
+        "meaning": "Krishna describes the enlightened person as one who has transcended all desires and is content in the Self."
+      },
+      {
+        "verseNumber": 57,
+        "speaker": "Krishna",
+        "sanskrit": "दुःखेष्वनुद्विग्नमनाः सुखेषु विगतस्पृहः | वीतरागभयक्रोधः स्थितधीर्मुनिरुच्यते ||",
+        "transliteration": "duḥkhеṣv anudvigna-manāḥ sukhеṣu vigata-spṛhaḥ | vīta-rāga-bhaya-krodhāḥ sthita-dhīr munir uchyate ||",
+        "englishTranslation": "One who is not disturbed amid the threefold miseries, who has no desire for happiness, and who is free from passion, fear, and anger is said to be a sage of steady wisdom.",
+        "meaning": "Krishna describes the characteristics of an enlightened sage—unaffected by suffering, without worldly desires, and free from negative emotions."
+      },
+      {
+        "verseNumber": 58,
+        "speaker": "Krishna",
+        "sanskrit": "यः सर्वत्रानभिस्नेहस्तत्तत्प्राप्य शुभाशुभम् | नाभिनंदति न द्वेष्टि तस्य प्रज्ञा प्रतिष्ठिता ||",
+        "transliteration": "yaḥ sarvtrānabhi-snehas tat tat prāpya śubhāśubham | nābhinandati na dveṣṭi tasya prajñā pratiṣṭhitā ||",
+        "englishTranslation": "One who is not attached to anything, who meets the good and the bad with an even mind, whose intellect is well-established is said to have attained the ultimate wisdom.",
+        "meaning": "Krishna emphasizes that the wise person remains unattached to all outcomes, good or bad, maintaining perfect equanimity."
+      },
+      {
+        "verseNumber": 59,
+        "speaker": "Krishna",
+        "sanskrit": "यदा संहरते चायं कूर्मोऽङ्गानीव सर्वशः | इन्द्रियाणीन्द्रियार्थेभ्यस्तस्य प्रज्ञा प्रतिष्ठिता ||",
+        "transliteration": "yadā samharate chāyaṃ kūrmo 'ngānīva sarvaśaḥ | indriyāṇīndriyārtebhyas tasya prajñā pratiṣṭhitā ||",
+        "englishTranslation": "Just as a tortoise draws in all its limbs, so when the senses withdraw from their objects, the wisdom of such a person is established.",
+        "meaning": "Krishna uses the metaphor of a tortoise withdrawing its limbs to describe how the enlightened person withdraws the senses from their objects."
+      },
+      {
+        "verseNumber": 60,
+        "speaker": "Krishna",
+        "sanskrit": "विषया विनिवर्तंते निराहारस्य देहिनः | रसवर्जं रसोऽप्यस्य परं दृष्ट्वा निवर्तते ||",
+        "transliteration": "viṣayā vinivartante nirāhārasya dehinaḥ | rasa-varjaṃ raso'py asya paraṃ dṛṣṭvā nivartate ||",
+        "englishTranslation": "The objects of the senses turn away from the person who refrains from eating, but the taste remains.  However, upon seeing the Supreme, the taste also vanishes.",
+        "meaning":  "Krishna describes how even physical abstinence may not remove the taste for sense objects, but seeing the Supreme removes all desire."
+      },
+      {
+        "verseNumber": 61,
+        "speaker": "Krishna",
+        "sanskrit": "यतत:  शीलं प्रवर्तंते मानुष्याणां शरीरजाः | तानि सर्वाणि बहवः कामनाः प्रवर्तंते ||",
+        "transliteration": "yatataḥ śīlaṃ pravartante mānus्yaāṇāṃ śarīrajāḥ | tāni sarvāṇi bahavaḥ kāmanāḥ pravartante ||",
+        "englishTranslation": "Even though a person resists, his senses become unruly and carry away his mind. It is only through steadfast practice that one can overcome this tendency.",
+        "meaning": "Krishna acknowledges that the senses are powerful and difficult to control, but steady practice is the solution."
+      },
+      {
+        "verseNumber": 62,
+        "speaker": "Krishna",
+        "sanskrit": "तानि सर्वाणि संयम्य युक्त आसीत मत्परः | वशे हि यस्येन्द्रियाणि तस्य प्रज्ञा प्रतिष्ठिता ||",
+        "transliteration": "tāni sarvāṇi samyamya yukta āsīta mat-paraḥ | vaśe hi yasyendriyāṇi tasya prajñā pratiṣṭhitā ||",
+        "englishTranslation": "The one who restrains all senses and keeps the mind fixed on Me is considered to have steady wisdom.",
+        "meaning": "Krishna teaches that steady wisdom comes from controlling the senses and keeping the mind focused on the Divine."
+      },
+      {
+        "verseNumber": 63,
+        "speaker": "Krishna",
+        "sanskrit": "ध्यायतो विषयान्पुंसः सङ्गस्तेषूपजायते | सङ्गात्संजायते कामः कामात्क्रोधोऽभिजायते ||",
+        "transliteration": "dhyāyato viṣayān puṃsaḥ saṅgas teṣūpajāyate | saṅgāt sañjāyate kāmaḥ kāmāt krodho 'bhijāyate ||",
+        "englishTranslation": "While contemplating the objects of senses, a person develops attachment to them.  From this attachment, lust is born.  From lust, anger arises.",
+        "meaning": "Krishna describes the chain reaction of attachment—from thinking about objects comes attachment, from attachment comes desire, and from desire comes anger."
+      },
+      {
+      "verseNumber": 64,
+      "speaker": "Sri Krishna",
+      "sanskrit": "रागद्वेषवियुक्तैस्तु विषयानिन्द्रियैश्चरन् | आत्मवश्यैर्विधेयात्मा प्रसादमधिगच्छति ||",
+      "transliteration": "raga-dvesha-viyuktais tu vishayan indriyais charan atma-vashyair vidheyatma prasadam adhigacchati",
+      "english_translation": "But a person who is free from attachment and aversion, and who controls the senses through discipline, attains tranquility.",
+      "meaning": "One who moves among sense objects without attachment or hatred, and keeps the senses under control, attains inner peace and clarity of mind."
+      },
+      {
+      "verseNumber": 65,
+      "speaker": "Sri Krishna",
+      "sanskrit": "प्रसादे सर्वदुःखानां हानिरस्योपजायते | प्रसन्नचेतसो ह्याशु बुद्धिः पर्यवतिष्ठते ||",
+      "transliteration": "prasade sarva-duhkhanam hanir asyopajayate prasanna-chetaso hy ashu buddhih paryavatishthate",
+      "english_translation": "In that tranquility, all sorrows are destroyed, and the intellect of such a peaceful person soon becomes steady.",
+      "meaning": "When the mind is peaceful, all suffering diminishes, and the intellect becomes stable and clear, enabling proper judgment."
+      },
+      {
+        "verseNumber": 66,
+        "speaker": "Sri Krishna",
+        "sanskrit": "नास्ति बुद्धिरयुक्तस्य न चायुक्तस्य भावना | न चाभावयतः शान्तिरशान्तस्य कुतः सुखम् ||",
+        "transliteration": "nasti buddhir ayuktasya na cha ayuktasya bhavana na cha abhavayatah shantir ashantasya kutah sukham",
+        "english_translation": "For one who is not disciplined, there is no intelligence; nor for one without discipline is there meditation. Without meditation, there is no peace; and without peace, how can there be happiness?",
+        "meaning": "A person without self-control lacks wisdom and inner reflection. Without inner peace, true happiness is impossible."
+      },
+      {
+        "verseNumber": 67,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इन्द्रियाणां हि चरतां यन्मनोऽनुविधीयते | तदस्य हरति प्रज्ञां वायुर्नावमिवाम्भसि ||",
+        "transliteration": "indriyanam hi charatam yan mano'nuvidhiyate tadasya harati prajnam vayur navam ivambhasi",
+        "english_translation": "As a boat is swept away on the water by a strong wind, even one of the roaming senses on which the mind focuses can carry away a person's intelligence.",
+        "meaning": "If the mind follows wandering senses, it destroys wisdom just like wind can blow away a boat on water."
+      },
+      {
+        "verseNumber": 68,
+        "speaker": "Sri Krishna",
+        "sanskrit": "तस्माद्यस्य महाबाहो निगृहीतानि सर्वशः | इन्द्रियाणीन्द्रियार्थेभ्यस्तस्य प्रज्ञा प्रतिष्ठिता ||",
+        "transliteration": "tasmad yasya maha-baho nigrihitani sarvashah indriyani indriyarthebhyas tasya prajna pratishthita",
+        "english_translation": "Therefore, O mighty-armed Arjuna, one whose senses are completely restrained from their objects has steady wisdom.",
+        "meaning": "Control over senses leads to stable intelligence and clarity."
+      },
+      {
+        "verseNumber": 69,
+        "speaker": "Sri Krishna",
+        "sanskrit": "या निशा सर्वभूतानां तस्यां जागर्ति संयमी | यस्यां जाग्रति भूतानि सा निशा पश्यतो मुनेः ||",
+        "transliteration": "ya nisha sarva-bhutanam tasyam jagarti samyami yasyam jagrati bhutani sa nisha pashyato muneh",
+        "english_translation": "What is night for all beings is the time of awakening for the self-controlled; and what is awakening for all beings is night for the sage.",
+        "meaning": "A wise person sees reality differently from ordinary people—what others ignore, the wise understand, and vice versa."
+      },
+      {
+        "verseNumber": 70,
+        "speaker": "Sri Krishna",
+        "sanskrit": "आपूर्यमाणमचलप्रतिष्ठं समुद्रमापः प्रविशन्ति यद्वत् | तद्वत्कामा यं प्रविशन्ति सर्वे स शान्तिमाप्नोति न कामकामी ||",
+        "transliteration": "apuryamanam achala-pratishtham samudram apah pravishanti yadvat tadvat kama yam pravishanti sarve sa shantim apnoti na kama-kami",
+        "english_translation": "Just as rivers flow into the ever-full and unmoving ocean, so do all desires enter the person who is steady; such a person attains peace, not the one who seeks to satisfy desires.",
+        "meaning": "A person who remains unaffected by desires, like an ocean unaffected by rivers, attains true peace."
+      },{
+        "verseNumber": 71,
+        "speaker": "Sri Krishna",
+        "sanskrit": "विहाय कामान्यः सर्वान्पुमांश्चरति निःस्पृहः | निर्ममो निरहंकारः स शान्तिमधिगच्छति ||",
+        "transliteration": "vihaya kaman yah sarvan pumans charati nihsprihah nirmamo nirahankarah sa shantim adhigacchati",
+        "english_translation": "A person who gives up all desires, lives free from longing, without a sense of possession and ego, attains peace.",
+        "meaning": "True peace comes to one who abandons desires, ego, and attachment, living with detachment and humility."
+      },
+      {
+        "verseNumber": 72,
+        "speaker": "Sri Krishna",
+        "sanskrit": "एषा ब्राह्मी स्थिति: पार्थ नैनां प्राप्य विमुह्यति | स्थित्वास्यामन्तकालेऽपि ब्रह्मनिर्वाणमृच्छति ||",
+        "transliteration": "esha brahmi sthitih partha nainam prapya vimuhyati sthitva asyam anta-kale api brahma-nirvanam richchhati",
+        "english_translation": "This is the state of Brahman, O Arjuna. Having attained it, one is not deluded. Being established in this state even at the time of death, one attains liberation.",
+        "meaning": "Krishna concludes by describing the highest spiritual state. One who reaches this state remains free from confusion and ultimately attains liberation (moksha)."
+      }
+    ]
+  }
+}

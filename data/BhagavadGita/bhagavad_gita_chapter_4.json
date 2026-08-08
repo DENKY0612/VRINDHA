@@ -1,0 +1,398 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 4,
+      "name": "Jnana Karma Sanyasa Yoga",
+      "englishName": "Yoga of Knowledge and the Renunciation of Action",
+      "description": "Krishna reveals His divine nature and the purpose of His incarnations. He teaches Arjuna about the supreme knowledge of liberation, the importance of understanding the nature of action and inaction, and the significance of renunciation of desires and ego.",
+      "totalVerses": 42,
+      "theme": "Divine knowledge, the purpose of incarnation, and the path to liberation through wisdom and renunciation",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Jnana Karma Sanyasa Yoga - Yoga of Knowledge and Renunciation"
+    },
+    "verses":   [
+      {
+        "verseNumber": 1,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | इमं विवस्वते योगं प्रोक्तवानहमव्ययम् | विवस्वान्मनवे प्राह मनुरिक्ष्वाकवेऽब्रवीत् ||",
+        "transliteration": "śrībhagavān uvāca | imaṃ vivasvate yogaṃ proktavān aham avyayam | vivasvān manave prāha manur ikṣvākave'bravīt ||",
+        "englishTranslation": "The Blessed Lord said: I taught this imperishable Yoga to Vivasvan; Vivasvan taught it to Manu; Manu taught it to Ikshvaku.",
+        "meaning": "Krishna establishes the ancient lineage of this knowledge, showing that the teachings of Yoga have been passed down through a chain of enlightened masters from the beginning of time.",
+        "teachingPoint": "Knowledge of Yoga is eternal and has been preserved through the ages"
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Krishna",
+        "sanskrit": "एवं परम्पराप्राप्तमिमं राजर्षयो विदुः | स कालेनेह महता योगो नष्टः परंतप ||",
+        "transliteration":  "evaṃ parampara-prāptam imaṃ rājarṣayo viduḥ | sa kāleneha mahatā yogo naṣṭaḥ parantapa ||",
+        "englishTranslation": "The royal sages understood this Yoga by the means of the succession of teachers.   In course of time, O slayer of enemies, this Yoga was lost to the world.",
+        "meaning": "Over time, the true understanding of Yoga was lost due to lack of proper teachers.  This explains why Krishna is now teaching it to Arjuna.",
+        "teachingPoint": "Authentic knowledge is preserved through an unbroken lineage of teachers"
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Krishna",
+        "sanskrit": "स एवायं मया तेऽद्य योगः प्रोक्तः पुरातनः | भक्तोऽसि मे सखा चेति रहस्यं ह्येतदुत्तमम् ||",
+        "transliteration": "sa evāyaṃ mayā te'dya yogaḥ proktaḥ purātanaḥ | bhakto'si me sakhā cheti rahasyaṃ hy etad uttamam ||",
+        "englishTranslation": "That very Yoga I am now teaching you, since you are My devotee and My friend.  This is the supreme secret.",
+        "meaning": "Krishna reveals that the ancient Yoga is being transmitted to Arjuna because of their special relationship.  This knowledge is the ultimate secret.",
+        "teachingPoint": "Supreme knowledge is revealed to devoted disciples"
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Arjuna",
+        "sanskrit": "अर्जुन उवाच | अपरं भवतो जन्म परं जन्म विवस्वतः | कथमेतद्विजानीयां त्वमादौ प्रोक्तवानिति ||",
+        "transliteration": "arjuna uvāca | aparaṃ bhavato janma paraṃ janma vivasvataḥ | katham etad vijānīyāṃ tvam ādau proktavān iti ||",
+        "englishTranslation": "Arjuna said: Your birth is later, while Vivasvan's birth is ancient. How am I to understand that You taught this Yoga in the beginning?",
+        "meaning":  "Arjuna questions how Krishna, being born recently, could have taught this ancient knowledge to Vivasvan ages ago.",
+        "teachingPoint": "Arjuna seeks clarification about Krishna's eternal nature"
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Krishna",
+        "sanskrit": "श्रीभगवानुवाच | बहूनि मे व्यतीतानि जन्मानि तव चार्जुन | तान्यहं वेद सर्वाणि न त्वं वेत्थ परंतप ||",
+        "transliteration": "śrībhagavān uvāca | bahūni me vyatītāni janmāni tava chārjuna | tāny ahaṃ veda sarvāṇi na tvaṃ vettha parantapa ||",
+        "englishTranslation": "The Blessed Lord said: Many births have passed for both you and Me, O Arjuna.   I remember them all; you do not, O slayer of enemies.",
+        "meaning": "Krishna reveals that both He and Arjuna have had many births.  Krishna remembers all of them, but Arjuna does not.  This foreshadows Krishna's revelation of His divine nature.",
+        "teachingPoint": "Krishna is eternal and remembers all His incarnations"
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Krishna",
+        "sanskrit": "अजोऽपि सन्नव्ययात्मा भूतानामीश्वरोऽपि सन् | प्रकृतिं स्वामधिष्ठाय संभवाम्यात्ममायया ||",
+        "transliteration": "ajo'pi sann avyayātmā bhūtānām īśvaro'pi san | prakṛtiṃ svām adhiṣṭhāya sambhavāmy ātma-māyayā ||",
+        "englishTranslation": "Although I am unborn, imperishable, and the Lord of all beings, yet I manifest Myself by My own Maya, controlling nature.",
+        "meaning": "Krishna declares His divine nature—He is eternal, unchanging, the Lord of all creation, yet He voluntarily takes birth through His divine power (Maya).",
+        "teachingPoint": "Krishna is eternally divine but chooses to incarnate"
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Krishna",
+        "sanskrit": "यदा यदा हि धर्मस्य ग्लानिर्भवति भारत | अभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम् ||",
+        "transliteration": "yadā yadā hi dharmasya glānir bhavati bhārata | abhyutthānam adharmasya tadātmānaṃ sṛjāmy aham ||",
+        "englishTranslation": "Whenever there is a decline of righteousness and rise of unrighteousness, O Bharata, I manifest Myself on earth.",
+        "meaning": "This is Krishna's famous declaration about the purpose of incarnation.  Whenever dharma (righteousness) declines and adharma (unrighteousness) rises, Krishna appears to restore balance.",
+        "teachingPoint":  "Krishna incarnates whenever righteousness is threatened",
+        "significance": "One of the most celebrated verses in the Bhagavad Gita"
+      },
+      {
+        "verseNumber":  8,
+        "speaker":  "Krishna",
+        "sanskrit": "परित्राणाय साधूनां विनाशाय च दुष्कृताम् | धर्मसंस्थापनार्थाय सम्भवामि युगे युगे ||",
+        "transliteration": "paritrāṇāya sādhūnāṃ vināśāya cha duṣkṛtām | dharma-saṃsthāpanārthāya sambhavāmi yuge yuge ||",
+        "englishTranslation": "To protect the righteous, to destroy the wicked, and to re-establish righteousness, I incarnate age after age.",
+        "meaning":  "Krishna states the three purposes of His incarnation: protection of the good, destruction of evil, and establishment of dharma.",
+        "teachingPoint": "The divine purpose of incarnation is to protect goodness and destroy evil",
+        "significance": "Completes the previous verse with Krishna's complete mission"
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Krishna",
+        "sanskrit": "जन्म कर्म च मे दिव्यमेवं यो वेत्ति तत्त्वतः | त्यक्त्वा देहं पुनर्जन्म नैति मामेति सोऽर्जुन ||",
+        "transliteration": "janma karma cha me divyam evaṃ yo vetti tattvataḥ | tyaktvā dehaṃ punar janma naiti mām eti so'rjuna ||",
+        "englishTranslation": "He who truly understands My divine birth and activities is not born again after leaving the body; he attains Me, O Arjuna.",
+        "meaning": "Those who comprehend the divine nature of Krishna and His incarnations achieve liberation and union with the divine.",
+        "teachingPoint": "Understanding Krishna's divine nature leads to liberation"
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Krishna",
+        "sanskrit": "वीतरागभयक्रोधा मन्मया मामुपाश्रिताः | बहवो ज्ञानतपसा पूता मद्भावमागताः ||",
+        "transliteration": "vīta-rāga-bhaya-krodhā man-mayā mām upāśritāḥ | bahavo jñāna-tapasā putā mad-bhāvam āgatāḥ ||",
+        "englishTranslation":  "Many who are freed from attachment, fear, and anger, absorbed in Me and taking refuge in Me, are purified by knowledge and tapasya, and have attained My state.",
+        "meaning": "Those who transcend desires, fear, and anger, and take refuge in Krishna through knowledge and austerity, attain union with Him.",
+        "teachingPoint":  "Devotion combined with knowledge leads to divine realization"
+      },
+      {
+        "verseNumber":  11,
+        "speaker":  "Krishna",
+        "sanskrit": "ये यथा मां प्रपद्यंते तांस्तथैव भजाम्यहम् | मम वर्त्मानुवर्तंते मनुष्याः पार्थ सर्वशः ||",
+        "transliteration": "ye yathā māṃ prapadyante tāṃs tathāiva bhajāmy aham | mama vartmānuvartante manuṣyāḥ pārtha sarvaśaḥ ||",
+        "englishTranslation": "As people approach Me, so I accept them.  All paths lead to Me, O Partha.",
+        "meaning": "Krishna welcomes all sincere seekers according to their level of understanding and approach.  He reciprocates with all who come to Him.",
+        "teachingPoint": "Krishna accepts all sincere devotees irrespective of their approach"
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Krishna",
+        "sanskrit": "काङ्क्षंतः कर्मणां सिद्धिं यजंत इह देवताः | क्षिप्रं हि मानुषे लोके सिद्धिर्भवति कर्मजा ||",
+        "transliteration": "kāṅkṣantaḥ karmaṇāṃ siddhiṃ yajanti iha devatāḥ | kṣipraṃ hi mānuṣe loke siddhir bhavati karmajā ||",
+        "englishTranslation": "Those desiring success in their actions worship the gods here.  Indeed, in the world of humans, success born of action comes quickly.",
+        "meaning": "People seek quick results through ritualistic worship, but spiritual realization requires a deeper understanding.",
+        "teachingPoint": "Action-based worship brings material results quickly but not spiritual liberation"
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Krishna",
+        "sanskrit": "चातुर्वर्ण्यं मया सृष्टं गुणकर्मविभागशः | तस्य कर्तारमपि मां विद्ध्यकर्तारमव्ययम् ||",
+        "transliteration": "chātur-varṇyaṃ mayā sṛṣṭaṃ guṇa-karma-vibhāgaśaḥ | tasya kartāram api māṃ viddhy akartāram avyayam ||",
+        "englishTranslation": "I created the four-fold order based on the division of qualities and duties.   Though I am the creator, know Me as the non-doer and eternal.",
+        "meaning": "Krishna created the social order (caste system based on qualities), yet remains uninvolved in action as the eternal, unchanging divine.",
+        "teachingPoint": "The divine creates and sustains yet remains uninvolved in action"
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Krishna",
+        "sanskrit": "न मां कर्माणि लिम्पंति न मे कर्मफले स्पृहा | इति मां योऽभिजानाति कर्मभिर्न स बध्यते ||",
+        "transliteration": "na māṃ karmāṇi limpanti na me karma-phale spṛhā | iti māṃ yo'bhijānāti karmabhir na sa badhyate ||",
+        "englishTranslation": "Action does not bind Me; nor do I have attachment to the fruits of action.   Whoever understands Me thus is not bound by actions.",
+        "meaning": "Krishna is unaffected by actions because He has no attachment to results.  Those who understand this truth also transcend karma.",
+        "teachingPoint": "Freedom from attachment to results is the key to transcending karma"
+      },
+      {
+        "verseNumber":  15,
+        "speaker":  "Krishna",
+        "sanskrit": "एवं ज्ञात्वा कृतं कर्म पूर्ववैः आत्मनः | कुरु कर्मैव तस्मात्त्वं पूर्ववैः पूर्वतरं कृतम् ||",
+        "transliteration": "evaṃ jñātvā kṛtaṃ karma pūrvavaiḥ ātmanaḥ | kuru karmaiṇa tasmāt tvam purvavaiḥ purvatarṃ kṛtam ||",
+        "englishTranslation": "Having understood this principle, the ancients performed their duties.  Therefore, you too perform your actions as the ancients did.",
+        "meaning":  "Ancient sages performed their duties while understanding that they were not the true doers.  Arjuna should follow their example.",
+        "teachingPoint": "Duty should be performed with the understanding of one's true nature"
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Krishna",
+        "sanskrit": "किं कर्म किमकर्मेति कवयोऽप्यत्र मोहिताः | तत्ते कर्म प्रवक्ष्यामि यज्ञात्वा मोक्ष्यसेऽशुभात् ||",
+        "transliteration": "kiṃ karma kim akarmeṇiti kavayo'py atra mohitāḥ | tat te karma pravakṣyāmi yaj jñātvā mokṣyase'śubhāt ||",
+        "englishTranslation": "What is action, what is inaction?  Even the wise are confused about this.  Therefore, I shall explain to you the nature of action by knowing which you shall be freed from evil.",
+        "meaning": "The nature of action and inaction is subtle and confuses even the wise. Krishna promises to clarify it so Arjuna can transcend karma.",
+        "teachingPoint":  "Understanding action and inaction correctly leads to liberation"
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Krishna",
+        "sanskrit": "कर्मणो ह्यपि बोद्धव्यं बोद्धव्यं च विकर्मणः | अकर्मणश्च बोद्धव्यं गहना कर्मणो गतिः ||",
+        "transliteration": "karmaṇo hy api boddhavyaṃ boddhavyaṃ cha vikarmṇaḥ | akarmaṇaś cha boddhavyaṃ gahanā karmaṇo gatiḥ ||",
+        "englishTranslation": "One must understand the nature of action, forbidden action, and inaction. The mystery of action is subtle.",
+        "meaning": "There are three types of action to understand: proper action (karma), forbidden action (vikarma), and inaction. Each has different spiritual implications.",
+        "teachingPoint":  "There are subtle distinctions in the nature of action"
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Krishna",
+        "sanskrit": "कर्मण्यकर्म यः पश्येदकर्मणि च कर्म य��� | स बुद्धिमान्मनुष्येषु स युक्तः कृत्स्नकर्मकृत् ||",
+        "transliteration": "karmaṇy akarma yaḥ paśyed akarmaṇi cha karma yaḥ | sa buddhimān manuṣyeṣu sa yuktaḥ kṛtsna-karmakṛt ||",
+        "englishTranslation": "He who sees inaction in action and action in inaction is wise among humans and is a true yogi, performer of all actions.",
+        "meaning": "The wise person understands that in detached action there is inaction, and in detachment from action there can be genuine action.  This paradox reveals deep spiritual truth.",
+        "teachingPoint": "True wisdom is understanding the paradoxical nature of action and inaction"
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Krishna",
+        "sanskrit": "यस्य सर्वे समारम्भाः कामसंकल्पवर्जिताः | ज्ञानाग्निदग्धकर्माणं तमाहुः पंडितं बुधाः ||",
+        "transliteration": "yasya sarve samārambhāḥ kāma-saṅkalpa-varjitāḥ | jñānāgni-dagdha-karmāṇaṃ tam āhuḥ paṇḍitaṃ budhāḥ ||",
+        "englishTranslation":  "One whose undertakings are free from desire and selfish purpose, whose actions are burned by the fire of knowledge—such a one is called a sage by the wise.",
+        "meaning": "The wise person is one whose actions are free from selfish desires and are consumed in the fire of spiritual knowledge.",
+        "teachingPoint": "Wisdom is characterized by actionless action and freedom from selfish desires"
+      },
+      {
+        "verseNumber":  20,
+        "speaker":  "Krishna",
+        "sanskrit": "त्यक्त्वा कर्मफलासङ्गं नित्यतृप्तो निराश्रयः | कर्मण्यभिप्रवृत्तोऽपि नैव किंचित्करोति सः ||",
+        "transliteration": "tyaktvā karma-phalāsaṅgaṃ nitya-tṛpto nirāśrayaḥ | karmany abhipravṛtto'pi naiva kiñchit karoti saḥ ||",
+        "englishTranslation": "Having abandoned attachment to the fruits of action, ever content, free from dependence, even when engaged in action, he does not perform any action.",
+        "meaning": "The enlightened person who has renounced attachment to results is so inwardly free that despite engaging in action, he truly performs nothing.",
+        "teachingPoint":  "Renunciation of attachment is the key to freedom while performing duty"
+      },
+      {
+        "verseNumber": 21,
+        "speaker": "Krishna",
+        "sanskrit": "निराशीर्यतचित्तात्मा त्यक्तसर्वपरिग्रहः | शारीरं केवलं कर्म कुर्वन्नाप्नोति किल्बिषम् ||",
+        "transliteration": "nirāśīr yata-chittātmā tyakta-sarva-parigrahaḥ | śārīraṃ kevalaṃ karma kurvan nāpnoti kilbisham ||",
+        "englishTranslation": "Free from desire, with mind and senses controlled, performing only bodily actions, he incurs no sin.",
+        "meaning": "The person with controlled desires who performs only necessary physical actions without wanting results remains free from karmic bondage.",
+        "teachingPoint": "Physical action without desire does not create karma"
+      },
+      {
+        "verseNumber": 22,
+        "speaker": "Krishna",
+        "sanskrit": "यदृच्छालाभसंतुष्टो द्वन्द्वातीतो विमत्सरः | समः सिद्धावसिद्धौ च कृत्वापि न निबध्यते ||",
+        "transliteration": "yadṛchhā-lābha-santuṣṭo dvandvā-tīto vimatsaraḥ | samaḥ siddhāv asiddhau cha kṛtvāpi na nibadhyate ||",
+        "englishTranslation": "Satisfied with whatever comes unsought, beyond the pairs of opposites, free from envy, balanced in success and failure, though acting, he is not bound.",
+        "meaning": "The person content with what naturally comes, unaffected by opposites, and unenvious remains free even while performing actions.",
+        "teachingPoint":  "Contentment and equanimity in success and failure free one from bondage"
+      },
+      {
+        "verseNumber": 23,
+        "speaker": "Krishna",
+        "sanskrit": "गतसङ्गस्य मुक्तस्य ज्ञानावस्थितचेतसः | यज्ञायाचरतः कर्म समग्रं प्रविलीयते ||",
+        "transliteration": "gata-saṅgasya muktasya jñānāvasthita-chetasaḥ | yajñāy ācharataḥ karma samagraṃ pravilīyate ||",
+        "englishTranslation": "For one free from attachments, liberated, with mind established in knowledge, acting only for sacrifice, all actions are completely dissolved.",
+        "meaning": "When action is performed as sacrifice by one free from attachment and established in wisdom, all karmic consequences are dissolved.",
+        "teachingPoint":  "Action performed as sacrifice by the wise creates no bondage"
+      },
+      {
+        "verseNumber": 24,
+        "speaker": "Krishna",
+        "sanskrit": "ब्रह्मार्पणं ब्रह्म हविर्ब्रह्माग्नौ ब्रह्मणा हुतम् | ब्रह्मैव तेन गंतव्यं ब्रह्मकर्मसमाधिना ||",
+        "transliteration": "brahmārpaṇaṃ brahma havir brahmāgnau brahmaṇā hutam | brahmaiva tena gantavyaṃ brahma-karma-samādhInā ||",
+        "englishTranslation": "Brahman is the offering, Brahman is the oblation, Brahman is the fire, and Brahman is the one who offers into the fire.  Brahman alone is attained by him who sees Brahman in all action.",
+        "meaning": "When action is performed with the awareness that all—the doer, the deed, the instrument, and the result—are expressions of the divine, liberation is attained.",
+        "teachingPoint": "Seeing the divine in all aspects of action leads to liberation"
+      },
+      {
+        "verseNumber": 25,
+        "speaker": "Krishna",
+        "sanskrit": "दैवमेवापरे यज्ञं योगिनः पर्युपासते | ब्रह्मागनौ परे यज्ञं यज्ञेनैवोपजुह्वति ||",
+        "transliteration": "daivam evāpare yajñaṃ yoginaḥ paryupāsate | brahmāgnau pare yajñaṃ yajñenāiv opajuhvati ||",
+        "englishTranslation": "Some yogis offer sacrifice to the gods; others offer sacrifice to Brahman in the fire of Brahman itself.",
+        "meaning": "Different spiritual practitioners perform sacrifice differently—some worship the gods, while others perform sacrifice at the altar of Brahman.",
+        "teachingPoint": "Different paths of worship suit different temperaments"
+      },
+      {
+        "verseNumber": 26,
+        "speaker": "Krishna",
+        "sanskrit": "श्रोत्रादीनीन्द्रियाण्यन्ये संयमाग्निषु जुह्वति | शब्दादीन्विषयानन्य इन्द्रिया��्निषु जुह्वति ||",
+        "transliteration":  "śrotrādīn indriyāṇy anye samyamāgniṣu juhvati | śabdādīn viṣayān anya indriyāgniṣu juhvati ||",
+        "englishTranslation": "Some sacrifice the senses into the fires of self-control; others offer sense objects into the fires of the senses.",
+        "meaning":  "Various spiritual practices involve controlling or purifying the senses through different methods of sacrifice.",
+        "teachingPoint": "Spiritual discipline involves the regulation of senses"
+      },
+      {
+        "verseNumber": 27,
+        "speaker": "Krishna",
+        "sanskrit": "सर्वाणीन्द्रियकर्माणि प्राणकर्माणि चापरे | आत्मसंयमयोगाग्नौ जुह्वति ज्ञानदीपिते ||",
+        "transliteration": "sarvāṇī indriya-karmāṇi prāṇa-karmāṇi chāpare | ātma-samyama-yogāgnau juhvati jñāna-dīpite ||",
+        "englishTranslation": "Yet others offer all sense activities and all vital forces into the fire of self-control kindled by knowledge.",
+        "meaning": "Advanced practitioners offer all bodily and vital functions into the fire of self-control illuminated by wisdom.",
+        "teachingPoint": "Highest spiritual practice involves complete self-control through knowledge"
+      },
+      {
+        "verseNumber": 28,
+        "speaker": "Krishna",
+        "sanskrit": "द्रव्ययज्ञास्तपोयज्ञा योगयज्ञास्तथापरे | स्वाध्यायज्ञानयज्ञाश्च यतयः संशितव्रताः ||",
+        "transliteration": "dravya-yajñās tapo-yajñā yoga-yajñās tathāpare | svādhyāya-jñāna-yajñāś cha yatayaḥ samśita-vratāḥ ||",
+        "englishTranslation": "Some perform sacrifices with material objects; some with austerity; some with yoga practice; while others with study and knowledge—all are devoted to their vows.",
+        "meaning": "There are various forms of spiritual sacrifice suitable for different temperaments and stages of development.",
+        "teachingPoint": "Different spiritual practices are valid according to the individual's nature"
+      },
+      {
+        "verseNumber": 29,
+        "speaker": "Krishna",
+        "sanskrit": "अपाने जुह्वति प्राणं प्राणेऽपानं तथापरे | प्राणापानगती रुद्ध्वा प्राणायामपरायणाः ||",
+        "transliteration": "apāne juhvati prāṇaṃ prāṇe'pānaṃ tathāpare | prāṇāpāna-gatī ruddhvā prāṇāyāma-parāyaṇāḥ ||",
+        "englishTranslation": "Others offer the outgoing breath into the incoming breath, and the incoming breath into the outgoing breath, restricting the flow of both, devoted to pranayama.",
+        "meaning":  "Some practice breath control (pranayama) by directing one breath into the other as a form of spiritual sacrifice.",
+        "teachingPoint":  "Breath control is a yogic practice of spiritual discipline"
+      },
+      {
+        "verseNumber": 30,
+        "speaker": "Krishna",
+        "sanskrit": "अपरे नियताहाराः प्राणान्प्राणेषु जुह्वति | सर्वेऽप्येते यज्ञविदो यज्ञक्षपितक���्मषाः ||",
+        "transliteration": "apare niyatāhārāḥ prāṇān prāṇeṣu juhvati | sarve'py ete yajña-vido yajña-kṣapita-kalmashāḥ ||",
+        "englishTranslation":  "Others, devoted to restraint of diet, offer the life-breath into the life-breath itself.  All these understand sacrifice and their sins are washed away by sacrifice.",
+        "meaning": "Those who practice dietary restraint and offer their vital energies through controlled eating understand the nature of sacrifice and are purified.",
+        "teachingPoint": "Sacrifice purifies one from karmic contamination"
+      },
+      {
+        "verseNumber": 31,
+        "speaker": "Krishna",
+        "sanskrit": "यज्ञशिष्टामृतभुजो यांति ब्रह्म सनातनम् | नायं लोकोऽस्त्ययज्ञस्य कुतोऽन्यः कुरुसत्तम ||",
+        "transliteration": "yajña-śiṣṭāmṛta-bhujo yānti brahma sanātanam | nāyaṃ loko'stya yajñasya kuto'nyaḥ kuru-sattama ||",
+        "englishTranslation": "Those who eat the remnants of sacrifice attain the eternal Brahman. Even this world is not for one who does not sacrifice.  How then, O best of Kurus, could there be another world?",
+        "meaning":  "Those who partake of the sacred remains of sacrifice (living a life of spiritual practice) attain the eternal divine.  Without sacrifice, one cannot progress in any world.",
+        "teachingPoint":  "Sacrifice is essential for spiritual progress and worldly welfare"
+      },
+      {
+        "verseNumber": 32,
+        "speaker": "Krishna",
+        "sanskrit": "एवं बहुविधा यज्ञा वितता ब्रह्मणो मुखे | कर्मजान्विद्धि तान्सर्वान्एवं ज्ञात्वा विमोक्ष्यसे ||",
+        "transliteration": "evaṃ bahubidhā yajñā vitatā brahmaṇo mukhe | karmajān viddhi tān sarvān evaṃ jñātvā vimokṣyase ||",
+        "englishTranslation": "These various sacrifices are described in the Vedas.  Know them all as born of action.   Knowing this, you shall be freed.",
+        "meaning": "All these different forms of sacrifice are described in the Vedas and arise from different types of action.  Understanding this truth leads to liberation.",
+        "teachingPoint": "Knowledge of the various paths to sacrifice leads to freedom"
+      },
+      {
+        "verseNumber": 33,
+        "speaker": "Krishna",
+        "sanskrit": "श्रेयान्द्रव्ययज्ञाज्ज्ञानयज्ञः परंतप | सर्वं कर्माखिलं पार्थ ज्ञाने परिसमाप्यते ||",
+        "transliteration": "śreyān dravya-yajñāj jñāna-yajñaḥ parantapa | sarvaṃ karmākhilaṃ pārtha jñāne parisamāpyate ||",
+        "englishTranslation": "O slayer of enemies, sacrifice performed with knowledge is superior to the sacrifice of material objects.   All action, O Partha, is fulfilled in knowledge.",
+        "meaning": "Spiritual knowledge and understanding are superior to ritual sacrifice with material objects. All action finds its ultimate fulfillment in wisdom.",
+        "teachingPoint":  "Knowledge is the highest form of sacrifice and the culmination of all action"
+      },
+      {
+        "verseNumber": 34,
+        "speaker": "Krishna",
+        "sanskrit": "तद्विद्धि प्रणिपातेन परिप्रश्नेन सेवया | उपदेक्ष्यंति ते ज्ञानं ज्ञानिनस्तत्त्वदर्शिनः ||",
+        "transliteration": "tad viddhi praṇipātena paripraśnena sevayā | upadekṣyanti te jñānaṃ jñāninas tattva-darśinaḥ ||",
+        "englishTranslation":  "Learn this wisdom by approaching a spiritual teacher, by questioning him, and by serving him.  The wise who perceive the truth will impart knowledge to you.",
+        "meaning":  "To gain true spiritual knowledge, one must approach a qualified teacher with humility, ask sincere questions, and serve them with devotion.",
+        "teachingPoint": "Knowledge comes through proper relationship with a spiritual teacher"
+      },
+      {
+        "verseNumber": 35,
+        "speaker": "Krishna",
+        "sanskrit": "यज्ञात्वा न पुनर्मोहमेवं यास्यसि पाण्डव | येन भूतान्यशेषेण द्रक्ष्यस्यात्मन्यथो मयि ||",
+        "transliteration": "yaj jñātvā na punar mohṃ evaṃ yāsyasi pāṇḍava | yena bhūtāny aśeṣeṇa drakṣyasy ātmany atho mayi ||",
+        "englishTranslation": "Having known this, O Pandava, you shall never again be deluded like this.   By this knowledge, you will see all beings in yourself and in Me.",
+        "meaning": "Once one understands the nature of existence and the divine, delusion ends. One perceives all beings as connected in the Self and in God.",
+        "teachingPoint":  "True knowledge brings the vision of unity in all existence"
+      },
+      {
+        "verseNumber": 36,
+        "speaker": "Krishna",
+        "sanskrit": "अपि चेदसि पापेभ्यः सर्वेभ्यः पापकृत्तमः | सर्वं ज्ञानप्लवेनैव वृजिनं संतरिष्यसि ||",
+        "transliteration": "api ched asi pāpebhyaḥ sarvebhyaḥ pāpa-kṛt-tamaḥ | sarvaṃ jñāna-plavenaiva vṛjinaṃ santariṣyasi ||",
+        "englishTranslation":  "Even if you are the most sinful of all sinners, you shall cross over all sins by the boat of knowledge alone.",
+        "meaning": "No matter how sinful one's past, divine knowledge is so purifying that it washes away all karma.",
+        "teachingPoint": "Knowledge is the ultimate purifier"
+      },
+      {
+        "verseNumber": 37,
+        "speaker": "Krishna",
+        "sanskrit": "यथैधांसि समिद्धोऽग्निर्भस्मसात्कुरुते अर्जुन | ज्ञानाग्निः सर्वकर्माणि भस्मसात्कुरुते तथा ||",
+        "transliteration": "yathaidhāṃsi samiddho'gnir bhasma-sāt kurute arjuna | jñānāgniḥ sarva-karmāṇi bhasma-sāt kurute tathā ||",
+        "englishTranslation": "Just as a blazing fire reduces wood to ashes, O Arjuna, the fire of knowledge reduces all actions to ashes.",
+        "meaning": "The fire of spiritual knowledge destroys all karmic impressions created by past actions, just as fire consumes wood into ash.",
+        "teachingPoint": "Knowledge burns all karmic seeds"
+      },
+      {
+        "verseNumber": 38,
+        "speaker": "Krishna",
+        "sanskrit": "न हि ज्ञानेन सदृशं पवित्रमिह विद्यते | तत्स्वयं योगसंसिद्धः कालेनात्मनि विन्दति ||",
+        "transliteration": "na hi jñānena sadṛśaṃ pavitram iha vidyate | tat svayaṃ yoga-samsiddhaḥ kālena ātmani vindati ||",
+        "englishTranslation": "In this world, there is nothing as purifying as knowledge. In due course, he who is perfected in yoga discovers this within himself.",
+        "meaning": "Nothing is as purifying as spiritual knowledge. One who practices yoga and spiritual disciplines eventually experiences this knowledge within.",
+        "teachingPoint": "Knowledge is the ultimate purifier and comes through disciplined practice"
+      },
+      {
+        "verseNumber":  39,
+        "speaker":  "Krishna",
+        "sanskrit": "श्रद्धावान्लभते ज्ञानं तत्परः संयतेन्द्रियः | ज्ञानं लब्ध्वा परां शांतिमधिगच्छत्यनन्तरम् ||",
+        "transliteration": "śraddhāvān labhate jñānaṃ tat-paraḥ samyatendriyaḥ | jñānaṃ labdhvā parāṃ śāntiṃ adhigachhaty anantaram ||",
+        "englishTranslation": "One who has faith, is dedicated to it, and has subdued the senses obtains knowledge.  Having obtained knowledge, one speedily attains supreme peace.",
+        "meaning": "Knowledge comes to those with faith and dedication who have controlled their senses.  With knowledge comes lasting peace.",
+        "teachingPoint": "Faith, dedication, and sense control are prerequisites for knowledge and peace"
+      },
+      {
+        "verseNumber": 40,
+        "speaker": "Krishna",
+        "sanskrit": "अज्ञश्चाश्रद्धहानश्च संशयात्मा विनश्यति | नायं लोकोऽस्ति न परो न सुखं संशयात्मनः ||",
+        "transliteration": "ajñaś chāśraddha-hānaś cha samsayātmā vinashyati | nāyaṃ lokō'sti na parō na sukhaṃ samsayātmanaḥ ||",
+        "englishTranslation": "The ignorant, the faithless, and the doubtful perish. Neither this world nor the next world nor happiness exists for the doubtful.",
+        "meaning":  "Doubt and lack of faith destroy one's spiritual progress. The doubtful person finds no peace in either world.",
+        "teachingPoint": "Faith and certainty are essential; doubt leads to destruction"
+      },
+      {
+        "verseNumber":  41,
+        "speaker":  "Krishna",
+        "sanskrit": "योगसंन्यस्तकर्माणं ज्ञानसंछिन्नसंशयम् | आत्मवंतं न कर्माणि निबध्नंति धनंजय ||",
+        "transliteration": "yoga-sannyasta-karmāṇaṃ jñāna-sanchinna-samsayam | ātmavantaṃ na karmāṇi nibadhnaṃti dhānañjaya ||",
+        "englishTranslation": "He who has renounced action through yoga, whose doubt is cut by knowledge, and who is established in the Self—action does not bind him, O Dhananjaya.",
+        "meaning":  "One who has renounced attachment to action through yoga practice, whose doubts are destroyed by knowledge, and who is established in the Self remains free from karma.",
+        "teachingPoint":  "Liberation comes through renunciation, knowledge, and establishment in the Self"
+      },
+      {
+        "verseNumber": 42,
+        "speaker": "Krishna",
+        "sanskrit": "तस्मादज्ञानसंभूतं हृत्स्थं ज्ञानासिना स्वथः | छित्त्वा संशयं योगमातिष्ठोत्तिष्ठ भारत ||",
+        "transliteration": "tasmād ajñāna-sambhūtaṃ hṛtsthaṃ jñānāsinā sva-tha | chhitvā samsayaṃ yogam ātisṭho'ttiṣṭha bhārata ||",
+        "englishTranslation": "Therefore, with the sword of knowledge, cut asunder the doubt in your heart that has arisen from ignorance.  Engage in yoga—arise, O Bharata! ",
+        "meaning": "Krishna urges Arjuna to use the sword of knowledge to cut through all doubt born of ignorance, and to engage in yoga practice with determination.",
+        "teachingPoint":  "Knowledge destroys doubt; spiritual practice brings liberation",
+        "significance": "The final verse of Chapter 4, emphasizing Krishna's call to action"
+      }
+    ]
+  }
+}  

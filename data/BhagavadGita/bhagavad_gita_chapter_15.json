@@ -1,0 +1,177 @@
+{
+  "bhagavadGita": {
+    "chapter": {
+      "number": 15,
+      "name": "Purushottama Yoga",
+      "englishName": "Yoga of the Supreme Divine Personality",
+      "description": "Krishna describes the eternal cosmic tree of samsara, the nature of the soul, and the Supreme Being (Purushottama). This chapter explains how to detach from the material world and realize the highest divine reality.",
+      "totalVerses": 20,
+      "theme": "Understanding the cosmic tree, the soul, and the Supreme Being beyond material existence",
+      "primaryTeacher": "Lord Krishna",
+      "student": "Arjuna",
+      "yogaType": "Jnana Yoga - Knowledge of the Supreme Self"
+    },
+    "verses": [
+      {
+        "verseNumber": 1,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रीभगवानुवाच | ऊर्ध्वमूलमधःशाखमश्वत्थं प्राहुरव्ययम् | छन्दांसि यस्य पर्णानि यस्तं वेद स वेदवित् ||",
+        "transliteration": "śrī-bhagavān uvāca | ūrdhva-mūlam adhaḥ-śākham aśvatthaṃ prāhur avyayam | chandāṃsi yasya parṇāni yas taṃ veda sa veda-vit ||",
+        "english_translation": "There is an eternal banyan tree with roots above and branches below; one who knows it knows the Vedas.",
+        "meaning": "The world is like an inverted tree rooted in the divine."
+      },
+      {
+        "verseNumber": 2,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अधश्चोर्ध्वं प्रसृतास्तस्य शाखा गुणप्रवृद्धा विषयप्रवालाः | अधश्च मूलान्यनुसन्ततानि कर्मानुबन्धीनि मनुष्यलोके ||",
+        "transliteration": "adhaś cordhvaṃ prasṛtās tasya śākhā guṇa-pravṛddhā viṣaya-pravālāḥ | adhaś ca mūlāny anusantatāni karmānubandhīni manuṣya-loke ||",
+        "english_translation": "Its branches spread downward and upward, nourished by the gunas; roots bind humans through actions.",
+        "meaning": "Desires and actions sustain worldly existence."
+      },
+      {
+        "verseNumber": 3,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न रूपमस्येह तथोपलभ्यते नान्तो न चादिर्न च सम्प्रतिष्ठा | अश्वत्थमेनं सुविरूढमूलमसङ्गशस्त्रेण दृढेन छित्त्वा ||",
+        "transliteration": "na rūpam asyeha tathopalabhyate nānto na cādir na ca sampratiṣṭhā | aśvattham enaṃ suvirūḍha-mūlam asaṅga-śastreṇa dṛḍhena chittvā ||",
+        "english_translation": "This tree’s form is not perceived; it must be cut with detachment.",
+        "meaning": "Detach to escape worldly illusion."
+      },
+      {
+        "verseNumber": 4,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ततः पदं तत्परिमार्गितव्यं यस्मिन्गता न निवर्तन्ति भूयः | तमेव चाद्यं पुरुषं प्रपद्ये यतः प्रवृत्तिः प्रसृता पुराणी ||",
+        "transliteration": "tataḥ padaṃ tat parimārgitavyaṃ yasmin gatā na nivartanti bhūyaḥ | tam eva cādyaṃ puruṣaṃ prapadye yataḥ pravṛttiḥ prasṛtā purāṇī ||",
+        "english_translation": "Seek that supreme state from which none return.",
+        "meaning": "Liberation is the ultimate goal."
+      },
+      {
+        "verseNumber": 5,
+        "speaker": "Sri Krishna",
+        "sanskrit": "निर्मानमोहा जितसङ्गदोषा अध्यात्मनित्या विनिवृत्तकामाः | द्वन्द्वैर्विमुक्ताः सुखदुःखसंज्ञैर्गच्छन्त्यमूढाः पदमव्ययं तत् ||",
+        "transliteration": "nirmāna-mohā jita-saṅga-doṣā adhyātma-nityā vinivṛtta-kāmāḥ | dvandvair vimuktāḥ sukha-duḥkha-saṃjñair gacchanty amūḍhāḥ padam avyayaṃ tat ||",
+        "english_translation": "Free from ego and attachment, one reaches the eternal state.",
+        "meaning": "Detachment leads to liberation."
+      },
+      {
+        "verseNumber": 6,
+        "speaker": "Sri Krishna",
+        "sanskrit": "न तद्भासयते सूर्यो न शशाङ्को न पावकः | यद्गत्वा न निवर्तन्ते तद्धाम परमं मम ||",
+        "transliteration": "na tad bhāsayate sūryo na śaśāṅko na pāvakaḥ | yad gatvā na nivartante tad dhāma paramaṃ mama ||",
+        "english_translation": "That supreme abode is beyond sun, moon, and fire.",
+        "meaning": "Divine reality is self-luminous."
+      },
+      {
+        "verseNumber": 7,
+        "speaker": "Sri Krishna",
+        "sanskrit": "ममैवांशो जीवलोके जीवभूतः सनातनः | मनःषष्ठानीन्द्रियाणि प्रकृतिस्थानि कर्षति ||",
+        "transliteration": "mamaivāṃśo jīva-loke jīva-bhūtaḥ sanātanaḥ | manaḥ-ṣaṣṭhānīndriyāṇi prakṛti-sthāni karṣati ||",
+        "english_translation": "The soul is a part of Me, struggling with mind and senses.",
+        "meaning": "The individual soul is divine yet bound."
+      },
+      {
+        "verseNumber": 8,
+        "speaker": "Sri Krishna",
+        "sanskrit": "शरीरं यदवाप्नोति यच्चाप्युत्क्रामतीश्वरः | गृहीत्वैतानि संयाति वायुर्गन्धानिवाशयात् ||",
+        "transliteration": "śarīraṃ yad avāpnoti yac cāpy utkrāmatīśvaraḥ | gṛhītvaitāni saṃyāti vāyur gandhān ivāśayāt ||",
+        "english_translation": "The soul carries senses like wind carries fragrance.",
+        "meaning": "The soul moves between bodies."
+      },
+      {
+        "verseNumber": 9,
+        "speaker": "Sri Krishna",
+        "sanskrit": "श्रोत्रं चक्षुः स्पर्शनं च रसनं घ्राणमेव च | अधिष्ठाय मनश्चायं विषयानुपसेवते ||",
+        "transliteration": "śrotraṃ cakṣuḥ sparśanaṃ ca rasanaṃ ghrāṇam eva ca | adhiṣṭhāya manaś cāyaṃ viṣayān upasevate ||",
+        "english_translation": "The soul experiences through senses and mind.",
+        "meaning": "Consciousness uses body instruments."
+      },
+      {
+        "verseNumber": 10,
+        "speaker": "Sri Krishna",
+        "sanskrit": "उत्क्रामन्तं स्थितं वापि भुञ्जानं वा गुणान्वितम् | विमूढा नानुपश्यन्ति पश्यन्ति ज्ञानचक्षुषः ||",
+        "transliteration": "utkrāmantaṃ sthitaṃ vāpi bhuñjānaṃ vā guṇānvitam | vimūḍhā nānupaśyanti paśyanti jñāna-cakṣuṣaḥ ||",
+        "english_translation": "The ignorant cannot perceive the soul; the wise can.",
+        "meaning": "Wisdom reveals truth."
+      },
+      {
+        "verseNumber": 11,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यतन्तो योगिनश्चैनं पश्यन्त्यात्मन्यवस्थितम् | यतन्तोऽप्यकृतात्मानो नैनं पश्यन्त्यचेतसः ||",
+        "transliteration": "yatanto yoginaś cainaṃ paśyanty ātmany avasthitam | yatanto 'py akṛtātmāno nainaṃ paśyanty acetasaḥ ||",
+        "english_translation": "Yogis perceive the soul within; the unwise do not.",
+        "meaning": "Self-realization requires discipline."
+      },
+      {
+        "verseNumber": 12,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यदादित्यगतं तेजो जगद्भासयतेऽखिलम् | यच्चन्द्रमसि यच्चाग्नौ तत्तेजो विद्धि मामकम् ||",
+        "transliteration": "yad āditya-gataṃ tejo jagad bhāsayate 'khilam | yac candramasi yac cāgnau tat tejo viddhi māmakam ||",
+        "english_translation": "The light in sun, moon, and fire is Mine.",
+        "meaning": "All energy originates from the divine."
+      },
+      {
+        "verseNumber": 13,
+        "speaker": "Sri Krishna",
+        "sanskrit": "गामाविश्य च भूतानि धारयाम्यहमोजसा | पुष्णामि चौषधीः सर्वाः सोमो भूत्वा रसात्मकः ||",
+        "transliteration": "gām āviśya ca bhūtāni dhārayāmy aham ojasā | puṣṇāmi cauṣadhīḥ sarvāḥ somo bhūtvā rasātmakaḥ ||",
+        "english_translation": "I sustain the earth and nourish all plants.",
+        "meaning": "God sustains life."
+      },
+      {
+        "verseNumber": 14,
+        "speaker": "Sri Krishna",
+        "sanskrit": "अहं वैश्वानरो भूत्वा प्राणिनां देहमाश्रितः | प्राणापानसमायुक्तः पचाम्यन्नं चतुर्विधम् ||",
+        "transliteration": "ahaṃ vaiśvānaro bhūtvā prāṇināṃ deham āśritaḥ | prāṇāpāna-samāyuktaḥ pacāmy annaṃ catur-vidham ||",
+        "english_translation": "I am the digestive fire within all beings.",
+        "meaning": "Divine energy operates within the body."
+      },
+      {
+        "verseNumber": 15,
+        "speaker": "Sri Krishna",
+        "sanskrit": "सर्वस्य चाहं हृदि सन्निविष्टो मत्तः स्मृतिर्ज्ञानमपोहनं च | वेदैश्च सर्वैरहमेव वेद्यो वेदान्तकृद्वेदविदेव चाहम् ||",
+        "transliteration": "sarvasya cāhaṃ hṛdi sanniviṣṭo mattaḥ smṛtir jñānam apohanaṃ ca | vedaiś ca sarvair aham eva vedyo vedānta-kṛd veda-vid eva cāham ||",
+        "english_translation": "I dwell in all hearts; from Me come memory, knowledge, and forgetfulness.",
+        "meaning": "God is the source of consciousness and wisdom."
+      },
+      {
+        "verseNumber": 16,
+        "speaker": "Sri Krishna",
+        "sanskrit": "द्वाविमौ पुरुषौ लोके क्षरश्चाक्षर एव च | क्षरः सर्वाणि भूतानि कूटस्थोऽक्षर उच्यते ||",
+        "transliteration": "dvāv imau puruṣau loke kṣaraś cākṣara eva ca | kṣaraḥ sarvāṇi bhūtāni kūṭa-stho 'kṣara ucyate ||",
+        "english_translation": "There are two kinds of beings: perishable and imperishable.",
+        "meaning": "Material and spiritual realities exist."
+      },
+      {
+        "verseNumber": 17,
+        "speaker": "Sri Krishna",
+        "sanskrit": "उत्तमः पुरुषस्त्वन्यः परमात्मेत्युदाहृतः | यो लोकत्रयमाविश्य बिभर्त्यव्यय ईश्वरः ||",
+        "transliteration": "uttamaḥ puruṣas tv anyaḥ paramātmety udāhṛtaḥ | yo loka-trayam āviśya bibharty avyaya īśvaraḥ ||",
+        "english_translation": "Beyond both is the Supreme Person, who sustains all worlds.",
+        "meaning": "Krishna is the ultimate reality."
+      },
+      {
+        "verseNumber": 18,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यस्मात्क्षरमतीतोऽहमक्षरादपि चोत्तमः | अतोऽस्मि लोके वेदे च प्रथितः पुरुषोत्तमः ||",
+        "transliteration": "yasmāt kṣaram atīto 'ham akṣarād api cottamaḥ | ato 'smi loke vede ca prathitaḥ puruṣottamaḥ ||",
+        "english_translation": "I transcend both perishable and imperishable; thus I am called the Supreme Person.",
+        "meaning": "Krishna is beyond all existence."
+      },
+      {
+        "verseNumber": 19,
+        "speaker": "Sri Krishna",
+        "sanskrit": "यो मामेवमसम्मूढो जानाति पुरुषोत्तमम् | स सर्वविद्भजति मां सर्वभावेन भारत ||",
+        "transliteration": "yo mām evam asammūḍho jānāti puruṣottamam | sa sarva-vid bhajati māṃ sarva-bhāvena bhārata ||",
+        "english_translation": "One who knows Me as the Supreme worships Me with full devotion.",
+        "meaning": "True knowledge leads to devotion."
+      },
+      {
+        "verseNumber": 20,
+        "speaker": "Sri Krishna",
+        "sanskrit": "इति गुह्यतमं शास्त्रमिदमुक्तं मयानघ | एतद्बुद्ध्वा बुद्धिमान्स्यात्कृतकृत्यश्च भारत ||",
+        "transliteration": "iti guhyatamaṃ śāstram idam uktaṃ mayānagha | etad buddhvā buddhimān syāt kṛta-kṛtyaś ca bhārata ||",
+        "english_translation": "Thus, I have explained the most secret knowledge; understanding this, one becomes wise and fulfilled.",
+        "meaning": "This knowledge completes spiritual understanding."
+      }
+    ]
+  }
+}
