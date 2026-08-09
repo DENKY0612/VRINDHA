@@ -10,7 +10,7 @@ Vrindha is an ethical, defensive-first cybersecurity assistant with a CLI, FastA
 - **Red Team controls:** private/loopback targets by default, per-user confirmation, five-minute confirmation expiry, and no API auto-confirm bypass.
 - **Blue Team workflows:** threat analysis, alerts, firewall simulation, IDS monitoring, endpoint checks, and response orchestration.
 - **Tool wrappers:** nmap, whois, nikto, gobuster, dirb, amass, sublist3r, tcpdump, hashcat assistant, and related tools.
-- **Authentication:** bcrypt password hashes and signed, expiring JWT access tokens.
+- **Authentication:** bcrypt-only password hashes, secure first-user bootstrap, and signed, expiring JWT access tokens via a Swagger-visible `BearerAuth` scheme.
 - **Dashboard:** command center, logs, status, Gita guidance, tool checks, and Chart.js visualizations.
 - **Logging and memory:** SQLite WAL storage, file logs, event correlation, and similar-case retrieval.
 - **ML layer:** anomaly detection, rule-based risk scoring, threat prediction, and CSV data export.
@@ -138,20 +138,24 @@ Vrindha AI SOC System
 │
 ├── 🌐 API Layer — api/
 │   ├── main.py — FastAPI routes, request limits, security headers, CORS
-│   ├── auth.py — bcrypt, environment-provisioned users, expiring JWTs
-│   ├── Public routes — /, /status, /login, /gita/*, /dashboard/
+│   ├── auth.py — bcrypt, secure user registration, expiring JWTs
+│   ├── Public routes — /, /status, /login, /gita/*, /dashboard/, and
+│   │   /register while the user store is empty (first-user bootstrap)
 │   ├── Protected routes — /command, /logs, /dashboard-data, /ml/*,
 │   │   and /tools/verify
 │   └── routes.py — application re-export for modular integration
 │
 ├── 🖥️ Dashboard — dashboard/
-│   ├── index.html — login, command center, status, logs, ML, and guidance
+│   ├── index.html — register, login, command center, status, logs, ML,
+│   │   and guidance
 │   ├── style.css — responsive dark SOC interface
 │   └── app.js — authenticated API requests and Chart.js visualizations
 │
 ├── 🧪 Tests — tests/
-│   └── test_security.py — auth, target policy, harmful intent, IP validation,
-│       confirmation isolation, auto-confirm prevention, and expiry
+│   ├── test_security.py — auth, target policy, harmful intent, IP validation,
+│   │   confirmation isolation, auto-confirm prevention, and expiry
+│   └── test_registration.py — registration, bootstrap, roles, Bearer auth,
+│       OpenAPI security schemes, and user-store behavior
 │
 └── 🚀 Deployment
     ├── Dockerfile — unprivileged Kali-based API container
@@ -247,7 +251,120 @@ Open:
 - API documentation: <http://localhost:8000/docs>
 - Health/status: <http://localhost:8000/status>
 
-Log in through the dashboard with the administrator configured in `.env`.
+Two ways to get an administrator:
+
+- **First-user registration:** while `database/users.json` is empty, `POST /register` is public and creates the first account (always the `admin` role) and returns a Bearer JWT so the operator is logged in immediately.
+- **Environment provisioning:** `ADMIN_USERNAME` + `ADMIN_PASSWORD` in `.env` provision an administrator when the API starts.
+
+Log in through the dashboard or with the API using the created account.
+
+### User registration and authentication
+
+#### First-user bootstrap (public, creates the administrator)
+
+While no users exist, anyone may register. The first account is forced to the
+`admin` role and the response includes a signed Bearer access token:
+
+```bash
+curl -X POST http://127.0.0.1:8000/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "your-secure-password"
+  }'
+```
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "First administrator registered",
+  "user": {
+    "username": "admin",
+    "role": "admin",
+    "active": true,
+    "created": "2026-01-01T00:00:00+00:00"
+  },
+  "access_token": "SIGNED_JWT",
+  "token_type": "bearer"
+}
+```
+
+The first-registration `access_token` is a real JWT: store it and send it as
+`Authorization: Bearer <token>` to authenticated endpoints, exactly like the
+token returned by `/login`.
+
+#### Closing public registration
+
+As soon as the first account exists, public registration closes. Any
+unauthenticated `POST /register` then returns `401`. To create more users, the
+administrator sends their Bearer token:
+
+```bash
+curl -X POST http://127.0.0.1:8000/register \
+  -H "Authorization: Bearer ADMIN_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "analyst1",
+    "password": "another-secure-password",
+    "role": "user"
+  }'
+```
+
+Rules:
+
+- Only an authenticated administrator can create users (`200`/`201` for success).
+- A regular (non-admin) user receives `403`.
+- Missing or invalid authentication receives `401`.
+- Duplicate usernames (case-insensitive) receive `409`.
+- Invalid usernames, weak passwords, or unknown roles receive `422`.
+- Supported roles are `admin` and `user`.
+- Responses never contain a password or password hash.
+
+#### Username and password rules
+
+- Usernames are normalized to lowercase.
+- 3–64 characters; must start with a letter or number.
+- Only letters, numbers, `.`, `_`, and `-` are allowed.
+- Passwords must be at least 12 characters.
+- Passwords are hashed with bcrypt only.
+
+#### Using the Bearer token
+
+```bash
+TOKEN=$(curl -sS -X POST http://localhost:8000/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"admin","password":"YOUR_PASSWORD"}' \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
+
+curl -sS http://localhost:8000/logs \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Protected endpoints return `401` with a `WWW-Authenticate: Bearer` header when
+the token is missing, invalid, or expired, or when the account was disabled.
+
+#### Swagger Authorize control
+
+Open <http://localhost:8000/docs>. The OpenAPI schema declares an HTTP Bearer
+security scheme named **`BearerAuth`** (`components.securitySchemes.BearerAuth`),
+so Swagger UI shows an **Authorize** button. Paste the JWT from `/login` or
+first-user `/register` into the value field (the `Bearer` prefix is optional in
+Swagger UI), authorize, and the "Try it out" calls to protected endpoints will
+send the token automatically.
+
+#### Dashboard registration behavior
+
+The dashboard command center has Username, Password, **Register**, **Login**,
+and **Logout** controls plus an authentication status message:
+
+- If no users exist, **Register** creates the first administrator, stores the
+  returned JWT in `sessionStorage`, and treats you as logged in.
+- If an administrator is already logged in, **Register** creates a regular
+  user using the current Bearer token.
+- The password input is cleared after registration, and success/error messages
+  are shown in the status area.
 
 ### Authenticated API example
 
@@ -285,7 +402,8 @@ Confirmations are isolated by authenticated username and expire after five minut
 |---|---|---|---|
 | `/` | GET | Public | Basic service information |
 | `/status` | GET | Public | Minimal status and container health check |
-| `/login` | POST | Public | Exchange configured credentials for a JWT |
+| `/register` | POST | Public while empty / Admin JWT after | Create the first administrator or, after bootstrap, a user (admin only) |
+| `/login` | POST | Public | Exchange credentials for a JWT |
 | `/gita/random` | GET | Public | Return a random guidance verse |
 | `/gita/verse/{chapter}/{verse}` | GET | Public | Return a specific verse |
 | `/command` | POST | Bearer JWT | Process a command |
@@ -327,7 +445,7 @@ python -m compileall -q .
 pip check
 ```
 
-The suite currently covers password hashing, JWT validation, harmful-intent denial, target authorization, firewall IP validation, confirmation isolation, confirmation expiry, and auto-confirm prevention.
+The suite currently covers password hashing, JWT validation, harmful-intent denial, target authorization, firewall IP validation, confirmation isolation, confirmation expiry, auto-confirm prevention, plus user registration: forced-admin first user, JWT on first registration, registration closing after bootstrap, admin-only user creation, `401`/`403`/`409`/`422` responses, username normalization, disabled-account rejection, Bearer auth on protected routes, and the `BearerAuth` OpenAPI scheme.
 
 ## Docker
 

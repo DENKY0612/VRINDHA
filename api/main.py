@@ -1,21 +1,29 @@
 """FastAPI backend for the Vrindha SOC system."""
 from collections import defaultdict, deque
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Literal, Optional
 import logging
 import os
 import sys
 import time
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from api.auth import auth_module
+from api.auth import (
+    BootstrapClosedError,
+    DuplicateUserError,
+    InvalidPasswordError,
+    InvalidRoleError,
+    InvalidUsernameError,
+    auth_module,
+)
 from core.brain import brain
 from core.gita_engine import gita_engine
 from database.db import add_log, get_logs
@@ -50,13 +58,44 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=1024)
 
 
-def get_current_user(authorization: Optional[str] = Header(None)) -> Dict[str, Any]:
-    if not authorization or not authorization.startswith("Bearer "):
+class RegisterRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=64)
+    password: str = Field(min_length=1, max_length=1024)
+    role: Literal["admin", "user"] = "user"
+
+
+# OpenAPI Bearer security scheme; FastAPI exposes the Authorize control in
+# Swagger UI because protected endpoints depend on this scheme.
+bearer_scheme = HTTPBearer(
+    auto_error=False,
+    scheme_name="BearerAuth",
+    description="JWT returned by POST /login or first-user POST /register",
+)
+
+
+def get_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
+) -> Dict[str, Any]:
+    """Validate the Bearer JWT and return its claims plus the live user role.
+
+    Tokens are rejected when the account was disabled or removed, so disabling
+    a user also revokes their existing tokens.
+    """
+    if credentials is None or credentials.scheme.lower() != "bearer":
         raise HTTPException(status_code=401, detail="Bearer authentication required", headers={"WWW-Authenticate": "Bearer"})
-    payload = auth_module.verify_token(authorization[7:].strip())
+    payload = auth_module.verify_token(credentials.credentials)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid or expired token", headers={"WWW-Authenticate": "Bearer"})
-    return payload
+    user = auth_module.load_users().get(payload.get("sub", ""))
+    if not user or not user.get("active", True):
+        raise HTTPException(status_code=401, detail="Account is disabled or no longer exists", headers={"WWW-Authenticate": "Bearer"})
+    return {**payload, "role": user.get("role", payload.get("role", "user"))}
+
+
+def get_current_admin(user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Administrator role required")
+    return user
 
 
 def internal_error(context: str, exc: Exception) -> HTTPException:
@@ -92,6 +131,66 @@ async def get_status():
     result = brain.process("status", session_id="health")
     result.get("data", {}).pop("memory", None)
     return JSONResponse(content=result)
+
+
+@app.post("/register", status_code=201, tags=["auth"])
+async def register(
+    req: RegisterRequest,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
+):
+    """Create a user account.
+
+    While the user store is empty this endpoint is public and registers the
+    first administrator (returning an access token). Once any user exists,
+    public registration closes and only an authenticated administrator may
+    create further users.
+    """
+    try:
+        if not auth_module.has_users():
+            user = auth_module.create_user(req.username, req.password, role="admin", require_empty=True)
+            token = auth_module.create_access_token({"sub": user["username"], "role": "admin"})
+            return {
+                "status": "success",
+                "message": "First administrator registered",
+                "user": user,
+                "access_token": token,
+                "token_type": "bearer",
+            }
+
+        if credentials is None or credentials.scheme.lower() != "bearer":
+            raise HTTPException(
+                status_code=401,
+                detail="Public registration is closed; authenticate as an administrator",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        payload = auth_module.verify_token(credentials.credentials)
+        if not payload:
+            raise HTTPException(status_code=401, detail="Invalid or expired token", headers={"WWW-Authenticate": "Bearer"})
+        admin = auth_module.load_users().get(payload.get("sub", ""))
+        if not admin or not admin.get("active", True):
+            raise HTTPException(status_code=401, detail="Account is disabled or no longer exists", headers={"WWW-Authenticate": "Bearer"})
+        if admin.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Only administrators can create users")
+        user = auth_module.create_user(req.username, req.password, role=req.role)
+        return {"status": "success", "message": f"User {user['username']} created", "user": user}
+    except BootstrapClosedError:
+        raise HTTPException(
+            status_code=401,
+            detail="Public registration is closed; authenticate as an administrator",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except DuplicateUserError:
+        raise HTTPException(status_code=409, detail="Username already exists")
+    except InvalidUsernameError:
+        raise HTTPException(
+            status_code=422,
+            detail="Username must be 3-64 characters, start with a letter or number, "
+            "and contain only letters, numbers, '.', '_', or '-'",
+        )
+    except InvalidPasswordError:
+        raise HTTPException(status_code=422, detail="Password must be at least 12 characters")
+    except InvalidRoleError:
+        raise HTTPException(status_code=422, detail="Role must be 'admin' or 'user'")
 
 
 @app.post("/command")
@@ -134,7 +233,12 @@ async def login(req: LoginRequest, request: Request):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     attempts.clear()
     token = auth_module.create_access_token({"sub": user["username"], "role": user.get("role", "user")})
-    return {"access_token": token, "token_type": "bearer", "user": user["username"]}
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user["username"],
+        "role": user.get("role", "user"),
+    }
 
 
 @app.get("/gita/random")
