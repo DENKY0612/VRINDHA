@@ -517,7 +517,8 @@ pip install sublist3r
 python3 -c "from database.db import init_db; init_db()"
 # Creates database/vrindha.db with logs, threats, blocked_ips
 # Creates database/memory.db for Super Intelligence Memory
-# Creates logs/log.txt; provision users with ADMIN_USERNAME and ADMIN_PASSWORD
+# Creates logs/log.txt; provision users with ADMIN_USERNAME and ADMIN_PASSWORD,
+# or register the first administrator via POST /register while users.json is empty
 ```
 
 **Step 5 Run (see Usage section)**
@@ -660,8 +661,51 @@ curl http://localhost:8000/dashboard-data
 curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"username":"admin","password":"$ADMIN_PASSWORD"}'
 # Returns {access_token: ..., token_type: bearer}
 # Use token:
-curl http://localhost:8000/status -H "Authorization: Bearer <token>"
+curl http://localhost:8000/logs -H "Authorization: Bearer <token>"
 ```
+
+**First-user registration (secure bootstrap):**
+While `database/users.json` is empty, `POST /register` is public and creates
+the first administrator, returning a Bearer access token so the operator is
+logged in immediately:
+
+```bash
+curl -X POST http://127.0.0.1:8000/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "your-secure-password"
+  }'
+# Returns:
+# {
+#   "status": "success",
+#   "message": "First administrator registered",
+#   "user": {"username": "admin", "role": "admin", "active": true, "created": "..."},
+#   "access_token": "SIGNED_JWT",
+#   "token_type": "bearer"
+# }
+```
+
+**Administrator creating more users:** once any user exists, public
+registration is closed (`401` for anonymous calls). An authenticated
+administrator can create users with their Bearer token:
+
+```bash
+curl -X POST http://127.0.0.1:8000/register \
+  -H "Authorization: Bearer ADMIN_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "analyst1",
+    "password": "another-secure-password",
+    "role": "user"
+  }'
+```
+
+Rules: usernames are lowercased and must be 3–64 characters starting with a
+letter or number using only letters, numbers, `.`, `_`, `-`; passwords must be
+at least 12 characters; roles are `admin` or `user`; responses never contain a
+password or hash; regular users get `403`, duplicates `409`, invalid data `422`,
+missing/invalid auth `401`.
 
 **Dashboard (Per Day 29 Simple Dashboard Basic + START UP SOC Dashboard Prompt):**
 - Open `dashboard/index.html` directly or via `http://localhost:8000/dashboard/`
@@ -676,20 +720,21 @@ curl http://localhost:8000/status -H "Authorization: Bearer <token>"
 
 | Endpoint | Method | Description | Auth | Blueprint Source |
 |----------|--------|-------------|------|------------------|
-| `/` | GET | Root, running info, endpoints list | No | FastAPI Setup |
-| `/status` | GET | System status via Brain status | Bearer JWT required | Command Endpoint Day25 |
+| `/` | GET | Root, running info, endpoints list | Public | FastAPI Setup |
+| `/status` | GET | System status via Brain status | Public (health check) | Command Endpoint Day25 |
+| `/register` | POST | Create the first administrator (public while user store is empty, returns a JWT); after bootstrap, create a user (admin JWT required) | Public while empty / Admin JWT after | Secure registration |
 | `/command` | POST | Run AI command Body {command}; send yes/no separately for Red Team confirmation | Bearer JWT required | POST /command Day25 |
 | `/logs` | GET | Fetch logs ?limit=50 | Bearer JWT required | GET /logs Day25 |
-| `/login` | POST | JWT login Body {username,password} credentials provisioned from environment | No | Authentication Prompt |
-| `/gita/random` | GET | Random Gita verse | No | Gita Engine |
-| `/gita/verse/{chapter}/{verse}` | GET | Specific verse | No | Gita Engine |
+| `/login` | POST | JWT login Body {username,password}; credentials provisioned from environment or created via /register | Public | Authentication Prompt |
+| `/gita/random` | GET | Random Gita verse | Public | Gita Engine |
+| `/gita/verse/{chapter}/{verse}` | GET | Specific verse | Public | Gita Engine |
 | `/dashboard-data` | GET | Viz + recent logs + status + gita | Bearer JWT required | SOC Dashboard |
 | `/ml/anomaly` | POST | Anomaly detection Body {command/text} | Bearer JWT required | Anomaly Detection |
 | `/ml/risk` | POST | Risk scoring Body {ip, events} | Bearer JWT required | Risk Scoring |
 | `/ml/predict` | GET | Threat prediction from logs | Bearer JWT required | Prediction Model |
 | `/ml/pipeline` | GET | Data pipeline clean_data + CSV export | Bearer JWT required | Data Foundation |
 | `/tools/verify` | GET | Verify tool stack installed/missing | Bearer JWT required | Tool Verification |
-| `/dashboard/` | GET | Static dashboard files | No | Dashboard Mount |
+| `/dashboard/` | GET | Static dashboard files | Public (data actions require login) | Dashboard Mount |
 
 **Request Example:**
 ```json
@@ -742,7 +787,8 @@ POST /command
 
 **Features per SOC Dashboard Prompt + AI/ML Dashboard Intelligence:**
 - **Header:** Vrindha AI SOC System title, status bar systemStatus + gitaVerse
-- **Command Card (grid span 2):** Login fields, command input, Send, Quick action buttons Status Hello Scan Network Whois Vuln Scan Threat Detect Show Logs Block IP, Result box pre-wrap monospace
+- **Command Card (grid span 2):** Username + Password fields, Register, Login, Logout buttons, auth status message, command input, Send, Quick action buttons Status Hello Scan Network Whois Vuln Scan Threat Detect Show Logs Block IP, Result box pre-wrap monospace
+- **Registration behavior:** while no users exist, Register creates the first administrator (forced `admin` role), stores the returned JWT in `sessionStorage` and treats the operator as logged in; with an administrator logged in, Register creates a regular user using the current Bearer token; the password input is cleared and success/error messages appear in the auth status line. There is no auto-confirm button for Red Team operations — confirmations always require a separate explicit `yes` request.
 - **System Status Card:** StatusDetails from /status
 - **SIEM Logs Card:** logsTable, Refresh Logs button, last 30 logs
 - **Alerts Card:** alertsBox, Threat Level Indicators, Automated Action

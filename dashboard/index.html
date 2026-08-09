@@ -481,9 +481,11 @@ This dashboard organizes <b>everything</b> from your project: Core Brain, Red Te
 <input type="text" id="loginUsername" autocomplete="username" placeholder="Username">
 <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Password">
 <button onclick="login()">Login</button>
+<button onclick="register()" class="secondary">Register</button>
 <button onclick="logout()" class="secondary">Logout</button>
 <span id="authStatus">Not authenticated</span>
 </div>
+<small style="color:var(--text-muted)">First registration bootstraps the administrator (returned JWT logs you in automatically). After that, only an authenticated administrator can register users — regular users and anonymous requests are rejected.</small>
 <div class="input-group">
 <input type="text" id="commandInput" placeholder="Enter command: e.g., status, scan network 127.0.0.1, detect threats">
 <button onclick="sendCommand()">Send</button>
@@ -957,13 +959,54 @@ async function login(){
     authToken = data.access_token;
     sessionStorage.setItem('vrindhaToken', authToken);
     document.getElementById('loginPassword').value = '';
-    document.getElementById('authStatus').textContent = `Authenticated as ${data.user}`;
+    updateAuthStatus();
     loadLogs(); loadCharts();
   }catch(error){ document.getElementById('authStatus').textContent = error.message; }
 }
 function logout(){
   authToken=''; sessionStorage.removeItem('vrindhaToken');
-  document.getElementById('authStatus').textContent='Not authenticated';
+  document.getElementById('loginPassword').value = '';
+  updateAuthStatus();
+}
+function updateAuthStatus(){
+  const el = document.getElementById('authStatus');
+  if(!el) return;
+  if(authToken){
+    try{
+      const payload = JSON.parse(atob(authToken.split('.')[1]));
+      el.textContent = `Authenticated as ${payload.sub} (${payload.role || 'user'})`;
+    }catch{
+      el.textContent = 'Authenticated (token stored)';
+    }
+  } else {
+    el.textContent = 'Not authenticated';
+  }
+}
+async function register(){
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+  const statusEl = document.getElementById('authStatus');
+  if(!username || !password){ statusEl.textContent = 'Enter a username and password'; return; }
+  try{
+    const headers = {'Content-Type':'application/json'};
+    if(authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    const res = await fetch('/register', {method:'POST', headers, body:JSON.stringify({username, password, role:'user'})});
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.detail || `Registration failed (${res.status})`);
+    document.getElementById('loginPassword').value = '';
+    if(data.access_token){
+      // First administrator: store the returned JWT and treat as logged in.
+      authToken = data.access_token;
+      sessionStorage.setItem('vrindhaToken', authToken);
+      updateAuthStatus();
+      statusEl.textContent = `First administrator '${data.user.username}' registered — logged in.`;
+    } else {
+      statusEl.textContent = `Registered '${data.user.username}' (role: ${data.user.role})`;
+    }
+    loadLogs(); loadCharts();
+  }catch(error){
+    statusEl.textContent = error.message;
+  }
 }
 
 async function sendCommand(){
@@ -1140,6 +1183,7 @@ function createExampleSkin(){
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
+  updateAuthStatus();
   loadStatus();
   loadGita();
   // Don't auto load logs/charts to save API calls, load on pane switch
