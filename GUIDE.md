@@ -840,7 +840,7 @@ docker run -it vrindha python3 main.py
 **Environment Variables (.env.example):**
 ```
 SECRET_KEY=change-this-very-long-random-secret
-ALGORITHM=HS256 ACCESS_TOKEN_EXPIRE_MINUTES=60
+ALGORITHM=HS256 ACCESS_TOKEN_EXPIRE_MINUTES=525600
 DATABASE_URL=sqlite:///./database/vrindha.db # or postgresql://user:pass@localhost/vrindha
 API_HOST=0.0.0.0 API_PORT=8000 API_RELOAD=True
 VRINDHA_MODE=defensive

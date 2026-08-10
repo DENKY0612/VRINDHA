@@ -27,6 +27,14 @@ from core.memory_system import memory_system
 from core.planning_engine import planning_engine
 from core.knowledge_base import knowledge_base
 from core.error_handler import ErrorHandler
+from autonomous.goals import GoalEngine
+from autonomous.planner import Planner
+from autonomous.policy import AutonomyPolicy
+from autonomous.scheduler import Scheduler
+from autonomous.agent import autonomous_agent
+from autonomous.state_manager import state_manager
+from autonomous.task_manager import task_manager
+from autonomous.models import AutonomyLevel
 
 # Agents will be imported lazily to avoid circular imports
 class Brain:
@@ -35,10 +43,23 @@ class Brain:
     """
 
     def __init__(self):
-        self.mode = "defensive"  # default per blueprint
+        state = state_manager.get_state()
+        self.mode = state.get("current_mode", "defensive")
         self.pending_confirmations = {}  # store commands awaiting confirmation
         self.last_command_id = 0
-        print("[Brain] Vrindha AI SOC System initialized in DEFENSIVE MODE")
+        self.goal_engine = GoalEngine()
+        self.autonomy_planner = Planner()
+        self.policy = AutonomyPolicy()
+        self.scheduler = Scheduler()
+        self.task_manager = task_manager
+        self.autonomous_agent = autonomous_agent
+        self.state_manager = state_manager
+        if not self.autonomous_agent.active or self.autonomous_agent.emergency_stopped:
+            self.mode = "defensive"
+        else:
+            self.mode = self.autonomous_agent.current_mode or self.mode
+        recovery_result = self.scheduler.recover_stuck_tasks()
+        print(f"[Brain] Vrindha AI SOC System initialized in {self.mode.upper()} MODE. Autonomous recovery: {recovery_result.get('status')}")
 
     def _is_admin_user(self, user_token: str = None) -> bool:
         """Check if user is admin for unrestricted access as per user request"""
@@ -147,6 +168,7 @@ class Brain:
 
             if command.lower() == "status":
                 stats = memory_system.get_stats()
+                agent_state = self.autonomous_agent.status()
                 return {
                     "mode": "blue",
                     "action": "status",
@@ -158,6 +180,7 @@ class Brain:
                         "agents": ["ReconAgent", "VulnAgent", "ThreatAgent", "SIEMAgent"],
                         "tools": ["nmap", "whois", "nikto", "amass", "gobuster", "fail2ban", "rkhunter"],
                         "memory": stats,
+                        "autonomous_agent": agent_state,
                         "gita_status": "loaded" if gita_engine.loaded else "not loaded"
                     }
                 }
@@ -220,6 +243,16 @@ class Brain:
 
             # Planning engine suggestions
             plan = planning_engine.plan(command)
+
+            # Runtime autonomy commands
+            runtime_result = self._handle_autonomy_runtime(command, user_token)
+            if runtime_result is not None:
+                return runtime_result
+
+            # Autonomous goal evaluation
+            goal_meta = self.goal_engine.classify_goal(command)
+            if goal_meta.get("category") != "unknown":
+                return self._handle_autonomous_goal(command, goal_meta, classification, safety, similar_cases, plan)
 
             # Route based on mode
             if mode == "red":
@@ -506,6 +539,36 @@ class Brain:
                     "data": result
                 }
 
+            if any(k in cmd_lower for k in ["incident response", "security incident", "forensic", "endpoint security", "endpoint scan", "contain", "isolate"]):
+                from agents.endpoint_security import endpoint_security
+                from automation.ids_monitor import ids_monitor
+                from automation.firewall import firewall_module
+                from automation.response_engine import response_engine
+
+                endpoint_result = endpoint_security.scan()
+                ids_result = ids_monitor.monitor()
+                firewall_result = firewall_module.check_and_block()
+                response_result = response_engine.respond({
+                    "risk_level": "HIGH" if "incident response" in cmd_lower or "security incident" in cmd_lower else "MEDIUM",
+                    "source_ip": target or "192.168.1.100",
+                    "command": command,
+                })
+
+                return {
+                    "mode": "blue",
+                    "action": "incident_response",
+                    "status": "success",
+                    "message": "Incident response workflow executed with endpoint security, IDS monitoring, firewall review, and safe response recommendation",
+                    "data": {
+                        "endpoint_scan": endpoint_result,
+                        "ids_monitor": ids_result,
+                        "firewall_check": firewall_result,
+                        "response_engine": response_result,
+                        "safety": safety,
+                        "gita_guidance": gita_engine.get_ethical_guidance("defense")
+                    }
+                }
+
             if "ids" in cmd_lower or "snort" in cmd_lower or "suricata" in cmd_lower:
                 from automation.ids_monitor import ids_monitor
                 result = ids_monitor.monitor()
@@ -556,7 +619,6 @@ class Brain:
                     "gita_verse": gita_engine.get_random_verse()
                 }
             }
-
         except Exception as e:
             err = ErrorHandler.handle_exception(e, "Brain._handle_blue_team")
             return {
@@ -566,6 +628,137 @@ class Brain:
                 "message": f"Blue team handling error: {e}",
                 "data": err
             }
+
+    def _handle_autonomous_goal(self, command: str, goal_meta: dict, classification: dict, safety: dict, similar: dict, plan: dict) -> dict:
+        """Create a persisted autonomous goal and structured task plan."""
+        try:
+            goal_record = self.task_manager.create_goal(goal_meta)
+            task_definitions = self.autonomy_planner.plan_goal(goal_meta)
+            stored_tasks = self.task_manager.create_tasks(goal_record["id"], task_definitions)
+
+            goal_decision = self.policy.evaluate_goal(goal_meta)
+            tasks_decisions = []
+            requires_approval = goal_decision["requires_approval"]
+
+            for task in task_definitions:
+                task_policy = self.policy.evaluate_task(task, goal_meta["autonomy_level"])
+                if task_policy["requires_approval"]:
+                    requires_approval = True
+                tasks_decisions.append({
+                    "task_id": task["task_id"],
+                    "description": task["description"],
+                    "risk": task["risk"],
+                    "decision": task_policy["decision"],
+                    "requires_approval": task_policy["requires_approval"],
+                    "reason": task_policy["reason"],
+                })
+
+            status = "waiting_approval" if requires_approval else "planned"
+            if status != goal_record["status"]:
+                self.task_manager.update_goal_status(goal_record["id"], status)
+
+            return {
+                "mode": "autonomous",
+                "action": "goal_planned",
+                "status": "success",
+                "message": f"Goal accepted and decomposed into {len(stored_tasks)} structured tasks. {'Approval required.' if requires_approval else 'No approval required for planning.'}",
+                "data": {
+                    "goal": goal_record,
+                    "goal_meta": goal_meta,
+                    "goal_policy": goal_decision,
+                    "tasks": stored_tasks,
+                    "task_policy": tasks_decisions,
+                    "autonomy_mode": goal_meta.get("autonomy_level"),
+                    "plan_preview": plan,
+                    "safety": safety,
+                    "similar_cases": similar,
+                }
+            }
+        except Exception as e:
+            err = ErrorHandler.handle_exception(e, "Brain._handle_autonomous_goal")
+            return {
+                "mode": "autonomous",
+                "action": "goal_planning_failed",
+                "status": "error",
+                "message": "Failed to generate autonomous goal plan.",
+                "data": err,
+            }
+
+    def _handle_autonomy_runtime(self, command: str, user_token: str = None) -> dict | None:
+        lower = command.lower().strip()
+
+        # Autonomous agent lifecycle commands
+        if lower in ["start autonomous agent", "start autonomy", "enable autonomous mode"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "start_denied", "status": "denied", "message": "Only admin may start autonomous operations."}
+            result = self.autonomous_agent.start(mode="autonomous")
+            self.mode = "autonomous" if result.get("status") == "success" else self.mode
+            return {"mode": "autonomous", "action": "start_agent", "status": result.get("status"), "message": result.get("message"), "data": result}
+
+        if lower in ["stop autonomous agent", "stop autonomy", "disable autonomous mode"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "stop_denied", "status": "denied", "message": "Only admin may stop autonomous operations."}
+            result = self.autonomous_agent.stop()
+            self.mode = "defensive"
+            return {"mode": "autonomous", "action": "stop_agent", "status": result.get("status"), "message": result.get("message"), "data": result}
+
+        if lower in ["autonomous heartbeat", "heartbeat", "pulse"]:
+            result = self.autonomous_agent.heartbeat()
+            return {"mode": "autonomous", "action": "heartbeat", "status": result.get("status"), "message": result.get("message"), "data": result}
+
+        if lower in ["emergency stop", "halt autonomy", "stop all autonomous operations"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "emergency_stop_denied", "status": "denied", "message": "Only admin may trigger emergency stop."}
+            result = self.autonomous_agent.emergency_stop()
+            self.mode = "defensive"
+            return {"mode": "autonomous", "action": "emergency_stop", "status": result.get("status"), "message": result.get("message"), "data": result}
+
+        if lower in ["reset emergency stop", "reset autonomy", "resume autonomous operations"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "reset_emergency_denied", "status": "denied", "message": "Only admin may reset emergency stop."}
+            return {"mode": "autonomous", "action": "reset_emergency", "status": "success", "message": "Emergency stop reset.", "data": self.autonomous_agent.reset_emergency()}
+
+        if lower.startswith("set autonomous mode") or lower.startswith("set autonomy mode") or lower in ["switch to defensive mode", "switch to autonomous mode", "set defensive mode", "set autonomous mode"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "set_mode_denied", "status": "denied", "message": "Only admin may change autonomous mode."}
+            if "defensive" in lower:
+                result = self.autonomous_agent.set_mode("defensive")
+                self.mode = "defensive"
+            elif "autonomous" in lower:
+                result = self.autonomous_agent.set_mode("autonomous")
+                self.mode = "autonomous"
+            else:
+                return {"mode": "autonomous", "action": "set_mode_invalid", "status": "error", "message": "Specify 'defensive' or 'autonomous'."}
+            return {"mode": self.mode, "action": "set_mode", "status": result.get("status"), "message": result.get("message"), "data": result}
+
+        if lower in ["autonomous agent status", "autonomy status", "agent status"]:
+            return {"mode": "autonomous", "action": "status_agent", "status": "success", "message": "Autonomous agent status.", "data": self.autonomous_agent.status()}
+
+        if lower in ["recover autonomous tasks", "recover stuck tasks", "resume pending tasks", "recover pending tasks"]:
+            if not self._is_admin_user(user_token):
+                return {"mode": "autonomous", "action": "recover_denied", "status": "denied", "message": "Only admin may recover stuck tasks."}
+            result = self.scheduler.recover_stuck_tasks()
+            return {"mode": "autonomous", "action": "recover_tasks", "status": result.get("status"), "message": "Autonomous task recovery completed.", "data": result}
+
+        # Task execution commands
+        if lower.startswith("run autonomous goal") or lower.startswith("execute autonomous goal"):
+            try:
+                parts = lower.split()
+                goal_id = int(parts[-1])
+            except Exception:
+                return {"mode": "autonomous", "action": "invalid_goal_id", "status": "error", "message": "Specify a numeric goal id at end of the command."}
+            if not self.autonomous_agent.active or self.autonomous_agent.emergency_stopped:
+                return {"mode": "autonomous", "action": "runner_unavailable", "status": "denied", "message": "Autonomous agent must be active and not emergency-stopped to run goals."}
+            execution = self.scheduler.run_goal(goal_id)
+            return {"mode": "autonomous", "action": "goal_executed", "status": "success" if execution.get("status") != "error" else "error", "message": "Autonomous goal execution completed.", "data": execution}
+
+        if lower in ["run pending autonomous tasks", "execute pending tasks", "process pending autonomous tasks"]:
+            if not self.autonomous_agent.active or self.autonomous_agent.emergency_stopped:
+                return {"mode": "autonomous", "action": "runner_unavailable", "status": "denied", "message": "Autonomous agent must be active and not emergency-stopped to process pending tasks."}
+            execution = self.scheduler.run_pending_tasks()
+            return {"mode": "autonomous", "action": "pending_tasks_executed", "status": "success", "message": "Pending autonomous tasks executed.", "data": execution}
+
+        return None
 
     def get_help_text(self) -> str:
         return """

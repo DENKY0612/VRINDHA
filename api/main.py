@@ -29,6 +29,9 @@ from core.gita_engine import gita_engine
 from database.db import add_log, get_logs
 from ml.anomaly_detector import anomaly_detector
 from ml.data_pipeline import data_pipeline
+from autonomous.agent import autonomous_agent
+from autonomous.scheduler import Scheduler
+from autonomous.task_manager import task_manager
 from ml.prediction_model import prediction_model
 from ml.risk_scoring import risk_scoring
 from ml.visualization import visualization_engine
@@ -62,6 +65,10 @@ class RegisterRequest(BaseModel):
     username: str = Field(min_length=1, max_length=64)
     password: str = Field(min_length=1, max_length=1024)
     role: Literal["admin", "user"] = "user"
+
+
+class AutonomyModeRequest(BaseModel):
+    mode: Literal["autonomous", "defensive"] = Field(..., description="Autonomy mode to persist and apply")
 
 
 # OpenAPI Bearer security scheme; FastAPI exposes the Authorize control in
@@ -257,6 +264,135 @@ async def dashboard_data(user=Depends(get_current_user)):
         return {"visualization": visualization_engine.get_all_dashboard_data(), "recent_logs": get_logs(10), "system_status": brain.process("status", session_id=str(user["sub"])), "gita": gita_engine.get_random_verse()}
     except Exception as exc:
         raise internal_error("dashboard data", exc)
+
+
+@app.get("/incident/endpoint-scan")
+async def incident_endpoint_scan(user=Depends(get_current_user)):
+    try:
+        from agents.endpoint_security import endpoint_security
+        return endpoint_security.scan()
+    except Exception as exc:
+        raise internal_error("incident endpoint scan", exc)
+
+
+@app.get("/incident/ids")
+async def incident_ids(user=Depends(get_current_user)):
+    try:
+        from automation.ids_monitor import ids_monitor
+        return ids_monitor.monitor()
+    except Exception as exc:
+        raise internal_error("incident ids", exc)
+
+
+@app.get("/incident/firewall")
+async def incident_firewall(user=Depends(get_current_user)):
+    try:
+        from automation.firewall import firewall_module
+        return firewall_module.check_and_block()
+    except Exception as exc:
+        raise internal_error("incident firewall", exc)
+
+
+@app.get("/incident/overview")
+async def incident_overview(user=Depends(get_current_admin)):
+    try:
+        from agents.endpoint_security import endpoint_security
+        from automation.ids_monitor import ids_monitor
+        from automation.firewall import firewall_module
+        return {
+            "status": "success",
+            "endpoint_scan": endpoint_security.scan(),
+            "ids_monitor": ids_monitor.monitor(),
+            "firewall_check": firewall_module.check_and_block(),
+        }
+    except Exception as exc:
+        raise internal_error("incident overview", exc)
+
+
+@app.post("/incident/respond")
+async def incident_respond(payload: Dict[str, Any], user=Depends(get_current_admin)):
+    try:
+        from automation.response_engine import response_engine
+        return response_engine.respond(payload)
+    except Exception as exc:
+        raise internal_error("incident respond", exc)
+
+
+@app.get("/autonomy/status")
+async def autonomy_status(user=Depends(get_current_user)):
+    try:
+        return {"status": "success", "data": autonomous_agent.status()}
+    except Exception as exc:
+        raise internal_error("autonomy status", exc)
+
+
+@app.post("/autonomy/start")
+async def autonomy_start(user=Depends(get_current_admin)):
+    try:
+        return {"status": "success", "data": autonomous_agent.start()}
+    except Exception as exc:
+        raise internal_error("autonomy start", exc)
+
+
+@app.post("/autonomy/stop")
+async def autonomy_stop(user=Depends(get_current_admin)):
+    try:
+        return {"status": "success", "data": autonomous_agent.stop()}
+    except Exception as exc:
+        raise internal_error("autonomy stop", exc)
+
+
+@app.post("/autonomy/emergency-stop")
+async def autonomy_emergency_stop(user=Depends(get_current_admin)):
+    try:
+        return {"status": "success", "data": autonomous_agent.emergency_stop()}
+    except Exception as exc:
+        raise internal_error("autonomy emergency stop", exc)
+
+
+@app.post("/autonomy/reset")
+async def autonomy_reset(user=Depends(get_current_admin)):
+    try:
+        return {"status": "success", "data": autonomous_agent.reset_emergency()}
+    except Exception as exc:
+        raise internal_error("autonomy reset", exc)
+
+
+@app.post("/autonomy/run-goal")
+async def autonomy_run_goal(goal_id: int, user=Depends(get_current_admin)):
+    try:
+        scheduler = Scheduler()
+        return scheduler.run_goal(goal_id)
+    except Exception as exc:
+        raise internal_error("autonomy run goal", exc)
+
+
+@app.post("/autonomy/run-pending-tasks")
+async def autonomy_run_pending_tasks(user=Depends(get_current_admin)):
+    try:
+        scheduler = Scheduler()
+        return scheduler.run_pending_tasks()
+    except Exception as exc:
+        raise internal_error("autonomy run pending tasks", exc)
+
+
+@app.post("/autonomy/recover-tasks")
+async def autonomy_recover_tasks(user=Depends(get_current_admin)):
+    try:
+        scheduler = Scheduler()
+        return scheduler.recover_stuck_tasks()
+    except Exception as exc:
+        raise internal_error("autonomy recover tasks", exc)
+
+
+@app.post("/autonomy/set-mode")
+async def autonomy_set_mode(req: AutonomyModeRequest, user=Depends(get_current_admin)):
+    try:
+        result = autonomous_agent.set_mode(req.mode)
+        brain.mode = req.mode
+        return {"status": "success", "data": result}
+    except Exception as exc:
+        raise internal_error("autonomy set mode", exc)
 
 
 @app.post("/ml/anomaly")

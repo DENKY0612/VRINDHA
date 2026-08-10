@@ -1097,11 +1097,13 @@ async function loadMLData(){
   if(!el) return;
   el.textContent = "Loading ML intelligence...";
   try{
-    const [anomaly, risk] = await Promise.all([
+    const [anomaly, risk, prediction] = await Promise.all([
       apiFetch('/ml/anomaly', {method:'POST', body:JSON.stringify({command:'attack breach'})}),
-      apiFetch('/ml/risk', {method:'POST', body:JSON.stringify({ip:'192.168.1.50', events:['5 failed logins','port 4444']})})
+      apiFetch('/ml/risk', {method:'POST', body:JSON.stringify({ip:'192.168.1.50', events:['5 failed logins','port 4444']})}),
+      apiFetch('/ml/predict')
     ]);
-    el.textContent = `ANOMALY: ${JSON.stringify(anomaly, null, 2).slice(0,1000)}\n\nRISK: ${JSON.stringify(risk, null, 2).slice(0,1000)}`;
+    const predictionText = prediction?.predictions ? prediction.predictions.map(p => `${p.threat} (${Math.round(p.probability*100)}%)`).join('; ') : 'No prediction available';
+    el.textContent = `ANOMALY: ${JSON.stringify(anomaly, null, 2).slice(0,1000)}\n\nRISK: ${JSON.stringify(risk, null, 2).slice(0,1000)}\n\nPREDICTION: ${predictionText}`;
   }catch(e){
     el.textContent = `[SIMULATION] ML Intelligence: Anomaly IsolationForest, Risk scoring ip:85 reason multiple failed + unusual port, Prediction likely in 24h`;
   }

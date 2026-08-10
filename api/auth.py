@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$")
 SUPPORTED_ROLES = ("admin", "user")
+DEFAULT_ACCESS_TOKEN_EXPIRE_MINUTES = 525600  # 365 days
 
 
 class UserRegistrationError(Exception):
@@ -59,7 +60,7 @@ class AuthModule:
         self.users_file.parent.mkdir(parents=True, exist_ok=True)
         self._lock = Lock()
         self.algorithm = os.getenv("ALGORITHM", "HS256")
-        self.expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+        self.expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", str(DEFAULT_ACCESS_TOKEN_EXPIRE_MINUTES)))
         self.secret_key = secret_key or os.getenv("SECRET_KEY")
         if not self.secret_key:
             # Safer than a repository-wide default. Tokens intentionally stop
