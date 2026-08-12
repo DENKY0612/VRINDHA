@@ -276,12 +276,21 @@ async def incident_endpoint_scan(user=Depends(get_current_user)):
 
 
 @app.get("/incident/ids")
-async def incident_ids(user=Depends(get_current_user)):
+async def incident_ids(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
     try:
         from automation.ids_monitor import ids_monitor
-        return ids_monitor.monitor()
+        return ids_monitor.monitor(interface=interface, prevent=prevent)
     except Exception as exc:
         raise internal_error("incident ids", exc)
+
+
+@app.get("/incident/idps")
+async def incident_idps(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
+    try:
+        from automation.ids_monitor import ids_monitor
+        return ids_monitor.monitor(interface=interface, prevent=prevent)
+    except Exception as exc:
+        raise internal_error("incident idps", exc)
 
 
 @app.get("/incident/firewall")
@@ -302,7 +311,7 @@ async def incident_overview(user=Depends(get_current_admin)):
         return {
             "status": "success",
             "endpoint_scan": endpoint_security.scan(),
-            "ids_monitor": ids_monitor.monitor(),
+            "idps_monitor": ids_monitor.monitor(),
             "firewall_check": firewall_module.check_and_block(),
         }
     except Exception as exc:

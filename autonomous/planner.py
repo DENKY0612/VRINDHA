@@ -14,6 +14,7 @@ ACTION_REGISTRY = {
     "firewall_block_ip": "firewall_block_ip",
     "rootkit_scan": "rootkit_scan",
     "ids_status": "ids_status",
+    "idps_status": "ids_status",
     "report_generation": "report_generation",
     "backup": "backup",
     "anomaly_detection": "anomaly_detection",

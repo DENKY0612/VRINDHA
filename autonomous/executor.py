@@ -51,7 +51,7 @@ class TaskExecutor:
                 result.update(self._risk_scoring(task))
             elif action == "firewall_status":
                 result.update(self._firewall_status())
-            elif action == "ids_status":
+            elif action in ("ids_status", "idps_status"):
                 result.update(self._ids_status())
             elif action == "rootkit_scan":
                 result.update(self._rootkit_scan())

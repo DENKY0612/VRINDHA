@@ -546,7 +546,7 @@ class Brain:
                 from automation.response_engine import response_engine
 
                 endpoint_result = endpoint_security.scan()
-                ids_result = ids_monitor.monitor()
+                idps_result = ids_monitor.monitor()
                 firewall_result = firewall_module.check_and_block()
                 response_result = response_engine.respond({
                     "risk_level": "HIGH" if "incident response" in cmd_lower or "security incident" in cmd_lower else "MEDIUM",
@@ -558,10 +558,10 @@ class Brain:
                     "mode": "blue",
                     "action": "incident_response",
                     "status": "success",
-                    "message": "Incident response workflow executed with endpoint security, IDS monitoring, firewall review, and safe response recommendation",
+                    "message": "Incident response workflow executed with endpoint security, IDPS monitoring, firewall review, and safe response recommendation",
                     "data": {
                         "endpoint_scan": endpoint_result,
-                        "ids_monitor": ids_result,
+                        "idps_monitor": idps_result,
                         "firewall_check": firewall_result,
                         "response_engine": response_result,
                         "safety": safety,
@@ -569,14 +569,14 @@ class Brain:
                     }
                 }
 
-            if "ids" in cmd_lower or "snort" in cmd_lower or "suricata" in cmd_lower:
+            if any(k in cmd_lower for k in ["idps", "ids", "snort", "suricata"]):
                 from automation.ids_monitor import ids_monitor
                 result = ids_monitor.monitor()
                 return {
                     "mode": "blue",
-                    "action": "ids_monitor",
+                    "action": "idps_monitor",
                     "status": "success",
-                    "message": "IDS monitoring completed - Blue Team automated",
+                    "message": "IDPS protection completed - Blue Team automated",
                     "data": result
                 }
 
