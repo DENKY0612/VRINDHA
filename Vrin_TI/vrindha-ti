@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+TI_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPOSITORY_ROOT=$(CDPATH= cd -- "$TI_ROOT/.." && pwd)
+if [ -n "${PYTHON:-}" ]; then
+  PYTHON_BIN=$PYTHON
+elif [ -x "$TI_ROOT/.venv/bin/python" ]; then
+  PYTHON_BIN="$TI_ROOT/.venv/bin/python"
+else
+  PYTHON_BIN=python3
+fi
+cd "$REPOSITORY_ROOT"
+exec "$PYTHON_BIN" -m Vrin_TI.cli "$@"

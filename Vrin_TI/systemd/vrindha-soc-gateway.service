@@ -1,0 +1,32 @@
+[Unit]
+Description=Vrindha SOC API and Intelligence Gateway
+Documentation=file://@TI_ROOT@/docs/soc-ti-integration.md
+After=network-online.target vrindha-threat-intelligence.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@SERVICE_USER@
+Group=@SERVICE_GROUP@
+WorkingDirectory=@SOC_ROOT@
+EnvironmentFile=/etc/vrindha/vrindha-ti.env
+Environment=PYTHONPATH=@REPOSITORY_ROOT@:@SOC_ROOT@
+ExecStart=@SOC_PYTHON@ -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --no-server-header
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30s
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+ReadWritePaths=@SOC_ROOT@/database @SOC_ROOT@/logs @SOC_ROOT@/data @TI_ROOT@/database
+
+[Install]
+WantedBy=multi-user.target

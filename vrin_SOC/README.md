@@ -15,6 +15,7 @@ Vrindha is an ethical, defensive-first cybersecurity assistant with a CLI, FastA
 - **Logging and memory:** SQLite WAL storage, file logs, event correlation, and similar-case retrieval.
 - **ML layer:** anomaly detection, rule-based risk scoring, threat prediction, and CSV data export.
 - **Safety:** Dharma evaluation, intent detection, Zero Trust scoring, restricted public targets, command timeouts, and simulation fallbacks.
+- **Independent threat intelligence:** sibling `../Vrin_TI/` provides STIX 2.1 IOC storage, CISA KEV/MITRE/TAXII feeds, enrichment, sightings, graph correlation, authenticated SOC↔TI events, Redis/NATS/HTTP transports with SQLite fallback, WebSocket, CLI, dashboard pane, and systemd services without replacing the SOC.
 
 ## How Vrindha works
 
@@ -215,6 +216,24 @@ Other important settings:
 | `ALLOW_PUBLIC_TARGETS` | `False` | Enables active operations against public targets; keep disabled unless tightly controlled |
 | `DEBUG` | `False` | Includes technical error details when enabled; never enable publicly |
 | `API_HOST` / `API_PORT` | `0.0.0.0` / `8000` | API bind address and port |
+
+## Threat Intelligence dual service
+
+Vrin_TI and the SOC run independently and communicate only through the dedicated gateway:
+
+From the repository root:
+
+```bash
+export VRINDHA_TI_API_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
+Vrin_TI/.venv/bin/uvicorn Vrin_TI.api:app --host 127.0.0.1 --port 8010
+# In another service/process, from vrin_SOC or through its systemd unit:
+vrin_SOC/.venv/bin/uvicorn --app-dir vrin_SOC api.main:app --host 127.0.0.1 --port 8000
+./Vrin_TI/vrindha-ti doctor
+```
+
+See `../Vrin_TI/docs/threat-intelligence.md`, `../Vrin_TI/docs/soc-ti-integration.md`,
+and `../Vrin_TI/docs/threat-intelligence-deployment.md`. The systemd installer is opt-in:
+`sudo ./Vrin_TI/scripts/install_threat_intelligence.sh --install-systemd --service-user "$USER"`.
 
 ## Running Vrindha
 
