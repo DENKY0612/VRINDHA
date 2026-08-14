@@ -287,6 +287,7 @@ input:checked + .slider:before{transform:translateX(22px);background:var(--bg)}
 <div class="nav-item blue-team" data-pane="firewall" onclick="switchPane('firewall')"><span class="icon">🔥</span> Firewall Auto <span class="badge">fail2ban, ufw</span></div>
 <div class="nav-item blue-team" data-pane="ids" onclick="switchPane('ids')"><span class="icon">👁️</span> IDS Monitor <span class="badge">snort, suricata</span></div>
 <div class="nav-item blue-team" data-pane="endpoint" onclick="switchPane('endpoint')"><span class="icon">💻</span> Endpoint Protection <span class="badge">rkhunter</span></div>
+<div class="nav-item blue-team" data-pane="threatintel" onclick="switchPane('threatintel')"><span class="icon">🌐</span> Threat Intelligence <span class="badge">Vrin_TI</span></div>
 </div>
 
 <div class="nav-group">
@@ -649,6 +650,28 @@ Core Rules: NEVER offensive without approval, AUTOMATE defensive when threat, AL
 <div class="banner blue">Tools: rkhunter, chkrootkit, clamav - Flow: Run scan, Parse output, Detect suspicious results - Return threat, status clean/suspicious - Endpoint Security Scanner using Kali tools</div>
 </div>
 
+<div class="pane" id="pane-threatintel">
+<h3>🌐 Vrin_TI — Independent Threat Intelligence</h3>
+<div class="banner blue">Vrin_TI runs as a separate service and database. The authenticated SOC ↔ TI gateway exchanges validated events, retains outages in a durable local queue, and correlates intelligence without directly executing defensive actions.</div>
+<div class="grid">
+<div class="stat blue"><h3 id="tiActive">—</h3><p>Active Indicators</p></div>
+<div class="stat red"><h3 id="tiCritical">—</h3><p>Critical IOCs</p></div>
+<div class="stat gold"><h3 id="tiQueue">—</h3><p>Queue Depth</p></div>
+<div class="stat cyan"><h3 id="tiConnection">—</h3><p>SOC ↔ TI</p></div>
+</div>
+<div class="card blue">
+<div class="card-header"><div class="card-title">🔎 Intelligence Lookup</div><button onclick="lookupTI()">Lookup</button></div>
+<div class="input-group"><input id="tiLookupValue" placeholder="IP, domain, URL, hash, or CVE" value="8.8.8.8"><button onclick="lookupTI()">Search</button></div>
+<div id="tiLookupResult" class="result-box">Authenticate, then look up an indicator.</div>
+</div>
+<div class="grid grid-2">
+<div class="card"><div class="card-header"><div class="card-title">📡 Feed Health</div><button onclick="loadThreatIntel()">Refresh</button></div><div id="tiFeeds" class="result-box">Loading…</div></div>
+<div class="card"><div class="card-header"><div class="card-title">🔗 Recent Correlations & Timeline</div></div><div id="tiCorrelations" class="result-box">Loading…</div></div>
+<div class="card"><div class="card-header"><div class="card-title">🧬 Actors, Campaigns & Malware</div></div><div id="tiEntities" class="result-box">Loading…</div></div>
+<div class="card"><div class="card-header"><div class="card-title">🛡️ CVE / CISA KEV</div></div><div id="tiVulnerabilities" class="result-box">Loading…</div></div>
+</div>
+</div>
+
 <!-- Tools Pane -->
 <div class="pane" id="pane-tools">
 <h3>🛠️ Kali Tool Stack - tools/ (14 tools) - Safe Execution Layer</h3>
@@ -835,6 +858,7 @@ function switchPane(pane){
     firewall: ['Firewall','Fail2Ban + UFW threshold 5'],
     ids: ['IDS Monitor','Snort/Suricata - Alert only'],
     endpoint: ['Endpoint','rkhunter + chkrootkit + clamav'],
+    threatintel: ['Threat Intelligence','Independent Vrin_TI + authenticated SOC correlation gateway'],
     tools: ['Kali Tools','14 Tools Safe Execution Layer'],
     installer: ['Installer','User Permission Required - install_tool()'],
     siem: ['SIEM Logs','File logs/log.txt + DB vrindha.db + Correlation'],
@@ -862,6 +886,7 @@ function switchPane(pane){
   if(pane==='tools' || pane==='installer') verifyTools();
   if(pane==='visualization') loadCharts();
   if(pane==='anomaly' || pane==='risk' || pane==='pipeline') loadMLData();
+  if(pane==='threatintel') loadThreatIntel();
 }
 
 let panelOpen = false;
@@ -1046,6 +1071,53 @@ async function loadStatus(){
     statusEl.textContent = "⚠️ API offline - Simulation mode";
     detailsEl.textContent = "Start backend: uvicorn api.main:app --reload\nSystem would show: Agents, Tools, Memory, Gita status";
   }
+}
+
+async function loadThreatIntel(){
+  const feedsEl = document.getElementById('tiFeeds');
+  const corrEl = document.getElementById('tiCorrelations');
+  const entitiesEl = document.getElementById('tiEntities');
+  const vulnerabilitiesEl = document.getElementById('tiVulnerabilities');
+  if(!feedsEl || !corrEl || !entitiesEl || !vulnerabilitiesEl) return;
+  feedsEl.textContent = 'Loading authenticated TI feed status…';
+  corrEl.textContent = 'Loading correlations…';
+  entitiesEl.textContent = 'Loading entities…';
+  vulnerabilitiesEl.textContent = 'Loading CVE/KEV…';
+  try{
+    const [status, feeds, correlations, actors, campaigns, malware, vulnerabilities] = await Promise.all([
+      apiFetch('/threat-intel/status'), apiFetch('/threat-intel/feeds'), apiFetch('/threat-intel/correlations'),
+      apiFetch('/threat-intel/actors'), apiFetch('/threat-intel/campaigns'), apiFetch('/threat-intel/malware'),
+      apiFetch('/threat-intel/vulnerabilities?kev_only=true')
+    ]);
+    const health = status.health || status;
+    const values = status.metrics || {};
+    document.getElementById('tiActive').textContent = values.indicators_active ?? '—';
+    document.getElementById('tiCritical').textContent = values.critical_iocs ?? '—';
+    document.getElementById('tiQueue').textContent = health.queue_depth ?? health.local_queue_depth ?? '—';
+    document.getElementById('tiConnection').textContent = (health.soc_connection || health.status || 'unknown').toUpperCase();
+    feedsEl.textContent = JSON.stringify(feeds.feeds || feeds, null, 2).slice(0,5000);
+    const timeline = (correlations.correlations || []).map(item => ({time:item.created_at, rule:item.rule_name, severity:item.severity, asset:item.asset_id, score:item.score}));
+    corrEl.textContent = timeline.length ? JSON.stringify(timeline, null, 2).slice(0,5000) : 'No correlations recorded.';
+    entitiesEl.textContent = JSON.stringify({actors:actors.actors || [], campaigns:campaigns.campaigns || [], malware:malware.malware || []}, null, 2).slice(0,5000);
+    vulnerabilitiesEl.textContent = JSON.stringify(vulnerabilities.vulnerabilities || [], null, 2).slice(0,5000);
+  }catch(e){
+    feedsEl.textContent = `TI unavailable or authentication required: ${e.message}`;
+    corrEl.textContent = 'The SOC remains operational; observations will use the durable fallback queue.';
+    entitiesEl.textContent = 'Actor/campaign/malware intelligence unavailable.';
+    vulnerabilitiesEl.textContent = 'KEV intelligence unavailable.';
+    document.getElementById('tiConnection').textContent = 'DEGRADED';
+  }
+}
+
+async function lookupTI(){
+  const input = document.getElementById('tiLookupValue');
+  const result = document.getElementById('tiLookupResult');
+  if(!input || !result || !input.value.trim()) return;
+  result.textContent = 'Looking up normalized intelligence…';
+  try{
+    const data = await apiFetch('/threat-intel/lookup', {method:'POST', body:JSON.stringify({indicator:input.value.trim()})});
+    result.textContent = JSON.stringify(data, null, 2).slice(0,8000);
+  }catch(e){ result.textContent = `Lookup failed: ${e.message}`; }
 }
 
 async function loadLogs(){

@@ -1,0 +1,47 @@
+# Non-secret Vrin_TI defaults. Environment variables override this file.
+enabled: true
+collect_on_start: false
+feeds_concurrency: 3
+
+api:
+  host: 127.0.0.1
+  port: 8010
+  allowed_hosts: 127.0.0.1,localhost
+  request_max_bytes: 1000000
+  rate_limit_per_minute: 120
+  websocket_heartbeat_seconds: 30
+
+database:
+  path: database/threat_intelligence.db
+  retention_days: 365
+
+transport:
+  mode: auto  # redis -> nats -> authenticated HTTP -> SQLite durable queue
+
+soc:
+  url: http://127.0.0.1:8000
+
+security:
+  replay_window_seconds: 300
+
+privacy:
+  external_enrichment: false
+  external_submission: false
+
+logging:
+  directory: logs/threat_intelligence
+
+feeds:
+  cisa_kev: {enabled: true, interval: 3600, timeout: 20, retry_count: 3, reliability: 0.98}
+  nvd: {enabled: false, interval: 3600, timeout: 30, retry_count: 3, reliability: 0.95}
+  mitre_attack: {enabled: true, interval: 21600, timeout: 30, retry_count: 3, reliability: 0.98}
+  stix_taxii: {enabled: false, interval: 1800, timeout: 30, retry_count: 3, reliability: 0.80}
+  suricata: {enabled: false, interval: 300, timeout: 10, retry_count: 1, reliability: 0.85}
+  zeek: {enabled: false, interval: 300, timeout: 10, retry_count: 1, reliability: 0.85}
+
+integrations:
+  allowed_scan_paths: quarantine
+  suricata: {eve_path: ""}
+  zeek: {log_dir: ""}
+  yara: {rules_path: ""}
+  sigma: {rules_path: rules/sigma}

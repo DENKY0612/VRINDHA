@@ -7,7 +7,7 @@ import os
 import sys
 import time
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Path as APIPath, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -35,6 +35,9 @@ from autonomous.task_manager import task_manager
 from ml.prediction_model import prediction_model
 from ml.risk_scoring import risk_scoring
 from ml.visualization import visualization_engine
+from core.intelligence_bus import intelligence_gateway
+from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
+from Vrin_TI.normalization import InvalidIndicator
 
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Vrindha AI SOC System", description="Ethical agentic cybersecurity platform", version="1.1.0")
@@ -428,6 +431,157 @@ async def pipeline_status(user=Depends(get_current_user)):
 async def verify_tools(user=Depends(get_current_user)):
     from tools.installer import verify_all_tools
     return verify_all_tools()
+
+
+# -------------------------------------------------------------------------
+# Dedicated SOC ↔ independent Vrin_TI gateway. Existing SOC routes and
+# safety/authorization behavior above remain unchanged.
+# -------------------------------------------------------------------------
+def require_ti_service(x_vrindha_service_token: str = Header(default="")) -> str:
+    if not intelligence_gateway.service_token:
+        raise HTTPException(status_code=503, detail="TI service authentication is not configured")
+    if not intelligence_gateway.authenticate_service(x_vrindha_service_token):
+        raise HTTPException(status_code=401, detail="invalid service credentials")
+    return "threat_intelligence"
+
+
+@app.get("/intelligence/health", tags=["intelligence-gateway"])
+async def intelligence_health(_service=Depends(require_ti_service)):
+    """Service-authenticated, non-recursive health for the TI HTTP transport."""
+    return intelligence_gateway.transport_health()
+
+
+@app.post("/intelligence/events", tags=["intelligence-gateway"])
+async def intelligence_event(event: IntelligenceEvent, _service=Depends(require_ti_service)):
+    """TI → SOC/Correlation event ingress. This endpoint never executes actions."""
+    return await intelligence_gateway.receive_ti_event(event)
+
+
+@app.get("/threat-intel/health", tags=["threat-intelligence"])
+async def threat_intel_health(user=Depends(get_current_user)):
+    return await intelligence_gateway.health()
+
+
+@app.get("/threat-intel/status", tags=["threat-intelligence"])
+async def threat_intel_status(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/status")
+    except Exception:
+        return await intelligence_gateway.health()
+
+
+@app.post("/threat-intel/lookup", tags=["threat-intelligence"])
+async def threat_intel_lookup(req: LookupRequest, user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.lookup(req.indicator, req.indicator_type)
+    except InvalidIndicator as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@app.get("/threat-intel/indicators/{indicator:path}", tags=["threat-intelligence"])
+async def threat_intel_indicator(indicator: str = APIPath(max_length=4096), indicator_type: Optional[str] = Query(default=None),
+                                 user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.lookup(indicator, indicator_type)
+    except InvalidIndicator as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@app.post("/threat-intel/events", tags=["threat-intelligence"])
+async def soc_to_ti_event(event: IntelligenceEvent, user=Depends(get_current_user)):
+    """Authenticated analyst/SOC observation routed to TI with durable fallback."""
+    event.source = "soc"
+    event.context = {**event.context, "soc_user": str(user["sub"])}
+    return await intelligence_gateway.send_observation(event)
+
+
+@app.post("/threat-intel/sighting", tags=["threat-intelligence"])
+async def soc_to_ti_sighting(req: SightingRequest, user=Depends(get_current_user)):
+    event = IntelligenceEvent(event_type="ioc_observation", source="soc", indicator=req.indicator, asset=req.asset,
+        timestamp=req.timestamp, confidence=req.confidence, correlation_id=req.correlation_id,
+        context={**req.context, "soc_user": str(user["sub"])})
+    return await intelligence_gateway.send_observation(event)
+
+
+@app.get("/threat-intel/feeds", tags=["threat-intelligence"])
+async def threat_intel_feeds(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/feeds")
+    except Exception as exc:
+        return {"feeds": [], "status": "degraded", "error": str(exc)[:256]}
+
+
+@app.post("/threat-intel/feeds/{feed}/sync", tags=["threat-intelligence"])
+async def threat_intel_sync(feed: str = APIPath(pattern=r"^[a-z0-9_-]{1,64}$"), user=Depends(get_current_admin)):
+    try:
+        return await intelligence_gateway.sync_feed(feed)
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"TI feed service unavailable: {str(exc)[:128]}")
+
+
+@app.get("/threat-intel/correlations", tags=["threat-intelligence"])
+async def threat_intel_correlations(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/correlations")
+    except Exception:
+        return {"correlations": intelligence_gateway.database.correlations(), "status": "degraded"}
+
+
+@app.get("/threat-intel/sightings", tags=["threat-intelligence"])
+async def threat_intel_sightings(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/sightings")
+    except Exception:
+        return {"sightings": intelligence_gateway.database.list_sightings(), "status": "degraded"}
+
+
+@app.get("/threat-intel/vulnerabilities", tags=["threat-intelligence"])
+async def threat_intel_vulnerabilities(kev_only: bool = False, user=Depends(get_current_user)):
+    try:
+        suffix = "?kev_only=true" if kev_only else ""
+        return await intelligence_gateway.resource(f"/threat-intel/vulnerabilities{suffix}")
+    except Exception:
+        return {"vulnerabilities": intelligence_gateway.database.vulnerabilities(kev_only), "status": "degraded"}
+
+
+@app.get("/threat-intel/actors", tags=["threat-intelligence"])
+async def threat_intel_actors(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/actors")
+    except Exception:
+        return {"actors": intelligence_gateway.database.list_entities("threat-actor"), "status": "degraded"}
+
+
+@app.get("/threat-intel/campaigns", tags=["threat-intelligence"])
+async def threat_intel_campaigns(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/campaigns")
+    except Exception:
+        return {"campaigns": intelligence_gateway.database.list_entities("campaign"), "status": "degraded"}
+
+
+@app.get("/threat-intel/malware", tags=["threat-intelligence"])
+async def threat_intel_malware(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/malware")
+    except Exception:
+        return {"malware": intelligence_gateway.database.list_entities("malware"), "status": "degraded"}
+
+
+@app.get("/threat-intel/mitre/{technique}", tags=["threat-intelligence"])
+async def threat_intel_mitre(technique: str = APIPath(pattern=r"^T\d{4}(?:\.\d{3})?$"), user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource(f"/threat-intel/mitre/{technique.upper()}")
+    except Exception as exc:
+        return {"technique": technique.upper(), "matches": [], "status": "degraded", "error": str(exc)[:256]}
+
+
+@app.get("/threat-intel/reports", tags=["threat-intelligence"])
+async def threat_intel_reports(user=Depends(get_current_user)):
+    try:
+        return await intelligence_gateway.resource("/threat-intel/reports")
+    except Exception:
+        return {"reports": intelligence_gateway.database.reports(), "status": "degraded"}
 
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"
