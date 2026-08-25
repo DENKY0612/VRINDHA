@@ -12,14 +12,11 @@ from datetime import datetime
 from typing import List, Dict
 from core.error_handler import ErrorHandler
 
-DB_PATH = Path("database/vrindha.db")
-# Try alternative paths for robustness
-if not DB_PATH.parent.exists():
-    for alt in [Path("vrindha/database/vrindha.db"), Path("/home/user/vrindha/database/vrindha.db")]:
-        if alt.parent.exists():
-            DB_PATH = alt
-            break
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+DB_PATH = PACKAGE_ROOT / "database" / "vrindha.db"
+LOG_FILE = PACKAGE_ROOT / "logs" / "log.txt"
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 def get_connection():
     conn = sqlite3.connect(str(DB_PATH), timeout=10)
@@ -82,13 +79,10 @@ def add_log(command: str, result: str, risk_level: str = "Low", action: str = ""
         
         # Also write to file per Day 18
         try:
-            log_file = Path("logs/log.txt")
-            if not log_file.parent.exists():
-                log_file = Path("vrindha/logs/log.txt")
-            log_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(log_file, "a", encoding="utf-8") as f:
+            LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+            with open(LOG_FILE, "a", encoding="utf-8") as f:
                 f.write(f"[{datetime.now().isoformat()}] COMMAND: {command} | RISK: {risk_level} | RESULT: {result[:200]}\n")
-        except:
+        except OSError:
             pass
         
         return {"status": "success", "message": "Log added"}

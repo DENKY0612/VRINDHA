@@ -10,19 +10,13 @@ from pathlib import Path
 from typing import List, Dict
 from .error_handler import ErrorHandler
 
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
 class MemorySystem:
-    def __init__(self, db_path: str = "database/memory.db"):
-        self.db_path = Path(db_path)
-        if not self.db_path.exists():
-            # Try alternative locations
-            alt = Path("vrindha/database/memory.db")
-            if alt.parent.exists():
-                self.db_path = alt
-            else:
-                alt2 = Path("/home/user/vrindha/database/memory.db")
-                if alt2.parent.exists():
-                    self.db_path = alt2
-        
+    def __init__(self, db_path: str = None):
+        candidate = Path(db_path) if db_path else PACKAGE_ROOT / "database" / "memory.db"
+        self.db_path = candidate if candidate.is_absolute() else PACKAGE_ROOT / candidate
         self.init_db()
     
     def init_db(self):

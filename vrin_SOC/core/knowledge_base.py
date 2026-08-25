@@ -8,20 +8,18 @@ from pathlib import Path
 from typing import Dict, List
 from .error_handler import ErrorHandler
 
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
 class KnowledgeBase:
-    def __init__(self, kb_path: str = "data/knowledge.json"):
-        self.kb_path = Path(kb_path)
+    def __init__(self, kb_path: str = None):
+        candidate = Path(kb_path) if kb_path else PACKAGE_ROOT / "data" / "knowledge.json"
+        self.kb_path = candidate if candidate.is_absolute() else PACKAGE_ROOT / candidate
         self.data = {"vulnerabilities": [], "attack_patterns": [], "defense_strategies": []}
         self.load()
     
     def load(self):
         try:
-            # Try multiple paths
-            candidates = [self.kb_path, Path("vrindha/data/knowledge.json"), Path("/home/user/vrindha/data/knowledge.json")]
-            for p in candidates:
-                if p.exists():
-                    self.kb_path = p
-                    break
             if self.kb_path.exists():
                 with open(self.kb_path, 'r') as f:
                     self.data = json.load(f)

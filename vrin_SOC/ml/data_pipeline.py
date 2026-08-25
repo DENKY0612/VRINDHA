@@ -18,15 +18,13 @@ try:
 except ImportError:
     PANDAS_AVAILABLE = False
 
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
 class DataPipeline:
-    def __init__(self, db_path: str = "database/vrindha.db"):
-        self.db_path = Path(db_path)
-        # Resolve path
-        if not self.db_path.exists():
-            for alt in [Path("vrindha/database/vrindha.db"), Path("/home/user/vrindha/database/vrindha.db")]:
-                if alt.exists():
-                    self.db_path = alt
-                    break
+    def __init__(self, db_path: str = None):
+        candidate = Path(db_path) if db_path else PACKAGE_ROOT / "database" / "vrindha.db"
+        self.db_path = candidate if candidate.is_absolute() else PACKAGE_ROOT / candidate
     
     def collect_logs(self) -> List[Dict]:
         try:
@@ -55,10 +53,14 @@ class DataPipeline:
             })
         return structured
     
-    def to_csv(self, output_path: str = "data/training_data.csv") -> Dict:
+    def to_csv(self, output_path: str = None) -> Dict:
         try:
             data = self.to_structured_json()
-            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            destination = Path(output_path) if output_path else PACKAGE_ROOT / "data" / "training_data.csv"
+            if not destination.is_absolute():
+                destination = PACKAGE_ROOT / destination
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            output_path = str(destination)
             if not data:
                 # Create sample data for demonstration
                 data = [

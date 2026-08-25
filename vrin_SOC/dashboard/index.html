@@ -985,6 +985,7 @@ async function login(){
     sessionStorage.setItem('vrindhaToken', authToken);
     document.getElementById('loginPassword').value = '';
     updateAuthStatus();
+    chartsLoaded = false;
     loadLogs(); loadCharts();
   }catch(error){ document.getElementById('authStatus').textContent = error.message; }
 }
@@ -1028,6 +1029,7 @@ async function register(){
     } else {
       statusEl.textContent = `Registered '${data.user.username}' (role: ${data.user.role})`;
     }
+    chartsLoaded = false;
     loadLogs(); loadCharts();
   }catch(error){
     statusEl.textContent = error.message;
@@ -1184,7 +1186,6 @@ async function loadMLData(){
 let chartsLoaded = false;
 async function loadCharts(){
   if(chartsLoaded) return;
-  chartsLoaded = true;
   try{
     const data = await apiFetch('/dashboard-data');
     const viz = data.visualization;
@@ -1204,6 +1205,7 @@ async function loadCharts(){
       const rt = viz.risk_trends.data || [];
       new Chart(riskCtx, {type:'line', data:{labels:rt.map(r=>r.hour), datasets:[{label:'Risk Score', data:rt.map(r=>r.risk), borderColor:'#DAA520', backgroundColor:'rgba(218,165,32,0.2)', fill:true, tension:0.4}]}});
     }
+    chartsLoaded = true;
   }catch(e){
     console.log("Charts simulation", e);
     try{
