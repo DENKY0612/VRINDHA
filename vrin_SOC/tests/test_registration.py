@@ -202,6 +202,10 @@ class RegistrationAPITests(unittest.TestCase):
             ("post", "/command", {"command": "status"}),
             ("post", "/ml/anomaly", {"command": "test"}),
             ("post", "/ml/risk", {"ip": "127.0.0.1"}),
+            ("get", "/team/state", None),
+            ("post", "/team/red", {"action": "nmap", "target": "127.0.0.1"}),
+            ("post", "/team/blue", {"action": "detect", "details": "malware"}),
+            ("post", "/team/confirm", {"decision": "no"}),
         ]:
             request = getattr(self.client, method)
             result = request(path, json=payload) if payload else request(path)
@@ -293,6 +297,10 @@ class RegistrationAPITests(unittest.TestCase):
             ("/ml/predict", "get"),
             ("/ml/pipeline", "get"),
             ("/tools/verify", "get"),
+            ("/team/state", "get"),
+            ("/team/red", "post"),
+            ("/team/blue", "post"),
+            ("/team/confirm", "post"),
         ]
         for path, method in protected:
             security = spec["paths"][path][method].get("security")

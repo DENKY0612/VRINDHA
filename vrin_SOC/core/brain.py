@@ -61,6 +61,30 @@ class Brain:
         recovery_result = self.scheduler.recover_stuck_tasks()
         print(f"[Brain] Vrindha AI SOC System initialized in {self.mode.upper()} MODE. Autonomous recovery: {recovery_result.get('status')}")
 
+    def _is_concrete_team_command(self, command: str) -> bool:
+        lower = command.lower()
+        markers = (
+            "scan network", "nmap", "whois", "nikto", "gobuster", "dirb", "amass",
+            "sublist3r", "tcpdump", "hashcat", "exploit", "metasploit",
+            "detect threat", "block ip", "firewall", "rootkit", "ids ", "idps",
+            "show log", "siem", "incident response", "analyze anomaly", "risk score",
+            "endpoint",
+        )
+        if lower.startswith("ids") or lower.startswith("idps"):
+            return True
+        return any(marker in lower for marker in markers)
+
+    def pending_for(self, session_id: str = "cli"):
+        """Return the live pending Red Team confirmation for a session, if any."""
+        pending = self.pending_confirmations.get(session_id)
+        if not pending:
+            return None
+        created = datetime.fromisoformat(pending["timestamp"])
+        if (datetime.now() - created).total_seconds() > 300:
+            self.pending_confirmations.pop(session_id, None)
+            return None
+        return pending
+
     def _is_admin_user(self, user_token: str = None) -> bool:
         """Check if user is admin for unrestricted access as per user request"""
         if not user_token:
@@ -249,9 +273,10 @@ class Brain:
             if runtime_result is not None:
                 return runtime_result
 
-            # Autonomous goal evaluation
+            # Autonomous goal evaluation. Concrete Red/Blue operations must not
+            # be swallowed by keyword overlap such as "detect threats".
             goal_meta = self.goal_engine.classify_goal(command)
-            if goal_meta.get("category") != "unknown":
+            if goal_meta.get("category") != "unknown" and not self._is_concrete_team_command(command):
                 return self._handle_autonomous_goal(command, goal_meta, classification, safety, similar_cases, plan)
 
             # Route based on mode
@@ -395,6 +420,10 @@ class Brain:
                 from tools.hashcat_tool import run_hashcat_assistant
                 result_data = run_hashcat_assistant(command)
                 message = "Hashcat assistant - command suggested, not auto-executed per strict control"
+            elif "exploit" in cmd_lower or "metasploit" in cmd_lower:
+                from agents.exploit_assistant import exploit_assistant
+                result_data = exploit_assistant.suggest_exploit(command, target)
+                message = "Exploit assistant — suggestion only, no exploit was executed"
             else:
                 # Generic recon
                 result_data = recon_agent.run(target)
@@ -464,15 +493,33 @@ class Brain:
 
                 # Automated response if HIGH risk per Day 22-23
                 automated_action = None
+                try:
+                    from database.db import add_blocked_ip, add_threat
+                    add_threat(
+                        ",".join(threat_result.get("indicators") or [threat_result.get("threat") or "analysis"]),
+                        target or "",
+                        threat_result.get("risk_level", "LOW"),
+                        command,
+                    )
+                except Exception:
+                    add_blocked_ip = None  # type: ignore
+                    add_threat = None  # type: ignore
+
                 if threat_result.get("risk_level") == "HIGH" or threat_result.get("threat_level") == "HIGH":
-                    # Block the source found in the event when available; retain a
-                    # safe simulation address only when no source was supplied.
-                    automated_action = automation_actions.block_ip(target or "192.168.1.100")
-                    # Memory
+                    if target:
+                        automated_action = automation_actions.block_ip(target)
+                        if automated_action.get("status") != "error" and add_blocked_ip:
+                            add_blocked_ip(target, f"HIGH threat auto-response: {command[:160]}")
+                    else:
+                        automated_action = {
+                            "status": "skipped",
+                            "action": "block_ip",
+                            "message": "HIGH risk detected but no source IP was present to block",
+                        }
                     memory_system.save_memory({
                         "event_type": "auto_response",
                         "threat": command,
-                        "action_taken": "block_ip",
+                        "action_taken": "block_ip" if target else "alert_only",
                         "outcome": str(automated_action),
                         "risk_level": "HIGH"
                     })
@@ -502,11 +549,25 @@ class Brain:
                 }
 
             if "block ip" in cmd_lower:
-                ip_to_block = target or "192.168.1.100"
+                ip_to_block = target
+                if not ip_to_block:
+                    return {
+                        "mode": "blue",
+                        "action": "block_ip",
+                        "status": "error",
+                        "message": "Provide an IP to block, e.g. 'block ip 192.168.1.50'",
+                        "data": {},
+                    }
                 result = automation_actions.block_ip(ip_to_block)
                 result_status = result.get("status")
                 succeeded = result_status != "error"
                 message = result.get("message", "Could not block IP")
+                if succeeded:
+                    try:
+                        from database.db import add_blocked_ip
+                        add_blocked_ip(ip_to_block, f"Operator block: {command[:160]}")
+                    except Exception:
+                        pass
                 if succeeded and result_status != "simulated":
                     message = f"Automated defensive action: Blocked IP {ip_to_block}"
                 return {
@@ -550,7 +611,7 @@ class Brain:
                 firewall_result = firewall_module.check_and_block()
                 response_result = response_engine.respond({
                     "risk_level": "HIGH" if "incident response" in cmd_lower or "security incident" in cmd_lower else "MEDIUM",
-                    "source_ip": target or "192.168.1.100",
+                    "source_ip": target or "",
                     "command": command,
                 })
 

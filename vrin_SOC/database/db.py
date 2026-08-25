@@ -101,6 +101,69 @@ def get_logs(limit: int = 50) -> List[Dict]:
         ErrorHandler.handle_exception(e, "get_logs")
         return []
 
+def add_blocked_ip(ip: str, reason: str = "") -> Dict:
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO blocked_ips (ip, reason, timestamp)
+            VALUES (?, ?, ?)
+            ON CONFLICT(ip) DO UPDATE SET reason=excluded.reason, timestamp=excluded.timestamp
+            """,
+            (ip, reason[:500], datetime.now().isoformat()),
+        )
+        conn.commit()
+        conn.close()
+        return {"status": "success", "ip": ip, "reason": reason}
+    except Exception as e:
+        return ErrorHandler.handle_exception(e, "add_blocked_ip")
+
+
+def get_blocked_ips(limit: int = 100) -> List[Dict]:
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM blocked_ips ORDER BY id DESC LIMIT ?", (limit,))
+        rows = cur.fetchall()
+        conn.close()
+        return [dict(row) for row in rows]
+    except Exception as e:
+        ErrorHandler.handle_exception(e, "get_blocked_ips")
+        return []
+
+
+def add_threat(threat_type: str, source_ip: str = "", risk_level: str = "Low", description: str = "") -> Dict:
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO threats (timestamp, threat_type, source_ip, risk_level, description)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (datetime.now().isoformat(), threat_type[:128], source_ip[:64], risk_level[:32], description[:2000]),
+        )
+        conn.commit()
+        conn.close()
+        return {"status": "success", "threat_type": threat_type, "source_ip": source_ip, "risk_level": risk_level}
+    except Exception as e:
+        return ErrorHandler.handle_exception(e, "add_threat")
+
+
+def get_threats(limit: int = 50) -> List[Dict]:
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM threats ORDER BY id DESC LIMIT ?", (limit,))
+        rows = cur.fetchall()
+        conn.close()
+        return [dict(row) for row in rows]
+    except Exception as e:
+        ErrorHandler.handle_exception(e, "get_threats")
+        return []
+
+
 def get_logs_by_risk(risk_level: str) -> List[Dict]:
     try:
         conn = get_connection()

@@ -1,37 +1,44 @@
-"""
-tcpdump Tool - Network Sniffing per blueprint
-Function: run_tcpdump(interface) - asks confirmation, runs tcpdump -i interface -c 50, limited capture count to avoid infinite
-"""
-from core.tool_executor import tool_executor
-from core.error_handler import ErrorHandler
-import shutil
+"""tcpdump wrapper with a local-listener fallback."""
 from datetime import datetime
+import shutil
+
+from core.error_handler import ErrorHandler
+from core.local_sensors import local_listeners
+from core.tool_executor import tool_executor
+
 
 def run_tcpdump(interface: str = "eth0") -> dict:
     try:
-        if not interface:
-            interface = "lo"
-        
-        if not shutil.which("tcpdump"):
+        interface = interface or "lo"
+        if shutil.which("tcpdump"):
+            result = tool_executor.execute(
+                ["tcpdump", "-i", interface, "-c", "50", "-nn"],
+                tool_name="tcpdump",
+                timeout=20,
+            )
             return {
                 "tool": "tcpdump",
                 "interface": interface,
-                "status": "simulated",
-                "data": f"[SIMULATION] tcpdump -i {interface} -c 50\n12:00:01 IP 127.0.0.1.54321 > 127.0.0.1.80: Flags [S]\n12:00:02 IP 127.0.0.1.80 > 127.0.0.1.54321: Flags [S.]\nCaptured 50 packets summary: 30 TCP, 15 UDP, 5 ICMP",
-                "error": "",
+                "status": result.get("status"),
+                "engine": "tcpdump",
+                "data": result.get("output", "")[:5000],
+                "result": result.get("output", "")[:5000],
+                "error": result.get("error", ""),
                 "timestamp": datetime.now().isoformat(),
-                "safety": "Limit capture count to 50 for safety"
+                "safety": "Limited to 50 packets",
             }
-        
-        result = tool_executor.execute(f"tcpdump -i {interface} -c 50", tool_name="tcpdump")
+        listeners = local_listeners()
         return {
-            "tool": "tcpdump",
+            "tool": "local-sockets",
             "interface": interface,
-            "status": result.get("status"),
-            "data": result.get("output","")[:5000],
-            "error": result.get("error",""),
-            "timestamp": datetime.now().isoformat(),
-            "safety": "Limited to 50 packets per blueprint safety"
+            "status": listeners.get("status"),
+            "engine": listeners.get("engine"),
+            "data": listeners.get("result", ""),
+            "result": listeners.get("result", ""),
+            "listeners": listeners.get("listeners", []),
+            "error": "",
+            "timestamp": listeners.get("timestamp", datetime.now().isoformat()),
+            "safety": "tcpdump not installed; listed local listening sockets instead of capturing packets",
         }
-    except Exception as e:
-        return ErrorHandler.handle_exception(e, "run_tcpdump")
+    except Exception as exc:
+        return ErrorHandler.handle_exception(exc, "run_tcpdump")

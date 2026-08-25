@@ -604,50 +604,110 @@ Core Rules: NEVER offensive without approval, AUTOMATE defensive when threat, AL
 
 <!-- Red Team Panes -->
 <div class="pane" id="pane-recon">
-<h3>🔍 Recon Agent - agents/recon_agent.py + tools (Red Team Manual Only)</h3>
-<div class="banner red">Recon Agent Tools: nmap, netdiscover, amass, sublist3r, whois, gobuster, dirb, tcpdump - Flow: Validate target, Ask user confirmation (handled by Brain), Run scan, Return structured result, Do NOT auto-execute without approval, Red Team Manual Only per MASTER BLUEPRINT</div>
+<h3>🔍 Recon Agent</h3>
+<div class="banner red">Red Team is manual. Every scan is authorized, then you must press <b>Yes, proceed</b>. Loopback/private targets only unless public scanning is enabled. If nmap is missing, Vrindha runs a real Python TCP connect scan of common ports.</div>
+<div class="card red">
+<div class="input-group">
+<input id="reconTarget" value="127.0.0.1" placeholder="Target IP or domain">
+<button onclick="runTeam('red','nmap','reconTarget','reconResult')">Scan ports</button>
+<button class="secondary" onclick="runTeam('red','whois','reconTarget','reconResult')">WHOIS</button>
+<button class="secondary" onclick="runTeam('red','tcpdump','reconTarget','reconResult')">Listeners</button>
+</div>
+<div class="quick-actions">
+<button onclick="document.getElementById('reconTarget').value='127.0.0.1'">localhost</button>
+<button onclick="runTeam('red','amass','reconTarget','reconResult')">DNS prefixes</button>
+<button onclick="runTeam('red','sublist3r','reconTarget','reconResult')">Subdomains</button>
+</div>
+<div id="reconResult" class="result-box">Log in, enter a lab target, then scan. Confirmation is required.</div>
+</div>
 </div>
 <div class="pane" id="pane-vuln">
-<h3>🐛 Vuln Agent - agents/vuln_agent.py</h3>
-<div class="banner red">Vulnerability Agent Tools: nikto, openvas, searchsploit - Identify vulnerabilities, Map CVEs, Suggest exploit possibilities (no execution unless authorized) - Flow: Ask confirmation, Scan target, Return vulnerabilities, No automatic execution</div>
+<h3>🐛 Vulnerability Agent</h3>
+<div class="banner red">Web vulnerability check (nikto, or HTTP path probe when nikto is not installed). Confirmation required. No exploit is executed.</div>
+<div class="card red">
+<div class="input-group">
+<input id="vulnTarget" value="127.0.0.1" placeholder="Host or URL">
+<button onclick="runTeam('red','nikto','vulnTarget','vulnResult')">Scan vulnerabilities</button>
+</div>
+<div id="vulnResult" class="result-box">Results appear here after confirmation.</div>
+</div>
 </div>
 <div class="pane" id="pane-exploit">
-<h3>💣 Exploit Assistant - agents/exploit_assistant.py (Strictly Controlled ⚠️)</h3>
-<div class="banner red">Tools: metasploit - Rules: Only assist, do not auto-execute exploits, Require explicit user confirmation, Prefer simulation - Responsibilities: Suggest exploit modules, Explain attack steps, Provide mitigation advice - Output: Exploit name, Target vulnerability, Risk level, Defense recommendation</div>
+<h3>💣 Exploit Assistant — suggestion only</h3>
+<div class="banner red">This assistant never launches an exploit. It maps a keyword to defensive guidance.</div>
+<div class="card red">
+<div class="input-group">
+<input id="exploitTarget" placeholder="Keyword: apache, ssh, smb…">
+<button onclick="runTeam('red','assist','exploitTarget','exploitResult')">Suggest mitigation</button>
+</div>
+<div id="exploitResult" class="result-box">No exploit modules are executed.</div>
+</div>
 </div>
 <div class="pane" id="pane-webtools">
-<h3>🌐 Web Tools - Red Team Manual</h3>
-<div class="banner red">Gobuster: run_gobuster(url) -> gobuster dir -u url -w /usr/share/wordlists/dirb/common.txt -t 20, Dirb: run_dirb(url) -> dirb url, Amass: amass enum -d domain, Sublist3r: sublist3r -d domain, Wireshark: tshark wrapper + guidance, tcpdump: tcpdump -i interface -c 50 limited 50 packets safety, Hashcat: assistant only suggestion only strict control, require justification</div>
+<h3>🌐 Web Tools</h3>
+<div class="banner red">Directory discovery against authorized lab targets. Confirmation required. Falls back to a real HTTP HEAD probe of common paths when gobuster/dirb are missing.</div>
+<div class="card red">
+<div class="input-group">
+<input id="webTarget" value="http://127.0.0.1" placeholder="http://127.0.0.1">
+<button onclick="runTeam('red','gobuster','webTarget','webResult')">Gobuster / paths</button>
+<button class="secondary" onclick="runTeam('red','dirb','webTarget','webResult')">Dirb / paths</button>
+</div>
+<div id="webResult" class="result-box">Enter an authorized URL, then confirm.</div>
+</div>
 </div>
 
 <!-- Blue Team Panes -->
 <div class="pane" id="pane-threat">
-<h3>🚨 Threat Detection - agents/threat_agent.py + core/threat detection prompt</h3>
-<div class="banner blue">Analyze system logs and tool outputs - Detect: Multiple failed logins, Unusual ports, Suspicious processes - Assign risk levels: LOW, MEDIUM, HIGH - Return: threat, risk, confidence - Analyze text input for words attack, breach, malware - Also detect brute force patterns (\d+ failed), suspicious ports 4444,1234,6666,1337,8081 - Day 17 logic</div>
+<h3>🚨 Threat Detection</h3>
+<div class="banner blue">Blue Team is automated. HIGH risk with a source IP records a defensive block in SIEM. Login first from the Command Center.</div>
 <div class="card blue">
-<div class="card-header"><div class="card-title">🚨 Threat Analysis</div><button onclick="quickCmd('detect threats malware attack from 192.168.1.50')">Test Threat Detect</button></div>
-<div id="threatResult" class="result-box">No threats yet - try detect threats malware attack</div>
+<div class="input-group">
+<input id="threatTarget" value="192.168.1.50" placeholder="Source IP (optional)">
+<input id="threatDetails" value="malware attack 5 failed logins port 4444" placeholder="Event text">
+<button onclick="runTeam('blue','detect','threatTarget','threatResult','threatDetails')">Analyze</button>
+</div>
+<div id="threatResult" class="result-box">Describe an event and analyze it.</div>
 </div>
 </div>
 
 <div class="pane" id="pane-response">
-<h3>⚡ Response Engine - automation/response_engine.py + automation/actions.py (Blue Team Automated)</h3>
-<div class="banner blue">Build Response Engine - INPUT threat data - ACTIONS block_ip(ip), kill_process(pid) - RULES Only for HIGH risk, Log all actions, Ensure system safety - Return action summary - Only HIGH risk auto-blocks per blueprint, MEDIUM alert only, LOW log only - Safe Mode: Never execute destructive exploits, Confirm before high-impact actions</div>
+<h3>⚡ Response Engine</h3>
+<div class="banner blue">Block a validated IP (simulation when ufw/iptables cannot change this host). Invalid addresses are rejected. Blocks persist in SIEM.</div>
+<div class="card blue">
+<div class="input-group">
+<input id="blockTarget" placeholder="IP to block, e.g. 192.168.1.50">
+<button onclick="runTeam('blue','block','blockTarget','responseResult')">Block IP</button>
+<button class="secondary" onclick="runTeam('blue','respond','blockTarget','responseResult')">Incident response</button>
+</div>
+<div id="responseResult" class="result-box">No response yet.</div>
+</div>
 </div>
 
 <div class="pane" id="pane-firewall">
-<h3>🔥 Firewall Auto Response - automation/firewall.py (Fail2Ban + UFW)</h3>
-<div class="banner blue">Tools: ufw, fail2ban - Features: Detect repeated failed logins, Automatically block IP - Rules: Only block after threshold 5 attempts, Log all actions - Return blocked IP, reason - Blue Additional Control Prompt</div>
+<h3>🔥 Firewall review</h3>
+<div class="banner blue">Reviews fail2ban/ufw when installed and correlates failed-login text from SIEM. Blocks are stored, not re-injected as fake events every click.</div>
+<div class="card blue">
+<div class="card-header"><div class="card-title">Firewall</div><button onclick="runTeam('blue','firewall','','firewallResult')">Run check</button></div>
+<div id="firewallResult" class="result-box">Click Run check.</div>
+</div>
 </div>
 
 <div class="pane" id="pane-ids">
-<h3>👁️ IDS Auto Monitor - automation/ids_monitor.py (Snort/Suricata Enhancement)</h3>
-<div class="banner blue">Tools: snort, suricata - Features: Run in monitoring mode, Parse alerts, Send alerts to system - Rules: Do not block automatically, Only alert + log - Return alerts detected, severity - Blue Additional Control</div>
+<h3>👁️ IDS / IDPS</h3>
+<div class="banner blue">Uses Snort/Suricata when present. Otherwise inventories local listening sockets. Simulated sensors do not auto-block.</div>
+<div class="card blue">
+<div class="card-header"><div class="card-title">Monitor</div><button onclick="runTeam('blue','ids','','idsResult')">Run monitor</button></div>
+<div id="idsResult" class="result-box">Click Run monitor.</div>
+</div>
 </div>
 
 <div class="pane" id="pane-endpoint">
-<h3>💻 Endpoint Protection - automation/rootkit_scanner.py + agents/endpoint_security.py (rkhunter + chkrootkit)</h3>
-<div class="banner blue">Tools: rkhunter, chkrootkit, clamav - Flow: Run scan, Parse output, Detect suspicious results - Return threat, status clean/suspicious - Endpoint Security Scanner using Kali tools</div>
+<h3>💻 Endpoint protection</h3>
+<div class="banner blue">rkhunter / chkrootkit / clamav when installed; otherwise a clean, labeled fallback so the workflow still completes.</div>
+<div class="card blue">
+<div class="card-header"><div class="card-title">Endpoint scan</div><button onclick="runTeam('blue','endpoint','','endpointResult')">Scan endpoint</button></div>
+<div id="endpointResult" class="result-box">Click Scan endpoint.</div>
+</div>
 </div>
 
 <div class="pane" id="pane-threatintel">
@@ -698,10 +758,10 @@ Core Rules: NEVER offensive without approval, AUTOMATE defensive when threat, AL
 </div>
 
 <div class="pane" id="pane-alerts">
-<h3>🚨 Alerts & Timeline - SIEM Correlation</h3>
+<h3>🚨 Alerts & Timeline</h3>
 <div class="card">
-<div class="card-header"><div class="card-title">🚨 Alerts & Threats</div></div>
-<div id="alertsBox" class="result-box">No alerts...</div>
+<div class="card-header"><div class="card-title">🚨 Blocked IPs, threats, pending Red Team</div><button onclick="loadTeamState()">Refresh</button></div>
+<div id="alertsBox" class="result-box">Log in, then refresh.</div>
 </div>
 </div>
 
@@ -887,6 +947,7 @@ function switchPane(pane){
   if(pane==='visualization') loadCharts();
   if(pane==='anomaly' || pane==='risk' || pane==='pipeline') loadMLData();
   if(pane==='threatintel') loadThreatIntel();
+  if(['recon','vuln','exploit','webtools','threat','response','firewall','ids','endpoint','alerts'].includes(pane)) loadTeamState();
 }
 
 let panelOpen = false;
@@ -1036,21 +1097,73 @@ async function register(){
   }
 }
 
+function formatTeamResult(data){
+  const payload = data.data ? JSON.stringify(data.data, null, 2).slice(0, 4000) : '';
+  return `Mode: ${(data.mode||'').toUpperCase()} | Action: ${data.action||''} | Status: ${data.status||''}\n\n${data.message||''}\n\n${payload}`;
+}
+function showTeamResult(box, data){
+  if(!box) return;
+  const text = formatTeamResult(data);
+  if(data.status === 'awaiting_confirmation'){
+    box.innerHTML = `${escapeHtml(text)}\n\n<div class="quick-actions" style="margin-top:10px;white-space:normal">
+      <button onclick="confirmTeam(true,'${box.id}')">Yes, proceed</button>
+      <button onclick="confirmTeam(false,'${box.id}')">No, cancel</button>
+    </div>`;
+  } else {
+    box.textContent = text;
+  }
+}
+async function runTeam(side, action, targetId, resultId, detailsId){
+  const box = document.getElementById(resultId);
+  if(!box) return;
+  const target = targetId ? (document.getElementById(targetId)?.value || '').trim() : '';
+  const details = detailsId ? (document.getElementById(detailsId)?.value || '').trim() : '';
+  box.textContent = `⏳ Running ${side}/${action}...`;
+  try{
+    const data = await apiFetch(`/team/${side}`, {method:'POST', body: JSON.stringify({action, target, details})});
+    showTeamResult(box, data);
+    if(side === 'blue') loadTeamState();
+  }catch(e){
+    box.textContent = `${e.message}\nLog in from the AI Command Center first if this is an auth error.`;
+  }
+}
+async function confirmTeam(yes, resultId){
+  const box = document.getElementById(resultId);
+  if(box) box.textContent = yes ? '⏳ Confirming...' : '⏳ Cancelling...';
+  try{
+    const data = await apiFetch('/team/confirm', {method:'POST', body: JSON.stringify({decision: yes ? 'yes' : 'no'})});
+    showTeamResult(box, data);
+    loadTeamState();
+  }catch(e){
+    if(box) box.textContent = e.message;
+  }
+}
+async function loadTeamState(){
+  const alerts = document.getElementById('alertsBox');
+  try{
+    const data = await apiFetch('/team/state');
+    if(alerts){
+      const threats = data.threats || [];
+      const blocked = data.blocked_ips || [];
+      const pending = data.pending ? `PENDING RED: ${data.pending.command} → ${data.pending.target||'?'}` : 'No pending Red Team confirmation.';
+      alerts.textContent = `${pending}\n\nBlocked IPs (${blocked.length}):\n${blocked.map(item => `${item.timestamp||''} ${item.ip} — ${item.reason||''}`).join('\n') || '(none)'}\n\nThreats (${threats.length}):\n${threats.map(item => `${item.timestamp||''} [${item.risk_level}] ${item.threat_type} ${item.source_ip||''}`).join('\n') || '(none)'}`;
+    }
+  }catch(e){
+    if(alerts) alerts.textContent = `Team state unavailable: ${e.message}`;
+  }
+}
+
 async function sendCommand(){
-  const autoConfirm = false;
   const input = document.getElementById('commandInput');
   const resultBox = document.getElementById('commandResult');
   const cmd = input.value.trim();
   if(!cmd) return alert("Enter command");
   resultBox.textContent = "⏳ Processing... Brain classifying Red/Blue, checking Dharma, Authorization...";
   try{
-    const data = await apiFetch('/command', {method:'POST', body:JSON.stringify({command:cmd, auto_confirm:autoConfirm})});
-    resultBox.textContent = `Mode: ${data.mode?.toUpperCase()} | Action: ${data.action} | Status: ${data.status}\n\nMessage: ${data.message}\n\nData: ${JSON.stringify(data.data, null, 2).slice(0,2000)}`;
-    if(data.status==='awaiting_confirmation'){
-      resultBox.textContent += "\n\n🔴 Type 'yes' and send to confirm, or 'no' to cancel per Red Team safety.";
-    }
+    const data = await apiFetch('/command', {method:'POST', body:JSON.stringify({command:cmd, auto_confirm:false})});
+    showTeamResult(resultBox, data);
   }catch(e){
-    resultBox.textContent = `[OFFLINE SIMULATION] Command: ${cmd}\nStart FastAPI: uvicorn api.main:app --reload --port 8000\nError: ${e.message}`;
+    resultBox.textContent = `[OFFLINE] Command: ${cmd}\nStart FastAPI: uvicorn api.main:app --reload --port 8000\nError: ${e.message}`;
   }
 }
 

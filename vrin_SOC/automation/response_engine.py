@@ -26,16 +26,20 @@ class ResponseEngine:
             
             # Only for HIGH risk per blueprint
             if risk == "HIGH":
-                # Extract IP if present
-                ip = threat_data.get("source_ip") or threat_data.get("ip") or "192.168.1.100"
-                block_result = automation_actions.block_ip(ip)
-                actions_taken.append(block_result)
-                
-                # Alert
-                alert_result = automation_actions.send_alert(f"HIGH risk threat responded: {threat_data} - Blocked {ip}")
-                actions_taken.append(alert_result)
-                
-                message = f"HIGH risk detected - Automated response triggered: Blocked {ip}, alert sent"
+                ip = threat_data.get("source_ip") or threat_data.get("ip") or ""
+                if ip:
+                    block_result = automation_actions.block_ip(ip)
+                    actions_taken.append(block_result)
+                    if block_result.get("status") != "error":
+                        from database.db import add_blocked_ip
+                        add_blocked_ip(ip, f"HIGH risk auto-response: {str(threat_data)[:180]}")
+                    alert_result = automation_actions.send_alert(f"HIGH risk threat responded — blocked {ip}")
+                    actions_taken.append(alert_result)
+                    message = f"HIGH risk detected — defensive block recorded for {ip}"
+                else:
+                    alert_result = automation_actions.send_alert("HIGH risk threat with no source IP — logged only")
+                    actions_taken.append(alert_result)
+                    message = "HIGH risk detected but no source IP was supplied, so nothing was blocked"
             elif risk == "MEDIUM":
                 # Only alert, not block automatically (per safety)
                 alert_result = automation_actions.send_alert(f"MEDIUM risk threat: {threat_data} - Monitoring")
