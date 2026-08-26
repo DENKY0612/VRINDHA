@@ -3,10 +3,10 @@ import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from api.auth import AuthModule
-from automation.actions import automation_actions
-from core.authorization import AuthorizationLayer
-from core.brain import Brain
+from vrin_SOC.api.auth import AuthModule
+from vrin_SOC.automation.actions import automation_actions
+from vrin_SOC.core.authorization import AuthorizationLayer
+from vrin_SOC.core.brain import Brain
 
 
 class SecurityTests(unittest.TestCase):

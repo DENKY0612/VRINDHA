@@ -5,8 +5,15 @@ from typing import Any, Dict, Literal, Optional
 import logging
 import os
 import re
-import sys
 import time
+
+if __name__ == "__main__" and (__package__ in {None, ""}):
+    import runpy
+    import sys
+    _repo = Path(__file__).resolve().parents[2]
+    if str(_repo) not in sys.path:
+        sys.path.insert(0, str(_repo))
+    raise SystemExit(runpy.run_module("vrin_SOC.api.main", run_name="__main__"))
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Path as APIPath, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,9 +22,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-sys.path.append(str(Path(__file__).parent.parent))
 
-from api.auth import (
+from .auth import (
     BootstrapClosedError,
     DuplicateUserError,
     InvalidPasswordError,
@@ -25,18 +31,18 @@ from api.auth import (
     InvalidUsernameError,
     auth_module,
 )
-from core.brain import brain
-from core.gita_engine import gita_engine
-from database.db import add_log, get_blocked_ips, get_logs, get_threats
-from ml.anomaly_detector import anomaly_detector
-from ml.data_pipeline import data_pipeline
-from autonomous.agent import autonomous_agent
-from autonomous.scheduler import Scheduler
-from autonomous.task_manager import task_manager
-from ml.prediction_model import prediction_model
-from ml.risk_scoring import risk_scoring
-from ml.visualization import visualization_engine
-from core.intelligence_bus import intelligence_gateway
+from vrin_SOC.core.brain import brain
+from vrin_SOC.core.gita_engine import gita_engine
+from vrin_SOC.database.db import add_log, get_blocked_ips, get_logs, get_threats
+from vrin_SOC.ml.anomaly_detector import anomaly_detector
+from vrin_SOC.ml.data_pipeline import data_pipeline
+from vrin_SOC.autonomous.agent import autonomous_agent
+from vrin_SOC.autonomous.scheduler import Scheduler
+from vrin_SOC.autonomous.task_manager import task_manager
+from vrin_SOC.ml.prediction_model import prediction_model
+from vrin_SOC.ml.risk_scoring import risk_scoring
+from vrin_SOC.ml.visualization import visualization_engine
+from vrin_SOC.core.intelligence_bus import intelligence_gateway
 from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
 from Vrin_TI.normalization import InvalidIndicator
 
@@ -326,7 +332,7 @@ async def dashboard_data(user=Depends(get_current_user)):
 @app.get("/incident/endpoint-scan")
 async def incident_endpoint_scan(user=Depends(get_current_user)):
     try:
-        from agents.endpoint_security import endpoint_security
+        from vrin_SOC.agents.endpoint_security import endpoint_security
         return endpoint_security.scan()
     except Exception as exc:
         raise internal_error("incident endpoint scan", exc)
@@ -335,7 +341,7 @@ async def incident_endpoint_scan(user=Depends(get_current_user)):
 @app.get("/incident/ids")
 async def incident_ids(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
     try:
-        from automation.ids_monitor import ids_monitor
+        from vrin_SOC.automation.ids_monitor import ids_monitor
         return ids_monitor.monitor(interface=interface, prevent=prevent)
     except Exception as exc:
         raise internal_error("incident ids", exc)
@@ -344,7 +350,7 @@ async def incident_ids(prevent: bool = Query(True), interface: str = "eth0", use
 @app.get("/incident/idps")
 async def incident_idps(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
     try:
-        from automation.ids_monitor import ids_monitor
+        from vrin_SOC.automation.ids_monitor import ids_monitor
         return ids_monitor.monitor(interface=interface, prevent=prevent)
     except Exception as exc:
         raise internal_error("incident idps", exc)
@@ -353,7 +359,7 @@ async def incident_idps(prevent: bool = Query(True), interface: str = "eth0", us
 @app.get("/incident/firewall")
 async def incident_firewall(user=Depends(get_current_user)):
     try:
-        from automation.firewall import firewall_module
+        from vrin_SOC.automation.firewall import firewall_module
         return firewall_module.check_and_block()
     except Exception as exc:
         raise internal_error("incident firewall", exc)
@@ -362,9 +368,9 @@ async def incident_firewall(user=Depends(get_current_user)):
 @app.get("/incident/overview")
 async def incident_overview(user=Depends(get_current_admin)):
     try:
-        from agents.endpoint_security import endpoint_security
-        from automation.ids_monitor import ids_monitor
-        from automation.firewall import firewall_module
+        from vrin_SOC.agents.endpoint_security import endpoint_security
+        from vrin_SOC.automation.ids_monitor import ids_monitor
+        from vrin_SOC.automation.firewall import firewall_module
         return {
             "status": "success",
             "endpoint_scan": endpoint_security.scan(),
@@ -378,7 +384,7 @@ async def incident_overview(user=Depends(get_current_admin)):
 @app.post("/incident/respond")
 async def incident_respond(payload: Dict[str, Any], user=Depends(get_current_admin)):
     try:
-        from automation.response_engine import response_engine
+        from vrin_SOC.automation.response_engine import response_engine
         return response_engine.respond(payload)
     except Exception as exc:
         raise internal_error("incident respond", exc)
@@ -483,13 +489,13 @@ async def pipeline_status(user=Depends(get_current_user)):
 
 @app.get("/tools/verify")
 async def verify_tools(user=Depends(get_current_user)):
-    from tools.installer import verify_all_tools
+    from vrin_SOC.tools.installer import verify_all_tools
     return verify_all_tools()
 
 
 @app.get("/team/state", tags=["teams"])
 async def team_state(user=Depends(get_current_user)):
-    from tools.installer import verify_all_tools
+    from vrin_SOC.tools.installer import verify_all_tools
     pending = brain.pending_for(str(user["sub"]))
     preview = None
     if pending:

@@ -5,12 +5,15 @@
 set -eu
 
 SOC_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-cd "$SOC_ROOT"
+REPOSITORY_ROOT=$(CDPATH= cd -- "$SOC_ROOT/.." && pwd)
+cd "$REPOSITORY_ROOT"
 
 if [ -n "${PYTHON:-}" ]; then
     PYTHON_BIN=$PYTHON
 elif [ -x "$SOC_ROOT/.venv/bin/python" ]; then
     PYTHON_BIN="$SOC_ROOT/.venv/bin/python"
+elif [ -x "$REPOSITORY_ROOT/.venv/bin/python" ]; then
+    PYTHON_BIN="$REPOSITORY_ROOT/.venv/bin/python"
 else
     PYTHON_BIN=python3
 fi
@@ -22,14 +25,14 @@ fi
 require_api_dependencies() {
     if ! "$PYTHON_BIN" -c 'import fastapi, uvicorn, pydantic, jose, bcrypt, dotenv, pandas, numpy, sklearn, requests' >/dev/null 2>&1; then
         echo "FastAPI dependencies are missing for this Python interpreter: $PYTHON_BIN" >&2
-        echo "Install them with: $PYTHON_BIN -m pip install -r requirements.txt" >&2
+        echo "Install them with: $PYTHON_BIN -m pip install -r vrin_SOC/requirements.txt" >&2
         return 1
     fi
 }
 
 start_api() {
     require_api_dependencies
-    set -- -m uvicorn api.main:app --host "${API_HOST:-0.0.0.0}" --port "${API_PORT:-8000}"
+    set -- -m uvicorn vrin_SOC.api.main:app --host "${API_HOST:-0.0.0.0}" --port "${API_PORT:-8000}"
     case "${API_RELOAD:-false}" in
         1|true|TRUE|yes|YES) set -- "$@" --reload ;;
     esac
@@ -41,7 +44,7 @@ echo "🛡️ Vrindha AI SOC System - Startup"
 
 # Database initialization is idempotent and now works regardless of the
 # caller's current working directory.
-"$PYTHON_BIN" -c "import database.db"
+"$PYTHON_BIN" -c "import vrin_SOC.database.db"
 
 echo ""
 echo "Choose mode:"
@@ -63,7 +66,7 @@ fi
 case $opt in
     1)
         echo "Starting CLI..."
-        exec "$PYTHON_BIN" main.py
+        exec "$PYTHON_BIN" -m vrin_SOC
         ;;
     2)
         echo "Starting API on http://${API_HOST:-0.0.0.0}:${API_PORT:-8000}"
@@ -74,24 +77,24 @@ case $opt in
     3)
         require_api_dependencies
         echo "Starting API in background..."
-        "$PYTHON_BIN" -m uvicorn api.main:app --host "${API_HOST:-0.0.0.0}" --port "${API_PORT:-8000}" &
+        "$PYTHON_BIN" -m uvicorn vrin_SOC.api.main:app --host "${API_HOST:-0.0.0.0}" --port "${API_PORT:-8000}" &
         api_pid=$!
         trap 'kill "$api_pid" 2>/dev/null || true' INT TERM EXIT
         sleep 2
         echo "Starting CLI..."
-        "$PYTHON_BIN" main.py
+        "$PYTHON_BIN" -m vrin_SOC
         ;;
     4)
-        exec "$PYTHON_BIN" -c "from tools.installer import verify_all_tools; import json; print(json.dumps(verify_all_tools(), indent=2))"
+        exec "$PYTHON_BIN" -c "from vrin_SOC.tools.installer import verify_all_tools; import json; print(json.dumps(verify_all_tools(), indent=2))"
         ;;
     5)
-        exec "$PYTHON_BIN" main.py <<'EOF'
+        exec "$PYTHON_BIN" -m vrin_SOC <<'EOF'
 help
 exit
 EOF
         ;;
     *)
         echo "Invalid option, starting CLI as default"
-        exec "$PYTHON_BIN" main.py
+        exec "$PYTHON_BIN" -m vrin_SOC
         ;;
 esac

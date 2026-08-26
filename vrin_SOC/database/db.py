@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 from datetime import datetime
 from typing import Callable, List, Dict, TypeVar
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = PACKAGE_ROOT / "database" / "vrindha.db"

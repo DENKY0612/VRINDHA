@@ -4,14 +4,14 @@ import shutil
 import subprocess
 from datetime import datetime
 from typing import Dict, Any
-from core.tool_executor import tool_executor
-from automation.firewall import firewall_module
-from automation.ids_monitor import ids_monitor
-from automation.rootkit_scanner import rootkit_scanner
-from ml.anomaly_detector import anomaly_detector
-from ml.risk_scoring import risk_scoring
-from database.db import get_logs
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.automation.firewall import firewall_module
+from vrin_SOC.automation.ids_monitor import ids_monitor
+from vrin_SOC.automation.rootkit_scanner import rootkit_scanner
+from vrin_SOC.ml.anomaly_detector import anomaly_detector
+from vrin_SOC.ml.risk_scoring import risk_scoring
+from vrin_SOC.database.db import get_logs
+from vrin_SOC.core.error_handler import ErrorHandler
 
 
 class TaskExecutor:

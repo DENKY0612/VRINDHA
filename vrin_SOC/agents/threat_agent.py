@@ -7,11 +7,8 @@ Return: {threat, risk, confidence}
 """
 import re
 from typing import Dict
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
 
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 from datetime import datetime
 
 class ThreatAgent:

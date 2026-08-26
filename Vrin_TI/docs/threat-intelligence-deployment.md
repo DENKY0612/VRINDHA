@@ -23,7 +23,7 @@ Manual development processes (not persistent), from the repository root:
 ```bash
 set -a; . ./.env; set +a
 Vrin_TI/.venv/bin/uvicorn Vrin_TI.api:app --host 127.0.0.1 --port 8010
-vrin_SOC/.venv/bin/uvicorn --app-dir vrin_SOC api.main:app --host 127.0.0.1 --port 8000
+vrin_SOC/.venv/bin/uvicorn vrin_SOC.api.main:app --host 127.0.0.1 --port 8000
 ```
 
 ## systemd

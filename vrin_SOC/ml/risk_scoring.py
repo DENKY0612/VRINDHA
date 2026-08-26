@@ -7,7 +7,7 @@ This becomes core feature for startup product per both PDFs
 from datetime import datetime
 from typing import Dict, List
 import re
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 class RiskScoring:
     def __init__(self):

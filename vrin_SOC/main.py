@@ -6,17 +6,19 @@ Features: Interactive loop, exit command, clean output formatting
 File: main.py, Flow: while True: input -> brain.process() -> print output
 Also: Multi-agent, logging, SIEM, Dharma integration, Gita wisdom
 """
-import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+import sys
 
-# Ensure imports
-sys.path.append(str(Path(__file__).parent))
+# Allow `python vrin_SOC/main.py` and `cd vrin_SOC && python main.py`.
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-from core.brain import brain
-from core.gita_engine import gita_engine
-from tools.installer import verify_all_tools
-from database.db import init_db
+from vrin_SOC.core.brain import brain
+from vrin_SOC.core.gita_engine import gita_engine
+from vrin_SOC.tools.installer import verify_all_tools
+from vrin_SOC.database.db import init_db
 import json
 
 def print_banner():

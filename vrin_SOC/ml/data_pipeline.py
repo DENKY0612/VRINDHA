@@ -10,7 +10,7 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 try:
     import pandas as pd

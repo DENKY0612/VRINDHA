@@ -11,7 +11,7 @@ import shutil
 from datetime import datetime
 from typing import Dict
 from pathlib import Path
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 LOG_FILE = PACKAGE_ROOT / "logs" / "log.txt"

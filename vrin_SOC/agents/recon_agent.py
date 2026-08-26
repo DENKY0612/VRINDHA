@@ -5,17 +5,14 @@ Flow: Validate target, ask user confirmation (handled by Brain), run scan, retur
 Do NOT auto-execute without approval - Brain handles that
 """
 from typing import Dict
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
 
-from tools.nmap_tool import run_nmap
-from tools.network_tool import run_netdiscover
-from tools.whois_tool import run_whois
-from tools.amass_tool import run_amass
-from tools.sublist3r_tool import run_sublist3r
-from tools.gobuster_tool import run_gobuster
-from core.error_handler import ErrorHandler
+from vrin_SOC.tools.nmap_tool import run_nmap
+from vrin_SOC.tools.network_tool import run_netdiscover
+from vrin_SOC.tools.whois_tool import run_whois
+from vrin_SOC.tools.amass_tool import run_amass
+from vrin_SOC.tools.sublist3r_tool import run_sublist3r
+from vrin_SOC.tools.gobuster_tool import run_gobuster
+from vrin_SOC.core.error_handler import ErrorHandler
 from datetime import datetime
 
 class ReconAgent:

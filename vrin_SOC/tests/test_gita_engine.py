@@ -1,9 +1,4 @@
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
-from core.gita_engine import GitaEngine
+from vrin_SOC.core.gita_engine import GitaEngine
 
 
 def test_gita_engine_loads_bhagavad_gita_chapter_files():

@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 from typing import Dict, Optional
-from database.db import get_connection
+from vrin_SOC.database.db import get_connection
 
 
 class AutonomousStateManager:

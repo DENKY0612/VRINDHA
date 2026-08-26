@@ -4,8 +4,8 @@ IMPORTANT: DO NOT auto-run attacks - only suggestion, requires explicit approval
 Features: Accept hash input, suggest hashcat command
 Example: hashcat -m <mode> <hash> wordlist.txt
 """
-from core.error_handler import ErrorHandler
-from core.tool_executor import tool_executor
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
 import shutil
 from datetime import datetime
 

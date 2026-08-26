@@ -943,7 +943,7 @@ ModuleNotFoundError: No module named 'fastapi'
 From the repository root run `python3 -m venv vrin_SOC/.venv && vrin_SOC/.venv/bin/python -m pip install -r vrin_SOC/requirements.txt`. Then launch with `VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh`. The launcher checks the same interpreter it uses and prints the exact install command if API dependencies are still missing.
 
 **3. API offline in dashboard:**
-The dashboard uses same-origin relative API requests, which also works through a hosted preview. Authentication failures are shown as authentication/permission errors instead of being incorrectly reported as an offline API. Start the service with `VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh` or `python3 -m uvicorn api.main:app --host 0.0.0.0 --port 8000` from `vrin_SOC/`, then log in above the command center.
+The dashboard uses same-origin relative API requests, which also works through a hosted preview. Authentication failures are shown as authentication/permission errors instead of being incorrectly reported as an offline API. Start the service with `VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh` or `python3 -m uvicorn vrin_SOC.api.main:app --host 0.0.0.0 --port 8000` from the repository root, then log in above the command center.
 
 **4. Git push rejected (fetch first):**
 ```

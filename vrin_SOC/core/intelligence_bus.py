@@ -15,14 +15,14 @@ from urllib.parse import urlsplit
 import asyncio
 import logging
 import os
-import sys
 
-# Vrin_TI is a sibling system, not a child package of the SOC. Add only the
-# repository root so the dedicated bridge can import the shared event contract
-# when the SOC is launched from its own working directory.
-REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-if str(REPOSITORY_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPOSITORY_ROOT))
+from vrin_SOC._imports import ensure_repository_root, repository_root
+
+# Vrin_TI is a sibling system, not a child package of the SOC. Resolve the
+# checkout root by looking for both packages instead of assuming a fixed
+# number of parents (which breaks a flat container layout).
+REPOSITORY_ROOT = repository_root(Path(__file__))
+ensure_repository_root(Path(__file__))
 
 from Vrin_TI.config import config as ti_config
 from Vrin_TI.database import ThreatDatabase
@@ -105,10 +105,10 @@ class IntelligenceGateway:
         self.recent_ti_events.append(payload)
         risk_analysis = None
         try:
-            from database.db import add_log
+            from vrin_SOC.database.db import add_log
             await asyncio.to_thread(add_log, f"TI:{event.event_type}", str(payload)[:2000], str(event.severity).title(), "intelligence_received", "blue")
             if event.event_type == "risk_update":
-                from ml.risk_scoring import risk_scoring
+                from vrin_SOC.ml.risk_scoring import risk_scoring
                 risk_analysis = await asyncio.to_thread(risk_scoring.score, payload)
         except Exception:
             # Existing SOC logging/risk failure must not reject otherwise valid TI.

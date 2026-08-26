@@ -1,8 +1,8 @@
 """
 Snort Tool - IDS per blueprint (already covered but module for verification)
 """
-from core.tool_executor import tool_executor
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.core.error_handler import ErrorHandler
 import shutil
 from datetime import datetime
 
