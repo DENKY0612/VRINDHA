@@ -43,6 +43,7 @@ from vrin_SOC.ml.prediction_model import prediction_model
 from vrin_SOC.ml.risk_scoring import risk_scoring
 from vrin_SOC.ml.visualization import visualization_engine
 from vrin_SOC.core.intelligence_bus import intelligence_gateway
+from vrin_SOC.hive.coordinator import hive as hive_coordinator
 from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
 from Vrin_TI.normalization import InvalidIndicator
 
@@ -708,6 +709,82 @@ async def threat_intel_reports(user=Depends(get_current_user)):
         return await intelligence_gateway.resource("/threat-intel/reports")
     except Exception:
         return {"reports": intelligence_gateway.database.reports(), "status": "degraded"}
+
+
+# -------------------------------------------------------------------------
+# Hive coordination layer — agent registry, swarm dispatch, health.
+# -------------------------------------------------------------------------
+class HiveAgentRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=128)
+    kind: str = Field(min_length=1, max_length=64)
+    capabilities: list = Field(default_factory=list)
+    metadata: dict = Field(default_factory=dict)
+
+
+class HiveDispatchRequest(BaseModel):
+    command: str = Field(min_length=1, max_length=2000)
+    priority: str = Field("normal", pattern=r"^(low|normal|high|critical)$")
+    capabilities: list = Field(default_factory=list)
+
+
+@app.get("/hive/health", tags=["hive"])
+async def hive_health(user=Depends(get_current_user)):
+    """Hive coordination layer health check."""
+    return hive_coordinator.health()
+
+
+@app.get("/hive/snapshot", tags=["hive"])
+async def hive_snapshot(user=Depends(get_current_user)):
+    """Full point-in-time snapshot of the agent hive."""
+    return hive_coordinator.snapshot()
+
+
+@app.get("/hive/agents", tags=["hive"])
+async def hive_agents(kind: Optional[str] = None, user=Depends(get_current_user)):
+    """List registered agents, optionally filtered by kind."""
+    return hive_coordinator.list_agents(kind=kind)
+
+
+@app.get("/hive/agents/{name}", tags=["hive"])
+async def hive_agent_status(name: str = APIPath(max_length=128), user=Depends(get_current_user)):
+    """Status of a single registered agent."""
+    return hive_coordinator.agent_status(name)
+
+
+@app.post("/hive/agents", status_code=201, tags=["hive"])
+async def hive_register_agent(req: HiveAgentRequest, user=Depends(get_current_admin)):
+    """Register a new agent in the hive (admin only)."""
+    return hive_coordinator.register_agent(req.name, req.kind, req.capabilities, req.metadata)
+
+
+@app.delete("/hive/agents/{name}", tags=["hive"])
+async def hive_deregister_agent(name: str = APIPath(max_length=128), user=Depends(get_current_admin)):
+    """Remove an agent from the hive registry (admin only)."""
+    return hive_coordinator.deregister_agent(name)
+
+
+@app.post("/hive/agents/{name}/heartbeat", tags=["hive"])
+async def hive_heartbeat(name: str = APIPath(max_length=128), user=Depends(get_current_user)):
+    """Record a heartbeat for an agent."""
+    return hive_coordinator.heartbeat_agent(name)
+
+
+@app.post("/hive/dispatch", tags=["hive"])
+async def hive_dispatch(req: HiveDispatchRequest, user=Depends(get_current_user)):
+    """Dispatch a task to matching agents through the swarm."""
+    return hive_coordinator.dispatch(req.command, req.priority, req.capabilities or None)
+
+
+@app.get("/hive/tasks", tags=["hive"])
+async def hive_tasks(status: Optional[str] = None, user=Depends(get_current_user)):
+    """List hive tasks, optionally filtered by status."""
+    return hive_coordinator.list_tasks(status=status)
+
+
+@app.post("/hive/reap", tags=["hive"])
+async def hive_reap(user=Depends(get_current_admin)):
+    """Reap stale agent heartbeats (admin only)."""
+    return hive_coordinator.reap_stale()
 
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"

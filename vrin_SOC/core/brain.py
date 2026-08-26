@@ -30,6 +30,7 @@ from vrin_SOC.autonomous.agent import autonomous_agent
 from vrin_SOC.autonomous.state_manager import state_manager
 from vrin_SOC.autonomous.task_manager import task_manager
 from vrin_SOC.autonomous.models import AutonomyLevel
+from vrin_SOC.hive.coordinator import hive
 
 # Agents will be imported lazily to avoid circular imports
 class Brain:
@@ -49,6 +50,7 @@ class Brain:
         self.task_manager = task_manager
         self.autonomous_agent = autonomous_agent
         self.state_manager = state_manager
+        self.hive = hive
         if not self.autonomous_agent.active or self.autonomous_agent.emergency_stopped:
             self.mode = "defensive"
         else:
@@ -267,6 +269,11 @@ class Brain:
             runtime_result = self._handle_autonomy_runtime(command, user_token)
             if runtime_result is not None:
                 return runtime_result
+
+            # Hive coordination commands
+            hive_result = self._handle_hive_commands(command)
+            if hive_result is not None:
+                return hive_result
 
             # Autonomous goal evaluation. Concrete Red/Blue operations must not
             # be swallowed by keyword overlap such as "detect threats".
@@ -819,6 +826,57 @@ class Brain:
 
         return None
 
+    def _handle_hive_commands(self, command: str) -> dict | None:
+        """Handle hive-layer coordination commands."""
+        lower = command.lower().strip()
+
+        if lower in ["hive status", "hive health", "swarm status", "agent hive"]:
+            return {
+                "mode": "blue",
+                "action": "hive_health",
+                "status": "success",
+                "message": "Hive coordination layer health report.",
+                "data": self.hive.health(),
+            }
+
+        if lower in ["hive snapshot", "swarm snapshot", "hive full"]:
+            return {
+                "mode": "blue",
+                "action": "hive_snapshot",
+                "status": "success",
+                "message": "Full hive snapshot.",
+                "data": self.hive.snapshot(),
+            }
+
+        if lower in ["hive agents", "list agents", "show agents", "agent list"]:
+            return {
+                "mode": "blue",
+                "action": "hive_agents",
+                "status": "success",
+                "message": "Registered hive agents.",
+                "data": self.hive.list_agents(),
+            }
+
+        if lower.startswith("hive reap") or lower == "reap stale agents":
+            return {
+                "mode": "blue",
+                "action": "hive_reap",
+                "status": "success",
+                "message": "Stale agent heartbeat reaping completed.",
+                "data": self.hive.reap_stale(),
+            }
+
+        if lower.startswith("hive tasks") or lower == "list hive tasks":
+            return {
+                "mode": "blue",
+                "action": "hive_tasks",
+                "status": "success",
+                "message": "Hive task queue.",
+                "data": self.hive.list_tasks(),
+            }
+
+        return None
+
     def get_help_text(self) -> str:
         return """
 Vrindha AI SOC - Help
@@ -848,6 +906,13 @@ Vrindha AI SOC - Help
 🧠 INTELLIGENCE:
 - anomaly detection - IsolationForest anomaly scoring
 - dashboard - Open SOC dashboard (web)
+
+🐝 HIVE (Agent Coordination):
+- hive status - Hive health and agent overview
+- hive agents - List all registered agents
+- hive snapshot - Full hive point-in-time snapshot
+- hive tasks - Show hive task queue
+- reap stale agents - Mark offline agents
 
 🕉️ DHARMA ENGINE:
 All actions evaluated for ethical compliance per Bhagavad Gita.
