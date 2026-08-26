@@ -11,8 +11,9 @@ from pptx.oxml.ns import nsmap
 from pptx.oxml.xmlchemy import OxmlElement
 from pptx.util import Emu, Inches, Pt
 
-ASSETS = Path("/home/user/Vrindha_SOC/presentation/assets")
-OUT = Path("/home/user/Vrindha_SOC/presentation/Vrindha_AI_Presentation.pptx")
+_HERE = Path(__file__).resolve().parent
+ASSETS = _HERE / "assets"
+OUT = _HERE / "Vrindha_AI_Presentation.pptx"
 
 W, H = Inches(13.333), Inches(7.5)
 NAVY = RGBColor(0x08, 0x12, 0x22)

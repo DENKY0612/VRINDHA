@@ -3,15 +3,13 @@ SIEM Agent - Per DAY 20, MASTER BLUEPRINT SIEM LOGGING, START UP SIEM (Kali Log 
 Responsibilities: Collect logs from system logs, tool outputs, correlate events, read logs/log.txt, return all logs, timeline of attack, correlated threats, alerts
 Features: get_logs(), add_log(), persistence (file or DB)
 """
-import sys
 from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
 import json
 
-sys.path.append(str(Path(__file__).parent.parent))
 
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 
@@ -33,7 +31,7 @@ class SIEMAgent:
                 f.write(entry)
             # Also try DB
             try:
-                from database.db import add_log as db_add
+                from vrin_SOC.database.db import add_log as db_add
                 db_add(command, result, risk_level)
             except:
                 pass
@@ -53,7 +51,7 @@ class SIEMAgent:
             # Also try DB logs
             db_logs = []
             try:
-                from database.db import get_logs as db_get
+                from vrin_SOC.database.db import get_logs as db_get
                 db_logs = db_get(limit)
             except:
                 pass

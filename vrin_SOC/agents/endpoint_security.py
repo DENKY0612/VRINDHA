@@ -4,8 +4,8 @@ Tools: chkrootkit, rkhunter, clamav
 Responsibilities: Scan for rootkits, detect malware, analyze suspicious binaries
 Output: File/process status, threat level, suggested action
 """
-from core.error_handler import ErrorHandler
-from core.tool_executor import tool_executor
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
 import shutil
 from datetime import datetime
 

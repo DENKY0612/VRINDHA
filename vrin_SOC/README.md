@@ -227,7 +227,7 @@ From the repository root:
 export VRINDHA_TI_API_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
 .venv/bin/uvicorn Vrin_TI.api:app --host 127.0.0.1 --port 8010
 # In another service/process:
-.venv/bin/uvicorn --app-dir vrin_SOC api.main:app --host 127.0.0.1 --port 8000
+.venv/bin/uvicorn vrin_SOC.api.main:app --host 127.0.0.1 --port 8000
 ./Vrin_TI/vrindha-ti doctor
 ```
 
@@ -241,8 +241,7 @@ and `../Vrin_TI/docs/threat-intelligence-deployment.md`. The systemd installer i
 
 ```bash
 source .venv/bin/activate
-cd vrin_SOC
-python3 main.py
+python3 -m vrin_SOC
 ```
 
 Example:
@@ -262,8 +261,7 @@ The CLI treats the local interactive operator as trusted, but Red Team commands 
 
 ```bash
 source .venv/bin/activate
-cd vrin_SOC
-uvicorn api.main:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn vrin_SOC.api.main:app --host 0.0.0.0 --port 8000
 ```
 
 Open:

@@ -6,14 +6,14 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from api import main as api_main
-from api.auth import AuthModule
-from automation.firewall import FirewallModule
-from core.brain import Brain
-from core.local_sensors import tcp_connect_scan
-from database.db import get_blocked_ips, get_threats
-from tools.nmap_tool import run_nmap
-from tools.whois_tool import run_whois
+from vrin_SOC.api import main as api_main
+from vrin_SOC.api.auth import AuthModule
+from vrin_SOC.automation.firewall import FirewallModule
+from vrin_SOC.core.brain import Brain
+from vrin_SOC.core.local_sensors import tcp_connect_scan
+from vrin_SOC.database.db import get_blocked_ips, get_threats
+from vrin_SOC.tools.nmap_tool import run_nmap
+from vrin_SOC.tools.whois_tool import run_whois
 
 STRONG_PASSWORD = "correct-horse-battery-staple"
 

@@ -1,9 +1,8 @@
 import json
 import sqlite3
 from typing import Dict, List, Optional
-from pathlib import Path
 from datetime import datetime
-from database.db import get_connection
+from vrin_SOC.database.db import get_connection
 from .models import GoalRecord, TaskRecord, GoalStatus, TaskStatus, RiskLevel
 from .policy import AutonomyPolicy
 

@@ -9,32 +9,27 @@ OUTPUT FORMAT: {mode, action, status, message, data}
 import re
 from datetime import datetime
 from typing import Dict, Any
-import sys
-from pathlib import Path
 
-# Ensure imports work when run from different locations
-sys.path.append(str(Path(__file__).parent.parent))
-
-from core.intent_analyzer import intent_analyzer
-from core.dharma_engine import dharma_engine
-from core.authorization import authorization_layer
-from core.safety_layer import safety_layer
-from core.gita_engine import gita_engine
-from core.tool_executor import tool_executor
-from core.iam_module import iam_module
-from core.zero_trust_engine import zero_trust_engine
-from core.memory_system import memory_system
-from core.planning_engine import planning_engine
-from core.knowledge_base import knowledge_base
-from core.error_handler import ErrorHandler
-from autonomous.goals import GoalEngine
-from autonomous.planner import Planner
-from autonomous.policy import AutonomyPolicy
-from autonomous.scheduler import Scheduler
-from autonomous.agent import autonomous_agent
-from autonomous.state_manager import state_manager
-from autonomous.task_manager import task_manager
-from autonomous.models import AutonomyLevel
+from .intent_analyzer import intent_analyzer
+from .dharma_engine import dharma_engine
+from .authorization import authorization_layer
+from .safety_layer import safety_layer
+from .gita_engine import gita_engine
+from .tool_executor import tool_executor
+from .iam_module import iam_module
+from .zero_trust_engine import zero_trust_engine
+from .memory_system import memory_system
+from .planning_engine import planning_engine
+from .knowledge_base import knowledge_base
+from .error_handler import ErrorHandler
+from vrin_SOC.autonomous.goals import GoalEngine
+from vrin_SOC.autonomous.planner import Planner
+from vrin_SOC.autonomous.policy import AutonomyPolicy
+from vrin_SOC.autonomous.scheduler import Scheduler
+from vrin_SOC.autonomous.agent import autonomous_agent
+from vrin_SOC.autonomous.state_manager import state_manager
+from vrin_SOC.autonomous.task_manager import task_manager
+from vrin_SOC.autonomous.models import AutonomyLevel
 
 # Agents will be imported lazily to avoid circular imports
 class Brain:
@@ -377,10 +372,10 @@ class Brain:
             cmd_lower = command.lower()
 
             # Lazy imports to avoid circular
-            from agents.recon_agent import recon_agent
-            from agents.vuln_agent import vuln_agent
-            from agents.threat_agent import threat_agent
-            from agents.siem_agent import siem_agent
+            from vrin_SOC.agents.recon_agent import recon_agent
+            from vrin_SOC.agents.vuln_agent import vuln_agent
+            from vrin_SOC.agents.threat_agent import threat_agent
+            from vrin_SOC.agents.siem_agent import siem_agent
 
             result_data = {}
             message = ""
@@ -390,38 +385,38 @@ class Brain:
                 result_data = recon_agent.run(target)
                 message = f"Nmap scan completed on {target}"
             elif "whois" in cmd_lower:
-                from tools.whois_tool import run_whois
+                from vrin_SOC.tools.whois_tool import run_whois
                 result_data = run_whois(target if target else "google.com")
                 message = f"Whois lookup for {target}"
             elif "vulnerab" in cmd_lower or "nikto" in cmd_lower:
                 result_data = vuln_agent.run(target)
                 message = f"Vulnerability scan on {target}"
             elif "gobuster" in cmd_lower:
-                from tools.gobuster_tool import run_gobuster
+                from vrin_SOC.tools.gobuster_tool import run_gobuster
                 result_data = run_gobuster(target)
                 message = f"Gobuster scan on {target}"
             elif "dirb" in cmd_lower:
-                from tools.dirb_tool import run_dirb
+                from vrin_SOC.tools.dirb_tool import run_dirb
                 result_data = run_dirb(target)
                 message = f"Dirb scan on {target}"
             elif "amass" in cmd_lower:
-                from tools.amass_tool import run_amass
+                from vrin_SOC.tools.amass_tool import run_amass
                 result_data = run_amass(target)
                 message = f"Amass enum on {target}"
             elif "sublist3r" in cmd_lower:
-                from tools.sublist3r_tool import run_sublist3r
+                from vrin_SOC.tools.sublist3r_tool import run_sublist3r
                 result_data = run_sublist3r(target)
                 message = f"Sublist3r on {target}"
             elif "tcpdump" in cmd_lower:
-                from tools.tcpdump_tool import run_tcpdump
+                from vrin_SOC.tools.tcpdump_tool import run_tcpdump
                 result_data = run_tcpdump(target or "eth0")
                 message = f"tcpdump on {target}"
             elif "hashcat" in cmd_lower:
-                from tools.hashcat_tool import run_hashcat_assistant
+                from vrin_SOC.tools.hashcat_tool import run_hashcat_assistant
                 result_data = run_hashcat_assistant(command)
                 message = "Hashcat assistant - command suggested, not auto-executed per strict control"
             elif "exploit" in cmd_lower or "metasploit" in cmd_lower:
-                from agents.exploit_assistant import exploit_assistant
+                from vrin_SOC.agents.exploit_assistant import exploit_assistant
                 result_data = exploit_assistant.suggest_exploit(command, target)
                 message = "Exploit assistant — suggestion only, no exploit was executed"
             else:
@@ -447,7 +442,7 @@ class Brain:
 
             # Log to SIEM
             try:
-                from database.db import add_log
+                from vrin_SOC.database.db import add_log
                 add_log(command, str(result_data)[:2000], "Medium")
             except:
                 pass
@@ -483,9 +478,9 @@ class Brain:
     def _handle_blue_team(self, command: str, target: str, classification: Dict, safety: Dict, similar: Dict, plan: Dict) -> Dict:
         """Blue Team → CAN be automated per blueprint"""
         try:
-            from agents.threat_agent import threat_agent
-            from agents.siem_agent import siem_agent
-            from automation.actions import automation_actions
+            from vrin_SOC.agents.threat_agent import threat_agent
+            from vrin_SOC.agents.siem_agent import siem_agent
+            from vrin_SOC.automation.actions import automation_actions
 
             cmd_lower = command.lower()
 
@@ -497,7 +492,7 @@ class Brain:
                 # Automated response if HIGH risk per Day 22-23
                 automated_action = None
                 try:
-                    from database.db import add_blocked_ip, add_threat
+                    from vrin_SOC.database.db import add_blocked_ip, add_threat
                     add_threat(
                         ",".join(threat_result.get("indicators") or [threat_result.get("threat") or "analysis"]),
                         target or "",
@@ -567,7 +562,7 @@ class Brain:
                 message = result.get("message", "Could not block IP")
                 if succeeded:
                     try:
-                        from database.db import add_blocked_ip
+                        from vrin_SOC.database.db import add_blocked_ip
                         add_blocked_ip(ip_to_block, f"Operator block: {command[:160]}")
                     except Exception:
                         pass
@@ -582,7 +577,7 @@ class Brain:
                 }
 
             if "firewall" in cmd_lower or "fail2ban" in cmd_lower:
-                from automation.firewall import firewall_module
+                from vrin_SOC.automation.firewall import firewall_module
                 result = firewall_module.check_and_block()
                 return {
                     "mode": "blue",
@@ -593,7 +588,7 @@ class Brain:
                 }
 
             if "rootkit" in cmd_lower or "rkhunter" in cmd_lower or "chkrootkit" in cmd_lower:
-                from automation.rootkit_scanner import rootkit_scanner
+                from vrin_SOC.automation.rootkit_scanner import rootkit_scanner
                 result = rootkit_scanner.scan()
                 return {
                     "mode": "blue",
@@ -604,10 +599,10 @@ class Brain:
                 }
 
             if any(k in cmd_lower for k in ["incident response", "security incident", "forensic", "endpoint security", "endpoint scan", "contain", "isolate"]):
-                from agents.endpoint_security import endpoint_security
-                from automation.ids_monitor import ids_monitor
-                from automation.firewall import firewall_module
-                from automation.response_engine import response_engine
+                from vrin_SOC.agents.endpoint_security import endpoint_security
+                from vrin_SOC.automation.ids_monitor import ids_monitor
+                from vrin_SOC.automation.firewall import firewall_module
+                from vrin_SOC.automation.response_engine import response_engine
 
                 endpoint_result = endpoint_security.scan()
                 idps_result = ids_monitor.monitor()
@@ -634,7 +629,7 @@ class Brain:
                 }
 
             if any(k in cmd_lower for k in ["idps", "ids", "snort", "suricata"]):
-                from automation.ids_monitor import ids_monitor
+                from vrin_SOC.automation.ids_monitor import ids_monitor
                 result = ids_monitor.monitor()
                 return {
                     "mode": "blue",
@@ -645,8 +640,8 @@ class Brain:
                 }
 
             if "anomaly" in cmd_lower or "risk" in cmd_lower:
-                from ml.anomaly_detector import anomaly_detector
-                from ml.risk_scoring import risk_scoring
+                from vrin_SOC.ml.anomaly_detector import anomaly_detector
+                from vrin_SOC.ml.risk_scoring import risk_scoring
                 # Simulate log analysis
                 anomaly = anomaly_detector.detect({"command": command})
                 risk = risk_scoring.score({"ip": target or "127.0.0.1", "events": [command]})

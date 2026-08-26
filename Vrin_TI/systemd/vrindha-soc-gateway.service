@@ -8,10 +8,10 @@ Wants=network-online.target
 Type=simple
 User=@SERVICE_USER@
 Group=@SERVICE_GROUP@
-WorkingDirectory=@SOC_ROOT@
+WorkingDirectory=@REPOSITORY_ROOT@
 EnvironmentFile=/etc/vrindha/vrindha-ti.env
-Environment=PYTHONPATH=@REPOSITORY_ROOT@:@SOC_ROOT@
-ExecStart=@SOC_PYTHON@ -m uvicorn api.main:app --host 127.0.0.1 --port 8000 --no-server-header
+Environment=PYTHONPATH=@REPOSITORY_ROOT@
+ExecStart=@SOC_PYTHON@ -m uvicorn vrin_SOC.api.main:app --host 127.0.0.1 --port 8000 --no-server-header
 Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=30s

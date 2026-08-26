@@ -1,14 +1,11 @@
 """Vulnerability agent: nikto/HTTP probe plus knowledge-base mapping."""
 from datetime import datetime
-import sys
-from pathlib import Path
 from typing import Dict
 
-sys.path.append(str(Path(__file__).parent.parent))
 
-from tools.nikto_tool import run_nikto
-from core.error_handler import ErrorHandler
-from core.knowledge_base import knowledge_base
+from vrin_SOC.tools.nikto_tool import run_nikto
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.knowledge_base import knowledge_base
 
 
 class VulnAgent:

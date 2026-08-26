@@ -2,9 +2,9 @@
 from datetime import datetime
 import shutil
 
-from core.error_handler import ErrorHandler
-from core.local_sensors import whois_lookup
-from core.tool_executor import tool_executor
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.local_sensors import whois_lookup
+from vrin_SOC.core.tool_executor import tool_executor
 
 
 def run_whois(domain: str) -> dict:

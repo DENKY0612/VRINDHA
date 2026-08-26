@@ -12,9 +12,9 @@ import shutil
 from datetime import datetime
 from typing import Dict, List
 
-from automation.actions import automation_actions
-from core.error_handler import ErrorHandler
-from core.tool_executor import tool_executor
+from .actions import automation_actions
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
 
 class IDPSMonitor:
     def __init__(self):
@@ -27,7 +27,7 @@ class IDPSMonitor:
             alerts.extend(self._run_suricata(interface))
             alerts.extend(self._run_snort(interface))
             try:
-                from core.local_sensors import local_listeners
+                from vrin_SOC.core.local_sensors import local_listeners
                 inventory = local_listeners()
                 alerts.append({
                     "tool": "local-sockets",
@@ -176,7 +176,7 @@ class IDPSMonitor:
                     if result.get("status") in ["success", "simulated"]:
                         self.blocked_sources.add(src_ip)
                         try:
-                            from database.db import add_blocked_ip
+                            from vrin_SOC.database.db import add_blocked_ip
                             add_blocked_ip(src_ip, f"IDPS high-severity: {alert.get('msg','')[:160]}")
                         except Exception:
                             pass

@@ -5,12 +5,9 @@ Responsibilities: Discover live hosts, scan open ports, identify services
 Rules: Only scan authorized targets, avoid aggressive scans unless approved
 Output: IP list, open ports, service versions, risk insights
 """
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
-from tools.nmap_tool import run_nmap
-from tools.network_tool import run_netdiscover
-from core.error_handler import ErrorHandler
+from vrin_SOC.tools.nmap_tool import run_nmap
+from vrin_SOC.tools.network_tool import run_netdiscover
+from vrin_SOC.core.error_handler import ErrorHandler
 from datetime import datetime
 
 class NetworkRecon:

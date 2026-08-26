@@ -5,12 +5,9 @@ INPUT: threat data
 ACTIONS: block_ip(ip), kill_process(pid)
 RULES: Only for HIGH risk, log all actions, ensure system safety, return action summary
 """
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
 
-from automation.actions import automation_actions
-from core.error_handler import ErrorHandler
+from .actions import automation_actions
+from vrin_SOC.core.error_handler import ErrorHandler
 from datetime import datetime
 
 class ResponseEngine:
@@ -31,7 +28,7 @@ class ResponseEngine:
                     block_result = automation_actions.block_ip(ip)
                     actions_taken.append(block_result)
                     if block_result.get("status") != "error":
-                        from database.db import add_blocked_ip
+                        from vrin_SOC.database.db import add_blocked_ip
                         add_blocked_ip(ip, f"HIGH risk auto-response: {str(threat_data)[:180]}")
                     alert_result = automation_actions.send_alert(f"HIGH risk threat responded — blocked {ip}")
                     actions_taken.append(alert_result)

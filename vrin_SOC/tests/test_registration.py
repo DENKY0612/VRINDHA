@@ -11,8 +11,8 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from api import main as api_main
-from api.auth import (
+from vrin_SOC.api import main as api_main
+from vrin_SOC.api.auth import (
     AuthModule,
     BootstrapClosedError,
     DuplicateUserError,

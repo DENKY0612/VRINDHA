@@ -5,10 +5,10 @@ from datetime import datetime
 from typing import Dict
 import shutil
 
-from automation.actions import automation_actions
-from core.error_handler import ErrorHandler
-from core.tool_executor import tool_executor
-from database.db import add_blocked_ip, get_blocked_ips, get_logs
+from .actions import automation_actions
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.database.db import add_blocked_ip, get_blocked_ips, get_logs
 
 
 class FirewallModule:

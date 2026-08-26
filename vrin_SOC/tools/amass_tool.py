@@ -2,9 +2,9 @@
 from datetime import datetime
 import shutil
 
-from core.error_handler import ErrorHandler
-from core.local_sensors import dns_prefixes
-from core.tool_executor import tool_executor
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.core.local_sensors import dns_prefixes
+from vrin_SOC.core.tool_executor import tool_executor
 
 
 def run_amass(domain: str) -> dict:

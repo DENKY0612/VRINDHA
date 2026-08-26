@@ -6,11 +6,8 @@ Models: Isolation Forest, K-Means clustering
 Output: {event, anomaly_score, status: suspicious}
 Also: Data science role - unusual login detection, suspicious traffic, attack pattern recognition
 """
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
 
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 from datetime import datetime
 from typing import Dict, List
 import random

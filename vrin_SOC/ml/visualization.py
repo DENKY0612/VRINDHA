@@ -7,8 +7,8 @@ Using Charts, Graphs, Trends to show Attack frequency, Most targeted ports, Risk
 from datetime import datetime, timedelta
 from typing import Dict, List
 import re
-from core.error_handler import ErrorHandler
-from database.db import get_connection
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.database.db import get_connection
 
 RISK_LEVEL_VALUES = {
     "critical": 95,

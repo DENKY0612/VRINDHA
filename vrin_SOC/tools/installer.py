@@ -8,7 +8,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from typing import Dict, List
-from core.error_handler import ErrorHandler
+from vrin_SOC.core.error_handler import ErrorHandler
 
 # Full tool stack per blueprint
 TOOL_STACK = {

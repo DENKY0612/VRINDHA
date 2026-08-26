@@ -6,8 +6,8 @@ Instead of "Attack detected" -> "Attack likely to happen"
 """
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
-from core.error_handler import ErrorHandler
-from database.db import get_logs
+from vrin_SOC.core.error_handler import ErrorHandler
+from vrin_SOC.database.db import get_logs
 import re
 
 try:
