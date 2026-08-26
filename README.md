@@ -24,6 +24,14 @@ uvicorn api.main:app --host 0.0.0.0 --port 8000
 - Dashboard: <http://localhost:8000/dashboard/>
 - API docs: <http://localhost:8000/docs>
 
-There are no default credentials. While `vrin_SOC/database/users.json` is empty, the first `POST /register` creates the administrator.
+For a path-safe launcher from the repository root, install the SOC dependencies into `vrin_SOC/.venv` and run:
+
+```bash
+python3 -m venv vrin_SOC/.venv
+vrin_SOC/.venv/bin/python -m pip install -r vrin_SOC/requirements.txt
+VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh
+```
+
+The launcher uses the same interpreter for dependency checks and Uvicorn, and accepts `API_HOST`, `API_PORT`, and `API_RELOAD` from the environment. There are no default credentials. While `vrin_SOC/database/users.json` is empty, the first `POST /register` creates the administrator.
 
 See [`vrin_SOC/README.md`](vrin_SOC/README.md) and [`Vrin_TI/README.md`](Vrin_TI/README.md) for full documentation.

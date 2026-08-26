@@ -1026,14 +1026,40 @@ function authHeaders(){ return authToken ? {Authorization:`Bearer ${authToken}`}
 function escapeHtml(value){
   return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 }
+class ApiError extends Error{
+  constructor(message, status){
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+function clearExpiredToken(){
+  authToken='';
+  sessionStorage.removeItem('vrindhaToken');
+  updateAuthStatus();
+}
 async function apiFetch(path, options = {}){
-  const res = await fetch(path, {headers:{'Content-Type':'application/json', ...authHeaders(), ...options.headers}, ...options});
+  // Build headers after spreading options: otherwise options.headers replaces
+  // the merged Authorization header and protected requests fail unexpectedly.
+  const headers = {'Content-Type':'application/json', ...authHeaders(), ...(options.headers || {})};
+  const res = await fetch(path, {...options, headers});
   if(!res.ok){
     let detail = '';
     try{ detail = (await res.json()).detail || ''; }catch{}
-    throw new Error(detail || `${path} failed ${res.status}`);
+    if(res.status === 401) clearExpiredToken();
+    throw new ApiError(detail || `${path} failed (${res.status})`, res.status);
   }
   return await res.json();
+}
+function showApiError(element, error, action){
+  if(!element) return;
+  if(error?.status === 401){
+    element.textContent = `${action || 'This action'} requires authentication. Log in above, then try again.`;
+  } else if(error?.status === 403){
+    element.textContent = `Permission denied: ${error.message}`;
+  } else {
+    element.textContent = `${action || 'API request'} unavailable: ${error?.message || error}`;
+  }
 }
 async function login(){
   const username = document.getElementById('loginUsername').value;
@@ -1163,7 +1189,7 @@ async function sendCommand(){
     const data = await apiFetch('/command', {method:'POST', body:JSON.stringify({command:cmd, auto_confirm:false})});
     showTeamResult(resultBox, data);
   }catch(e){
-    resultBox.textContent = `[OFFLINE] Command: ${cmd}\nStart FastAPI: uvicorn api.main:app --reload --port 8000\nError: ${e.message}`;
+    showApiError(resultBox, e, `Command '${cmd}'`);
   }
 }
 
@@ -1183,8 +1209,13 @@ async function loadStatus(){
     detailsEl.textContent = JSON.stringify(data.data, null, 2).slice(0,3000);
     if(document.getElementById('statusMode')) document.getElementById('statusMode').textContent = data.mode?.toUpperCase() || 'DEFENSIVE';
   }catch(e){
-    statusEl.textContent = "⚠️ API offline - Simulation mode";
-    detailsEl.textContent = "Start backend: uvicorn api.main:app --reload\nSystem would show: Agents, Tools, Memory, Gita status";
+    if(e?.status){
+      statusEl.textContent = `⚠️ API request failed (${e.status})`;
+      detailsEl.textContent = e.message;
+    } else {
+      statusEl.textContent = "⚠️ API offline - Simulation mode";
+      detailsEl.textContent = "Start backend: python -m uvicorn api.main:app --host 0.0.0.0 --port 8000\nSystem would show: Agents, Tools, Memory, Gita status";
+    }
   }
 }
 
@@ -1250,7 +1281,7 @@ async function loadLogs(){
       }).join('');
     }
   }catch(e){
-    container.textContent = `[SIMULATION] SIEM logs would appear here. Error: ${e.message}`;
+    showApiError(container, e, 'Logs');
   }
 }
 
@@ -1262,7 +1293,7 @@ async function verifyTools(){
     const data = await apiFetch('/tools/verify');
     el.textContent = `Installed (${data.installed_count}/${data.total}): ${data.installed?.join(', ')}\nMissing (${data.missing_count}): ${data.missing?.join(', ')}\nSuggestion: ${data.suggestion}`;
   }catch(e){
-    el.textContent = `[SIMULATION] Tools verification: Would check nmap, wireshark, nikto, gobuster, snort, fail2ban, rkhunter, amass, dirb, tcpdump, chkrootkit, ufw, suricata, whois\nError: ${e.message}`;
+    showApiError(el, e, 'Tool verification');
   }
 }
 

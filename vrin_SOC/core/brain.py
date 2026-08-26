@@ -458,7 +458,10 @@ class Brain:
             return {
                 "mode": "red",
                 "action": "executed",
-                "status": "success",
+                # Do not report a confirmed operation as successful when the
+                # selected tool actually failed (for example, a permissions
+                # error or a timeout).
+                "status": "error" if execution_status == "error" else "success",
                 "message": message + f" | Threat Level: {threat_analysis.get('threat_level','Low')}",
                 "data": {
                     "result": result_data,

@@ -5,13 +5,44 @@ const API_BASE = window.location.origin;
 let authToken = sessionStorage.getItem('vrindhaToken') || '';
 const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 
+class ApiError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
+    }
+}
+
 async function apiFetch(path, options = {}) {
-    const res = await fetch(`${API_BASE}${path}`, {
-        headers: { 'Content-Type': 'application/json', ...(authToken ? {Authorization: `Bearer ${authToken}`} : {}), ...options.headers },
-        ...options
-    });
-    if (!res.ok) throw new Error(`API ${path} failed: ${res.status}`);
+    // Spread request options first so a caller cannot accidentally replace the
+    // merged Authorization header with its own headers object.
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(authToken ? {Authorization: `Bearer ${authToken}`} : {}),
+        ...(options.headers || {})
+    };
+    const res = await fetch(`${API_BASE}${path}`, {...options, headers});
+    if (!res.ok) {
+        let detail = '';
+        try { detail = (await res.json()).detail || ''; } catch (_) {}
+        if (res.status === 401) {
+            authToken = '';
+            sessionStorage.removeItem('vrindhaToken');
+        }
+        throw new ApiError(detail || `API ${path} failed: ${res.status}`, res.status);
+    }
     return await res.json();
+}
+
+function showApiError(element, error, action) {
+    if (!element) return;
+    if (error?.status === 401) {
+        element.textContent = `${action || 'This action'} requires authentication. Log in, then try again.`;
+    } else if (error?.status === 403) {
+        element.textContent = `Permission denied: ${error.message}`;
+    } else {
+        element.textContent = `${action || 'API request'} unavailable: ${error?.message || error}`;
+    }
 }
 
 async function sendCommand(autoConfirm = false) {
@@ -36,8 +67,7 @@ async function sendCommand(autoConfirm = false) {
             loadAlertsFromResult(data);
         }
     } catch (e) {
-        // Fallback simulation if API not running
-        resultBox.textContent = `[OFFLINE SIMULATION] Command: ${cmd}\nBrain would process this. Start FastAPI backend with: uvicorn api.main:app --reload --port 8000\nError: ${e.message}`;
+        showApiError(resultBox, e, `Command '${cmd}'`);
     }
 }
 
@@ -60,7 +90,7 @@ async function loadLogs() {
             }).join('');
         }
     } catch (e) {
-        container.textContent = `[SIMULATION] SIEM logs would appear here. Start API. Error: ${e.message}`;
+        showApiError(container, e, 'Logs');
     }
 }
 
@@ -72,8 +102,13 @@ async function loadStatus() {
         statusEl.textContent = `✅ ${data.message} | Mode: ${data.mode}`;
         detailsEl.textContent = JSON.stringify(data.data, null, 2);
     } catch (e) {
-        statusEl.textContent = "⚠️ API offline - Running in simulation mode";
-        detailsEl.textContent = "Start backend: uvicorn api.main:app --reload\nSystem would show: Agents, Tools, Memory stats, Gita status";
+        if (e?.status) {
+            statusEl.textContent = `⚠️ API request failed (${e.status})`;
+            detailsEl.textContent = e.message;
+        } else {
+            statusEl.textContent = "⚠️ API offline - Running in simulation mode";
+            detailsEl.textContent = "Start backend: python -m uvicorn api.main:app --host 0.0.0.0 --port 8000\nSystem would show: Agents, Tools, Memory stats, Gita status";
+        }
     }
 }
 
@@ -84,7 +119,7 @@ async function verifyTools() {
         const data = await apiFetch('/tools/verify');
         el.textContent = `Installed (${data.installed_count}/${data.total}): ${data.installed?.join(', ')}\nMissing (${data.missing_count}): ${data.missing?.join(', ')}\nSuggestion: ${data.suggestion}`;
     } catch (e) {
-        el.textContent = `[SIMULATION] Tools verification: Would check nmap, wireshark, nikto, gobuster, snort, fail2ban, rkhunter, amass, dirb, tcpdump, chkrootkit, ufw, suricata, whois\nInstall missing via: sudo apt install <tool>\nError: ${e.message}`;
+        showApiError(el, e, 'Tool verification');
     }
 }
 

@@ -934,26 +934,31 @@ Give her tasks like: I will give you logs from my system. You build: 1.anomaly d
 ```
 [SIMULATION] nmap -sV 127.0.0.1 - Tool not installed. Install: sudo apt install nmap
 ```
-Fix: `sudo apt install nmap` or use installer module: `python3 -c "from tools.installer import install_tool; print(install_tool('nmap'))"` then confirm yes
+The wrappers now use clearly labelled, observation-only Python fallbacks when a supported binary is missing. A fallback never invents an IDS alert or applies a firewall change. To enable the real tool, use the permission-gated installer: `python3 -c "from tools.installer import install_tool; print(install_tool('nmap'))"` and confirm the prompt.
 
 **2. FastAPI ModuleNotFoundError:**
 ```
 ModuleNotFoundError: No module named 'fastapi'
 ```
-Fix: `pip install -r requirements.txt` or `pip install fastapi uvicorn`
+From the repository root run `python3 -m venv vrin_SOC/.venv && vrin_SOC/.venv/bin/python -m pip install -r vrin_SOC/requirements.txt`. Then launch with `VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh`. The launcher checks the same interpreter it uses and prints the exact install command if API dependencies are still missing.
 
 **3. API offline in dashboard:**
-Dashboard shows `[OFFLINE SIMULATION] Start FastAPI backend with: uvicorn api.main:app --reload`
-Fix: Start API `uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload`
+The dashboard uses same-origin relative API requests, which also works through a hosted preview. Authentication failures are shown as authentication/permission errors instead of being incorrectly reported as an offline API. Start the service with `VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh` or `python3 -m uvicorn api.main:app --host 0.0.0.0 --port 8000` from `vrin_SOC/`, then log in above the command center.
 
-**4. Git push rejected fetch first:**
+**4. Git push rejected (fetch first):**
 ```
-! [rejected] main -> main (fetch first)
+! [rejected] <branch> -> <branch> (fetch first)
 ```
-Fix: `git pull --allow-unrelated-histories` or `git push -f origin main` if you want to overwrite with your full project (you did force push for vrindha)
+Do not force-push a shared branch. Fetch and replay this branch on the latest remote commit, resolve conflicts, then push normally:
+```
+git fetch origin
+git rebase origin/<branch>
+git push origin <branch>
+```
+Use the branch assigned to your session; inspect conflicts before continuing.
 
 **5. Database locked:**
-Fix: Delete `database/vrindha.db` and re-init `python3 -c "from database.db import init_db; init_db()"`
+The SQLite layer uses WAL mode, a 30-second busy timeout, guaranteed connection cleanup, and bounded retries for transient locked/busy errors. Restarting the API is usually unnecessary. If the database was interrupted or is genuinely corrupt, back up `database/vrindha.db` first, then reinitialize with `python3 -c "from database.db import init_db; init_db()"`; do not delete it as the first response.
 
 **6. Gita Engine not loaded:**
 Check `data/gita.json` exists 701 verses; path resolution is package-relative under `vrin_SOC/data/`
