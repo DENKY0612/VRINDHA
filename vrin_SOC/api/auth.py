@@ -8,7 +8,20 @@ import logging
 import os
 import re
 import secrets
+import sys
 import tempfile
+
+# Bind legacy ``api.auth`` ↔ canonical ``vrin_SOC.api.auth`` so singletons
+# are shared regardless of import spelling.
+_repo = Path(__file__).resolve().parents[2]
+if (_repo / "Vrin_TI").is_dir() and str(_repo) not in sys.path:
+    sys.path.insert(0, str(_repo))
+try:
+    from vrin_SOC._imports import bind_package
+except ImportError:
+    bind_package = None
+if bind_package is not None:
+    bind_package(__name__)
 
 import bcrypt
 from jose import JWTError, jwt
