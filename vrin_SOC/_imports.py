@@ -27,6 +27,7 @@ LEGACY_ROOTS: tuple[str, ...] = (
     "autonomous",
     "core",
     "database",
+    "hive",
     "ml",
     "tools",
 )

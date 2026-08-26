@@ -25,6 +25,8 @@ def test_legacy_and_canonical_names_are_the_same_module():
     legacy = importlib.import_module("core.gita_engine")
     assert canonical is legacy
     assert sys.modules["core.gita_engine"] is sys.modules["vrin_SOC.core.gita_engine"]
+    # Importing vrin_SOC.api triggers bind_package which registers the legacy "api" alias.
+    importlib.import_module("vrin_SOC.api")
     assert sys.modules["api"] is sys.modules["vrin_SOC.api"]
 
 
@@ -46,3 +48,10 @@ def test_legacy_short_imports_used_by_docs_still_work():
 
     assert GitaEngine is importlib.import_module("vrin_SOC.core.gita_engine").GitaEngine
     assert AuthModule is importlib.import_module("vrin_SOC.api.auth").AuthModule
+
+
+def test_hive_legacy_and_canonical_imports_match():
+    canonical = importlib.import_module("vrin_SOC.hive")
+    legacy = importlib.import_module("hive")
+    assert canonical is legacy
+    assert sys.modules["hive"] is sys.modules["vrin_SOC.hive"]

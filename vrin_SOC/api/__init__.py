@@ -1,4 +1,11 @@
-"""Vrindha API Package"""
+"""Vrindha API Package — FastAPI application and route bindings.
+
+Supports both canonical (``vrin_SOC.api``) and legacy (``api``) import
+paths.  The ``app`` object is re-exported so callers can write::
+
+    from api import app          # legacy flat-import spelling
+    from vrin_SOC.api import app # canonical package spelling
+"""
 from pathlib import Path
 import sys
 
@@ -13,3 +20,25 @@ except ImportError:  # flat image / unpackaged checkout
 
 if bind_package is not None:
     bind_package(__name__)
+
+__all__ = ["app"]
+
+_EXPORTS = {
+    "app": (".main", "app"),
+}
+
+
+def __getattr__(name: str):
+    try:
+        module_name, attr = _EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}") from exc
+    from importlib import import_module
+
+    value = getattr(import_module(module_name, __name__), attr)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted(set(globals()) | set(__all__))
