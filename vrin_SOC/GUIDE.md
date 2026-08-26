@@ -486,7 +486,7 @@ Implemented fully - data/gita.json 701 verses generated via python script from v
 **Step 1 Clone from GitHub (You already pushed):**
 ```bash
 git clone https://github.com/trmv2007-bot/vrindha.git
-cd vrindha
+cd Vrindha_SOC
 ```
 
 **Step 2 Install Python deps:**
@@ -956,7 +956,7 @@ Fix: `git pull --allow-unrelated-histories` or `git push -f origin main` if you 
 Fix: Delete `database/vrindha.db` and re-init `python3 -c "from database.db import init_db; init_db()"`
 
 **6. Gita Engine not loaded:**
-Check `data/gita.json` exists 701 verses, path resolution tries multiple locations data/gita.json vrindha/data/gita.json /home/user/vrindha/data/gita.json
+Check `data/gita.json` exists 701 verses; path resolution is package-relative under `vrin_SOC/data/`
 
 **7. Permission errors sudo privileges:**
 Installer says Please run this program with sudo privileges - Per Permission Handling Prompt Do NOT automatically elevate - Fix Run with sudo or manually install via sudo apt install

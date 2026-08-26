@@ -1,37 +1,41 @@
-"""
-Dirb Tool - Web Testing per blueprint
-Function: run_dirb(url) - asks confirmation, runs dirb url
-"""
-from core.tool_executor import tool_executor
-from core.error_handler import ErrorHandler
-import shutil
+"""Dirb wrapper with an HTTP path-probe fallback."""
 from datetime import datetime
+import shutil
+
+from core.error_handler import ErrorHandler
+from core.local_sensors import http_probe
+from core.tool_executor import tool_executor
+
 
 def run_dirb(url: str) -> dict:
     try:
-        if not url:
-            url = "http://127.0.0.1"
+        url = url or "http://127.0.0.1"
         if not url.startswith("http"):
             url = f"http://{url}"
-        
-        if not shutil.which("dirb"):
+        if shutil.which("dirb"):
+            result = tool_executor.execute(["dirb", url], tool_name="dirb", timeout=45)
             return {
                 "tool": "dirb",
                 "target": url,
-                "status": "simulated",
-                "data": f"[SIMULATION] dirb {url}\n+ {url}/admin (CODE:200)\n+ {url}/config (CODE:200)",
-                "error": "",
-                "timestamp": datetime.now().isoformat()
+                "status": result.get("status"),
+                "engine": "dirb",
+                "data": result.get("output", "")[:5000],
+                "result": result.get("output", "")[:5000],
+                "error": result.get("error", ""),
+                "timestamp": datetime.now().isoformat(),
             }
-        
-        result = tool_executor.execute(f"dirb {url}", tool_name="dirb")
+        probe = http_probe(url)
         return {
-            "tool": "dirb",
+            "tool": "python-http",
             "target": url,
-            "status": result.get("status"),
-            "data": result.get("output","")[:5000],
-            "error": result.get("error",""),
-            "timestamp": datetime.now().isoformat()
+            "status": probe.get("status"),
+            "engine": probe.get("engine"),
+            "data": probe.get("result", ""),
+            "result": probe.get("result", ""),
+            "findings": probe.get("findings", []),
+            "error": "",
+            "timestamp": probe.get("timestamp", datetime.now().isoformat()),
+            "note": "dirb not installed; probed common web paths",
         }
-    except Exception as e:
-        return ErrorHandler.handle_exception(e, "run_dirb")
+    except Exception as exc:
+        return ErrorHandler.handle_exception(exc, "run_dirb")

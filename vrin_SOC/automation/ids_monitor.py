@@ -26,6 +26,18 @@ class IDPSMonitor:
             alerts = []
             alerts.extend(self._run_suricata(interface))
             alerts.extend(self._run_snort(interface))
+            try:
+                from core.local_sensors import local_listeners
+                inventory = local_listeners()
+                alerts.append({
+                    "tool": "local-sockets",
+                    "severity": "Low",
+                    "msg": inventory.get("summary", "Local listener inventory"),
+                    "src_ip": "",
+                    "listeners": inventory.get("listeners", [])[:20],
+                })
+            except Exception:
+                pass
             alerts = [alert for alert in alerts if alert]
 
             for alert in alerts:
@@ -61,10 +73,11 @@ class IDPSMonitor:
 
         return [
             {
-                "tool": "suricata (simulated)",
-                "severity": "Medium",
-                "msg": "Simulated: Possible port scan detected",
-                "src_ip": "192.168.1.50",
+                "tool": "suricata (unavailable)",
+                "severity": "Low",
+                "msg": "Suricata is not installed; no live IDS alerts. Local socket inventory used instead.",
+                "src_ip": "",
+                "simulated": True,
             }
         ]
 
@@ -78,10 +91,11 @@ class IDPSMonitor:
 
         return [
             {
-                "tool": "snort (simulated)",
+                "tool": "snort (unavailable)",
                 "severity": "Low",
-                "msg": "Simulated: ICMP ping detected",
-                "src_ip": "192.168.1.100",
+                "msg": "Snort is not installed; no live IDS alerts.",
+                "src_ip": "",
+                "simulated": True,
             }
         ]
 
@@ -152,12 +166,20 @@ class IDPSMonitor:
         for alert in alerts:
             src_ip = alert.get("src_ip")
             severity = alert.get("severity", "Medium")
+            if alert.get("simulated"):
+                actions.append({"action": "log_only", "ip": src_ip or "unknown", "message": "Simulated/unavailable sensor — no block"})
+                continue
             if severity == "High" and src_ip:
                 if src_ip not in self.blocked_sources:
                     result = automation_actions.block_ip(src_ip)
                     actions.append({"action": "block_ip", "ip": src_ip, "result": result})
                     if result.get("status") in ["success", "simulated"]:
                         self.blocked_sources.add(src_ip)
+                        try:
+                            from database.db import add_blocked_ip
+                            add_blocked_ip(src_ip, f"IDPS high-severity: {alert.get('msg','')[:160]}")
+                        except Exception:
+                            pass
                 else:
                     actions.append({"action": "block_ip", "ip": src_ip, "result": {"status": "skipped", "message": "Source already blocked"}})
             elif severity == "Medium":

@@ -9,7 +9,7 @@ from Vrin_TI.database import ThreatDatabase
 from Vrin_TI.models import IntelligenceEvent, IndicatorReference, utcnow
 from Vrin_TI.privacy import PrivacyGate
 from Vrin_TI.security import ReplayGuard, SecurityError, validate_external_url
-from Vrin_TI.tests.helpers import test_config
+from Vrin_TI.tests.helpers import make_test_config
 
 
 class FailingTransport(IntelligenceTransport):
@@ -57,7 +57,7 @@ class TransportTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = ThreatDatabase(f"{self.tmp.name}/ti.db")
-        self.manager = TransportManager(test_config(self.tmp.name), self.db)
+        self.manager = TransportManager(make_test_config(self.tmp.name), self.db)
         await self.manager.fallback.connect()
 
     async def asyncTearDown(self):

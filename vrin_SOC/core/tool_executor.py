@@ -19,13 +19,14 @@ class ToolExecutor:
         """Check if tool is installed via shutil.which"""
         return shutil.which(tool_name) is not None
     
-    def execute(self, command: str, tool_name: str = None) -> Dict:
+    def execute(self, command, tool_name: str = None, timeout: int = None) -> Dict:
         """
         Execute command safely with timeout
         command: full shell command string or list
         tool_name: optional for availability check
         Returns: {status: success/error, output:..., error:...}
         """
+        limit = timeout if timeout is not None else self.timeout
         try:
             # Check availability if tool_name provided
             if tool_name:
@@ -46,12 +47,11 @@ class ToolExecutor:
             else:
                 args = command
             
-            # Execute with timeout
             result = subprocess.run(
                 args,
                 capture_output=True,
                 text=True,
-                timeout=self.timeout,
+                timeout=limit,
                 shell=False
             )
             
@@ -82,7 +82,7 @@ class ToolExecutor:
                 "status": "error",
                 "tool": tool_name or "unknown",
                 "output": "",
-                "error": f"Tool execution timed out after {self.timeout} seconds - limited for safety per blueprint"
+                "error": f"Tool execution timed out after {limit} seconds - limited for safety per blueprint"
             }
         except FileNotFoundError as e:
             return {

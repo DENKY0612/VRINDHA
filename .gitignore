@@ -23,3 +23,4 @@ data/training_data.csv
 *.pdf
 *.txt
 !requirements.txt
+vrin_SOC/database/users.json

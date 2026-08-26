@@ -7,7 +7,7 @@ from Vrin_TI.collectors.feed_manager import FeedManager
 from Vrin_TI.database import ThreatDatabase
 from Vrin_TI.engine import ThreatIntelligenceEngine
 from Vrin_TI.models import IntelligenceEvent, IndicatorReference
-from Vrin_TI.tests.helpers import test_config
+from Vrin_TI.tests.helpers import make_test_config
 from vrin_SOC.core.intelligence_bus import IntelligenceGateway
 
 
@@ -34,7 +34,7 @@ class FailureRecoveryTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as directory:
             db = ThreatDatabase(f"{directory}/ti.db")
             fake = FakeEngine()
-            manager = FeedManager(test_config(directory), db, fake)
+            manager = FeedManager(make_test_config(directory), db, fake)
             collector = FlakyCollector()
             manager.register(collector, {"enabled": True, "interval": 60, "timeout": 1, "retry_count": 1, "reliability": .7})
             failed = await manager.sync("flaky")
@@ -63,7 +63,7 @@ class FailureRecoveryTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_db_health_failure_is_reported_not_raised(self):
         with tempfile.TemporaryDirectory() as directory:
-            engine = ThreatIntelligenceEngine(test_config(directory))
+            engine = ThreatIntelligenceEngine(make_test_config(directory))
             engine.database.queue_depth = Mock(side_effect=OSError("db down"))
             engine.bus.health = AsyncMock(side_effect=OSError("bus down"))
             result = await engine.health()
@@ -72,7 +72,7 @@ class FailureRecoveryTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_external_connectors_and_reputation_outages_are_optional(self):
         with tempfile.TemporaryDirectory() as directory:
-            engine = ThreatIntelligenceEngine(test_config(directory, external_enrichment=True, external_submission=True))
+            engine = ThreatIntelligenceEngine(make_test_config(directory, external_enrichment=True, external_submission=True))
             engine.enrichment._virus_total = AsyncMock(side_effect=RuntimeError("VirusTotal down"))
             # No API key means policy/provider status is disabled; either way the
             # outage is represented in data rather than escaping the engine.

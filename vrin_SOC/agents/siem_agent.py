@@ -13,19 +13,14 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from core.error_handler import ErrorHandler
 
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
 class SIEMAgent:
-    def __init__(self, log_file: str = "logs/log.txt"):
+    def __init__(self, log_file: str = None):
         self.name = "SIEMAgent"
-        self.log_file = Path(log_file)
-        # Try alternative paths
-        if not self.log_file.parent.exists():
-            alt = Path("vrindha/logs/log.txt")
-            if alt.parent.exists():
-                self.log_file = alt
-            else:
-                alt2 = Path("/home/user/vrindha/logs/log.txt")
-                if alt2.parent.exists():
-                    self.log_file = alt2
+        candidate = Path(log_file) if log_file else PACKAGE_ROOT / "logs" / "log.txt"
+        self.log_file = candidate if candidate.is_absolute() else PACKAGE_ROOT / candidate
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
         if not self.log_file.exists():
             self.log_file.write_text("")

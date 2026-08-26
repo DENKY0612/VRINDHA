@@ -6,13 +6,13 @@ from fastapi.testclient import TestClient
 from Vrin_TI.api import create_app
 from Vrin_TI.engine import ThreatIntelligenceEngine
 from Vrin_TI.models import AssetReference, IndicatorReference, IntelligenceEvent, ThreatIndicator
-from Vrin_TI.tests.helpers import test_config
+from Vrin_TI.tests.helpers import make_test_config
 
 
 class TIAPITests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.config = test_config(self.tmp.name)
+        self.config = make_test_config(self.tmp.name)
         self.engine = ThreatIntelligenceEngine(self.config)
         self.client_context = TestClient(create_app(self.engine))
         self.client = self.client_context.__enter__()
@@ -60,7 +60,7 @@ class TIAPITests(unittest.TestCase):
 class EndToEndCorrelationTests(unittest.IsolatedAsyncioTestCase):
     async def test_soc_gateway_to_ti_to_enriched_alert_without_action(self):
         with tempfile.TemporaryDirectory() as directory:
-            engine = ThreatIntelligenceEngine(test_config(directory))
+            engine = ThreatIntelligenceEngine(make_test_config(directory))
             seeded = await engine.ingest_indicator(ThreatIndicator(indicator_type="ipv4", indicator_value="8.8.8.8",
                 source="trusted-feed", source_reliability=.98, confidence=.95, threat_score=92,
                 malware_family=["ExampleMalware"], threat_actor=["ExampleActor"], campaign=["ExampleCampaign"],
@@ -86,7 +86,7 @@ class EndToEndCorrelationTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_unknown_observation_is_not_declared_malicious(self):
         with tempfile.TemporaryDirectory() as directory:
-            engine = ThreatIntelligenceEngine(test_config(directory))
+            engine = ThreatIntelligenceEngine(make_test_config(directory))
             event = IntelligenceEvent(event_type="ioc_observation", source="soc",
                 indicator=IndicatorReference(type="domain", value="unknown.example"), confidence=.4)
             result = await engine.process_soc_event(event)

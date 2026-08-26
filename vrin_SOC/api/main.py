@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Literal, Optional
 import logging
 import os
+import re
 import sys
 import time
 
@@ -26,7 +27,7 @@ from api.auth import (
 )
 from core.brain import brain
 from core.gita_engine import gita_engine
-from database.db import add_log, get_logs
+from database.db import add_log, get_blocked_ips, get_logs, get_threats
 from ml.anomaly_detector import anomaly_detector
 from ml.data_pipeline import data_pipeline
 from autonomous.agent import autonomous_agent
@@ -72,6 +73,59 @@ class RegisterRequest(BaseModel):
 
 class AutonomyModeRequest(BaseModel):
     mode: Literal["autonomous", "defensive"] = Field(..., description="Autonomy mode to persist and apply")
+
+
+class TeamActionRequest(BaseModel):
+    action: str = Field(min_length=1, max_length=64)
+    target: str = Field("", max_length=256)
+    details: str = Field("", max_length=2000)
+
+
+class TeamConfirmRequest(BaseModel):
+    decision: Literal["yes", "no"] = "yes"
+
+
+RED_TEAM_ACTIONS = {
+    "nmap": "scan network {target}",
+    "recon": "scan network {target}",
+    "whois": "whois {target}",
+    "nikto": "scan vulnerabilities {target}",
+    "vuln": "scan vulnerabilities {target}",
+    "gobuster": "gobuster {target}",
+    "dirb": "dirb {target}",
+    "amass": "amass {target}",
+    "sublist3r": "sublist3r {target}",
+    "tcpdump": "tcpdump {target}",
+    "hashcat": "hashcat {details}",
+    "assist": "exploit assist {details} on {target}",
+    "exploit": "exploit assist {details} on {target}",
+}
+
+BLUE_TEAM_ACTIONS = {
+    "detect": "detect threats {details} from {target}",
+    "block": "block ip {target}",
+    "firewall": "firewall check",
+    "ids": "ids monitor",
+    "idps": "ids monitor",
+    "endpoint": "rootkit scan",
+    "rootkit": "rootkit scan",
+    "respond": "incident response {target}",
+    "logs": "show logs",
+    "anomaly": "analyze anomaly",
+}
+
+
+def _render_team_command(template: str, target: str, details: str) -> str:
+    command = template.format(target=(target or "").strip(), details=(details or "").strip())
+    return re.sub(r"\s+", " ", command).strip()
+
+
+def _run_team_command(command: str, user: Dict[str, Any]) -> Dict[str, Any]:
+    result = brain.process(command, session_id=str(user["sub"]), user_token=str(user["sub"]))
+    data = result.get("data") if isinstance(result.get("data"), dict) else {}
+    threat = data.get("threat") if isinstance(data.get("threat"), dict) else {}
+    add_log(command, str(result.get("message", ""))[:2000], threat.get("risk_level", "Low"), result.get("action", ""), result.get("mode", ""))
+    return result
 
 
 # OpenAPI Bearer security scheme; FastAPI exposes the Authorize control in
@@ -431,6 +485,72 @@ async def pipeline_status(user=Depends(get_current_user)):
 async def verify_tools(user=Depends(get_current_user)):
     from tools.installer import verify_all_tools
     return verify_all_tools()
+
+
+@app.get("/team/state", tags=["teams"])
+async def team_state(user=Depends(get_current_user)):
+    from tools.installer import verify_all_tools
+    pending = brain.pending_for(str(user["sub"]))
+    preview = None
+    if pending:
+        preview = {
+            "command": pending.get("original_command"),
+            "target": pending.get("target"),
+            "timestamp": pending.get("timestamp"),
+        }
+    return {
+        "status": "success",
+        "pending": preview,
+        "blocked_ips": get_blocked_ips(50),
+        "threats": get_threats(30),
+        "recent_logs": get_logs(20),
+        "tools": verify_all_tools(),
+    }
+
+
+@app.post("/team/red", tags=["teams"])
+async def team_red(req: TeamActionRequest, user=Depends(get_current_user)):
+    action = req.action.strip().lower()
+    template = RED_TEAM_ACTIONS.get(action)
+    if not template:
+        raise HTTPException(status_code=422, detail=f"Unknown red-team action '{req.action}'")
+    target = req.target.strip()
+    if action in {"nmap", "recon", "nikto", "vuln", "gobuster", "dirb"} and not target:
+        target = "127.0.0.1"
+    if action == "whois" and not target:
+        target = "example.com"
+    if action == "tcpdump" and not target:
+        target = "lo"
+    if action in {"amass", "sublist3r"} and not target:
+        raise HTTPException(status_code=422, detail="A domain is required")
+    try:
+        return _run_team_command(_render_team_command(template, target, req.details), user)
+    except Exception as exc:
+        raise internal_error("team red", exc)
+
+
+@app.post("/team/blue", tags=["teams"])
+async def team_blue(req: TeamActionRequest, user=Depends(get_current_user)):
+    action = req.action.strip().lower()
+    template = BLUE_TEAM_ACTIONS.get(action)
+    if not template:
+        raise HTTPException(status_code=422, detail=f"Unknown blue-team action '{req.action}'")
+    if action == "block" and not req.target.strip():
+        raise HTTPException(status_code=422, detail="An IP is required to block")
+    try:
+        return _run_team_command(_render_team_command(template, req.target, req.details), user)
+    except Exception as exc:
+        raise internal_error("team blue", exc)
+
+
+@app.post("/team/confirm", tags=["teams"])
+async def team_confirm(req: TeamConfirmRequest, user=Depends(get_current_user)):
+    if not brain.pending_for(str(user["sub"])):
+        raise HTTPException(status_code=409, detail="No pending Red Team confirmation for this session")
+    try:
+        return _run_team_command("yes" if req.decision == "yes" else "no", user)
+    except Exception as exc:
+        raise internal_error("team confirm", exc)
 
 
 # -------------------------------------------------------------------------

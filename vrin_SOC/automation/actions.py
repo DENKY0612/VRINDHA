@@ -10,7 +10,11 @@ import subprocess
 import shutil
 from datetime import datetime
 from typing import Dict
+from pathlib import Path
 from core.error_handler import ErrorHandler
+
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+LOG_FILE = PACKAGE_ROOT / "logs" / "log.txt"
 
 class AutomationActions:
     def block_ip(self, ip: str) -> Dict:
@@ -92,14 +96,11 @@ class AutomationActions:
             
             # Also log to file
             try:
-                with open("logs/log.txt", "a") as f:
+                LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+                with open(LOG_FILE, "a", encoding="utf-8") as f:
                     f.write(alert_msg + "\n")
-            except:
-                try:
-                    with open("vrindha/logs/log.txt", "a") as f:
-                        f.write(alert_msg + "\n")
-                except:
-                    pass
+            except OSError:
+                pass
             
             return {
                 "status": "success",
