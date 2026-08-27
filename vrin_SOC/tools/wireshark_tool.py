@@ -2,13 +2,18 @@
 Wireshark Tool Guidance per blueprint - already covered but adding module
 Wireshark is GUI, we provide tshark (CLI version) wrapper for automation
 """
-from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.core.tool_executor import tool_executor, validate_interface
 from vrin_SOC.core.error_handler import ErrorHandler
 import shutil
 from datetime import datetime
 
 def run_wireshark(interface: str = "eth0") -> dict:
     try:
+        valid, interface_or_error = validate_interface(interface)
+        if not valid:
+            return {"tool": "wireshark", "status": "error", "error": interface_or_error,
+                    "timestamp": datetime.now().isoformat()}
+        interface = interface_or_error
         if shutil.which("tshark"):
             result = tool_executor.execute(f"tshark -i {interface} -c 20", tool_name="tshark")
             return {

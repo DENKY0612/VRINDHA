@@ -32,7 +32,10 @@ logger = logging.getLogger(__name__)
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$")
 SUPPORTED_ROLES = ("admin", "user")
-DEFAULT_ACCESS_TOKEN_EXPIRE_MINUTES = 525600  # 365 days
+# Default bearer-token lifetime: 8 hours. Anything longer leaves a stolen
+# token usable for far too long; operators can still raise it explicitly
+# through ACCESS_TOKEN_EXPIRE_MINUTES when they accept that trade-off.
+DEFAULT_ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours
 
 
 class UserRegistrationError(Exception):

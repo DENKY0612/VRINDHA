@@ -104,7 +104,6 @@ def tcp_connect_scan(target: str, ports: Optional[Iterable[int]] = None, timeout
             if hit:
                 open_ports.append({"port": hit[0], "state": "open", "service": hit[1]})
     open_ports.sort(key=lambda item: item["port"])
-    lines = [f"{item['port']}/tcp open {item['service']}" for item in open_ports] or ["No open common ports detected"]
     return {
         "status": "success",
         "engine": "python-tcp",

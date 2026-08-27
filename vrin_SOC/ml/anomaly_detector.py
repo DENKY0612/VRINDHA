@@ -72,7 +72,7 @@ class AnomalyDetector:
                     # Combine rule and ML
                     anomaly_score = (anomaly_score + ml_score) / 2
                     status = "suspicious" if anomaly_score > 0.6 else "normal"
-                except Exception as e:
+                except Exception:
                     ml_score = None
             
             return {

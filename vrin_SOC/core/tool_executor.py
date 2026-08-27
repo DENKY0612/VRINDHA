@@ -6,8 +6,12 @@ RULES: Check tool availability, use subprocess safely, handle errors, timeout 10
 import subprocess
 import shutil
 import shlex
-from typing import Dict
+from typing import Dict, Tuple
 from .error_handler import ErrorHandler
+
+# Canonical definition lives in vrin_SOC.tools.security; re-exported here so
+# existing callers of tool_executor keep a single import site.
+from vrin_SOC.tools.security import INTERFACE_RE, validate_interface  # noqa: F401
 
 class ToolExecutor:
     """Safe tool execution layer"""
