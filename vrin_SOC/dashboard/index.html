@@ -267,6 +267,7 @@ input:checked + .slider:before{transform:translateX(22px);background:var(--bg)}
 <div class="nav-group">
 <div class="nav-group-title">🧠 Core Brain - Orchestrator</div>
 <div class="nav-item" data-pane="brain" onclick="switchPane('brain')"><span class="icon">🧠</span> Brain & Orchestrator</div>
+<div class="nav-item" data-pane="hive" onclick="switchPane('hive')"><span class="icon">🐝</span> HIVE Intelligence <span class="badge" style="background:rgba(0,212,255,0.15);color:var(--soc-cyan);border-color:rgba(0,212,255,0.3)">multi-agent</span></div>
 <div class="nav-item" data-pane="dharma" onclick="switchPane('dharma')"><span class="icon">🕉️</span> Dharma Engine <span class="badge" style="background:var(--gold);color:var(--bg)">Ethics</span></div>
 <div class="nav-item" data-pane="gita" onclick="switchPane('gita')"><span class="icon">📜</span> Gita Engine <span class="badge">701 verses</span></div>
 <div class="nav-item" data-pane="safety" onclick="switchPane('safety')"><span class="icon">🛡️</span> Safety & Auth <span class="badge">Zero Trust</span></div>
@@ -537,6 +538,55 @@ This dashboard organizes <b>everything</b> from your project: Core Brain, Red Te
 Modes: DEFENSIVE (default) and RED TEAM MODE (manual approval)
 Core Rules: NEVER offensive without approval, AUTOMATE defensive when threat, ALWAYS validate permissions, LOG every action, HANDLE errors gracefully
 </pre>
+</div>
+</div>
+
+<!-- HIVE Intelligence Pane (coordination layer) -->
+<div class="pane" id="pane-hive">
+<h3>🐝 HIVE Intelligence - Coordinated Multi-Agent Layer</h3>
+<div class="banner">
+One organization, many specialists, shared intelligence, common event model, central coordination, human accountability.<br>
+<b>Commander AI</b> coordinates • <b>Infrastructure AI</b> observes • <b>Threat Intel AI</b> contextualizes (never fabricated) • <b>SOC Analyst AI</b> investigates • <b>Data Science AI</b> analyzes + risk models • <b>Knowledge AI</b> remembers validated lessons • <b>Ethics & Dharma AI</b> governs • <b>Human</b> approves high-impact actions.<br>
+<small>High-impact actions always pass Commander → Ethics → Human approval. All agents communicate through the shared event bus.</small>
+</div>
+
+<div class="grid">
+<div class="stat gold"><h3 id="hiveAgents">–</h3><p>Specialist Agents</p><span class="kawaii-small">health below</span></div>
+<div class="stat blue"><h3 id="hiveIncidents">–</h3><p>Active Incidents</p><span class="kawaii-small">investigations</span></div>
+<div class="stat red"><h3 id="hiveAnomalies">–</h3><p>Anomalies</p><span class="kawaii-small">last 100 events</span></div>
+<div class="stat cyan"><h3 id="hiveCritical">–</h3><p>Critical / High Risks</p><span class="kawaii-small">avg <span id="hiveAvgRisk">–</span></span></div>
+</div>
+
+<div class="grid grid-2">
+<div class="card cyan">
+<div class="card-header"><div class="card-title">🫀 Agent Health & Observability</div><button onclick="loadCoordinator()">Refresh</button></div>
+<div id="hiveAgentHealth"><small>Load the panel or refresh…</small></div>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title">📈 Risk & Anomaly Timelines</div></div>
+<div id="hiveRiskTimeline"><small>No risk data yet — ingest events or run the safe demo.</small></div>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title">🎯 Top Risk Factors</div></div>
+<div id="hiveTopFactors"><small>—</small></div>
+</div>
+<div class="card gold">
+<div class="card-header"><div class="card-title">🧮 Models & Data Quality</div></div>
+<div id="hiveModels"><small>—</small></div>
+</div>
+</div>
+
+<div class="grid grid-2" style="margin-top:12px">
+<div class="card red">
+<div class="card-header"><div class="card-title">🗂️ Incidents & Human Approval</div><button onclick="loadCoordinator()">Refresh</button></div>
+<div id="hiveIncidentsList"><small>No incidents yet.</small></div>
+</div>
+<div class="card blue">
+<div class="card-header"><div class="card-title">🧪 Safe Demonstration (labeled SIMULATION)</div></div>
+<p style="font-size:0.85em">Runs the full chain: simulated failed logins + unusual outbound traffic → Infrastructure AI → Commander → Threat Intel → Data Science → SOC Analyst → Ethics → <b>your approval</b> → defensive response → Knowledge AI. All data is synthetic and labeled <b>SIMULATION</b>.</p>
+<button onclick="runCoordinatorDemo()">▶ Run Safe Demo (admin)</button>
+<pre id="hiveDemoOutput" style="max-height:320px;overflow:auto"></pre>
+</div>
 </div>
 </div>
 

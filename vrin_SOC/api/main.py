@@ -31,6 +31,9 @@ from .auth import (
     InvalidUsernameError,
     auth_module,
 )
+# Auth dependencies are shared with the coordination router; main re-exports
+# them so existing imports of the names from this module keep working.
+from .deps import bearer_scheme, get_current_admin, get_current_user
 from vrin_SOC.core.brain import brain
 from vrin_SOC.core.gita_engine import gita_engine
 from vrin_SOC.database.db import add_log, get_blocked_ips, get_logs, get_threats
@@ -44,6 +47,7 @@ from vrin_SOC.ml.risk_scoring import risk_scoring
 from vrin_SOC.ml.visualization import visualization_engine
 from vrin_SOC.core.intelligence_bus import intelligence_gateway
 from vrin_SOC.hive.coordinator import hive as hive_coordinator
+from vrin_SOC.api.coordination_routes import router as coordination_router
 from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
 from Vrin_TI.normalization import InvalidIndicator
 
@@ -135,38 +139,8 @@ def _run_team_command(command: str, user: Dict[str, Any]) -> Dict[str, Any]:
     return result
 
 
-# OpenAPI Bearer security scheme; FastAPI exposes the Authorize control in
-# Swagger UI because protected endpoints depend on this scheme.
-bearer_scheme = HTTPBearer(
-    auto_error=False,
-    scheme_name="BearerAuth",
-    description="JWT returned by POST /login or first-user POST /register",
-)
-
-
-def get_current_user(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
-) -> Dict[str, Any]:
-    """Validate the Bearer JWT and return its claims plus the live user role.
-
-    Tokens are rejected when the account was disabled or removed, so disabling
-    a user also revokes their existing tokens.
-    """
-    if credentials is None or credentials.scheme.lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Bearer authentication required", headers={"WWW-Authenticate": "Bearer"})
-    payload = auth_module.verify_token(credentials.credentials)
-    if not payload:
-        raise HTTPException(status_code=401, detail="Invalid or expired token", headers={"WWW-Authenticate": "Bearer"})
-    user = auth_module.load_users().get(payload.get("sub", ""))
-    if not user or not user.get("active", True):
-        raise HTTPException(status_code=401, detail="Account is disabled or no longer exists", headers={"WWW-Authenticate": "Bearer"})
-    return {**payload, "role": user.get("role", payload.get("role", "user"))}
-
-
-def get_current_admin(user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
-    if user.get("role") != "admin":
-        raise HTTPException(status_code=403, detail="Administrator role required")
-    return user
+# NOTE: bearer_scheme / get_current_user / get_current_admin are defined in
+# ``vrin_SOC.api.deps`` and re-exported above for backward compatibility.
 
 
 def internal_error(context: str, exc: Exception) -> HTTPException:
@@ -786,6 +760,10 @@ async def hive_reap(user=Depends(get_current_admin)):
     """Reap stale agent heartbeats (admin only)."""
     return hive_coordinator.reap_stale()
 
+
+# Coordination layer (HIVE multi-agent: Commander, Infrastructure, Threat
+# Intelligence, SOC Analyst, Data Science, Knowledge, Ethics & Dharma).
+app.include_router(coordination_router)
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"
 if dashboard_path.exists():
