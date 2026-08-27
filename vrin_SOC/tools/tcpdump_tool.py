@@ -4,12 +4,17 @@ import shutil
 
 from vrin_SOC.core.error_handler import ErrorHandler
 from vrin_SOC.core.local_sensors import local_listeners
-from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.core.tool_executor import tool_executor, validate_interface
 
 
 def run_tcpdump(interface: str = "eth0") -> dict:
     try:
         interface = interface or "lo"
+        valid, interface_or_error = validate_interface(interface)
+        if not valid:
+            return {"tool": "tcpdump", "status": "error", "error": interface_or_error,
+                    "timestamp": datetime.now().isoformat()}
+        interface = interface_or_error
         if shutil.which("tcpdump"):
             result = tool_executor.execute(
                 ["tcpdump", "-i", interface, "-c", "50", "-nn"],

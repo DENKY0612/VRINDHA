@@ -56,7 +56,7 @@ class ReconAgent:
                 "type": "network_scan",
                 "agent": self.name,
                 "target": target,
-                "result": "dummy result (error fallback)",
+                "result": err.get("message", "scan failed"),
                 "status": "error",
                 "error": str(e)
             }

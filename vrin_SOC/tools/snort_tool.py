@@ -1,7 +1,7 @@
 """
 Snort Tool - IDS per blueprint (already covered but module for verification)
 """
-from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.core.tool_executor import tool_executor, validate_interface
 from vrin_SOC.core.error_handler import ErrorHandler
 import shutil
 from datetime import datetime
@@ -21,6 +21,11 @@ def run_snort(interface: str = "eth0") -> dict:
                 "timestamp": datetime.now().isoformat(),
                 "note": "Install Snort to enable live IDS monitoring; this fallback is observation-only.",
             }
+        valid, interface_or_error = validate_interface(interface)
+        if not valid:
+            return {"tool": "snort", "status": "error", "error": interface_or_error,
+                    "timestamp": datetime.now().isoformat()}
+        interface = interface_or_error
         result = tool_executor.execute(f"snort -i {interface} -c /etc/snort/snort.conf -A console -q -N -l /var/log/snort", tool_name="snort")
         return {
             "tool": "snort",

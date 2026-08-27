@@ -14,7 +14,7 @@ from typing import Dict, List
 
 from .actions import automation_actions
 from vrin_SOC.core.error_handler import ErrorHandler
-from vrin_SOC.core.tool_executor import tool_executor
+from vrin_SOC.core.tool_executor import tool_executor, validate_interface
 
 class IDPSMonitor:
     def __init__(self):
@@ -66,7 +66,15 @@ class IDPSMonitor:
         except Exception as e:
             return ErrorHandler.handle_exception(e, "IDPSMonitor.monitor")
 
+    @staticmethod
+    def _interface_or_error(interface: str) -> str:
+        valid, value = validate_interface(interface)
+        if not valid:
+            raise ValueError(value)
+        return value
+
     def _run_suricata(self, interface: str) -> List[dict]:
+        interface = self._interface_or_error(interface)
         if shutil.which("suricata"):
             res = tool_executor.execute(f"suricata -i {interface} -v", tool_name="suricata")
             return self._parse_alert_output(res.get("output", ""), "suricata")
@@ -82,6 +90,7 @@ class IDPSMonitor:
         ]
 
     def _run_snort(self, interface: str) -> List[dict]:
+        interface = self._interface_or_error(interface)
         if shutil.which("snort"):
             res = tool_executor.execute(
                 f"snort -q -A console -c /etc/snort/snort.conf -i {interface} -T",

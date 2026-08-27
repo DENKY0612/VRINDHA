@@ -151,6 +151,9 @@ def internal_error(context: str, exc: Exception) -> HTTPException:
 # Small per-process login throttle. A reverse proxy should add distributed rate
 # limiting in multi-worker production deployments.
 _login_attempts: Dict[str, deque] = defaultdict(deque)
+# Never let the throttle map grow without bound: a flood from rotating
+# source addresses would otherwise exhaust memory.
+_MAX_TRACKED_CLIENTS = 10_000
 
 
 @app.middleware("http")
@@ -267,6 +270,9 @@ async def fetch_logs(limit: int = Query(50, ge=1, le=500), user=Depends(get_curr
 async def login(req: LoginRequest, request: Request):
     client = request.client.host if request.client else "unknown"
     now = time.monotonic()
+    if len(_login_attempts) >= _MAX_TRACKED_CLIENTS:
+        # Drop stale buckets wholesale; the active window is 60 seconds.
+        _login_attempts.clear()
     attempts = _login_attempts[client]
     while attempts and now - attempts[0] > 60:
         attempts.popleft()
@@ -314,7 +320,10 @@ async def incident_endpoint_scan(user=Depends(get_current_user)):
 
 
 @app.get("/incident/ids")
-async def incident_ids(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
+async def incident_ids(prevent: bool = Query(True),
+                      interface: str = Query("eth0", max_length=32,
+                                             pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]*$"),
+                      user=Depends(get_current_user)):
     try:
         from vrin_SOC.automation.ids_monitor import ids_monitor
         return ids_monitor.monitor(interface=interface, prevent=prevent)
@@ -323,7 +332,10 @@ async def incident_ids(prevent: bool = Query(True), interface: str = "eth0", use
 
 
 @app.get("/incident/idps")
-async def incident_idps(prevent: bool = Query(True), interface: str = "eth0", user=Depends(get_current_user)):
+async def incident_idps(prevent: bool = Query(True),
+                       interface: str = Query("eth0", max_length=32,
+                                              pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]*$"),
+                       user=Depends(get_current_user)):
     try:
         from vrin_SOC.automation.ids_monitor import ids_monitor
         return ids_monitor.monitor(interface=interface, prevent=prevent)

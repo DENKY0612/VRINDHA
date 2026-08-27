@@ -45,6 +45,28 @@ validated (real IP syntax via `ipaddress`), the result is stored as
 firewall is mutated**. Enabling real execution is an operator configuration
 decision outside the API surface.
 
+### 2.5 JWT & session hardening
+
+- Bearer tokens carry `iat`, `exp`, and a random `jti`, and are signed with the
+  operator-provided `SECRET_KEY` (an ephemeral process key — with a startup
+  warning — when unset, so tokens never survive a restart unconfigured).
+- **Default token lifetime is 8 hours** (`480` minutes). It can only be raised
+  deliberately via `ACCESS_TOKEN_EXPIRE_MINUTES`; a stolen token stops working
+  at expiry, and disabling or deleting the account revokes its tokens
+  immediately (`deps.get_current_user` re-checks the live user record).
+- `POST /login` is throttled per client address (10 attempts/minute, sliding
+  window) and the throttle map is size-bounded so rotating source addresses
+  cannot exhaust memory. In multi-worker deployments, terminate TLS at a
+  reverse proxy and add distributed rate limiting there.
+
+### 2.6 IDS interface validation
+
+`GET /incident/ids` and `GET /incident/idps` accept an `interface` query
+parameter that reaches Suricata/Snort command lines. The value is
+allowlist-validated (FastAPI `pattern`, plus `validate_interface` in
+`tool_executor` as defense-in-depth for every caller, including the tcpdump,
+snort, and tshark wrappers) so tool flags can never be injected through it.
+
 ## 3. Anti-fabrication guarantees
 
 | Artifact | Guarantee |
