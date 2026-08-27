@@ -223,6 +223,125 @@ async function loadCharts() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// HIVE Intelligence (coordination layer)
+// ---------------------------------------------------------------------------
+async function loadCoordinator() {
+    const panel = document.getElementById('hiveAgentHealth');
+    if (panel) panel.innerHTML = '<small>⏳ Loading coordinator…</small>';
+    try {
+        const data = await apiFetch('/coordinator/dashboard');
+        renderCoordinator(data);
+    } catch (e) {
+        if (panel) panel.innerHTML = `<small style="color:var(--red-team)">${escapeHtml(e.message)}</small>`;
+    }
+}
+
+function renderCoordinator(data) {
+    const t = data.totals || {};
+    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    set('hiveAgents', data.agents ? Object.keys(data.agents).length : '–');
+    set('hiveIncidents', t.active_incidents ?? 0);
+    set('hiveAnomalies', t.anomalies ?? 0);
+    set('hiveCritical', t.critical_risks ?? 0);
+    set('hiveAvgRisk', t.average_risk != null ? t.average_risk.toFixed(2) : '–');
+
+    const health = document.getElementById('hiveAgentHealth');
+    if (health && data.agents) {
+        health.innerHTML = Object.entries(data.agents).map(([key, a]) => {
+            const color = a.status === 'healthy' ? 'var(--soc-cyan)' : 'var(--red-team)';
+            return `<div style="margin:3px 0;font-size:0.85em"><b style="color:${color}">●</b> ${escapeHtml(key)} <span class="badge">${escapeHtml(a.status)}</span> <span style="opacity:0.7">${a.events_processed} events, ${(a.average_latency_ms || 0).toFixed(1)}ms avg</span></div>`;
+        }).join('');
+    }
+
+    const risk = document.getElementById('hiveRiskTimeline');
+    if (risk) {
+        risk.innerHTML = (data.risk_timeline || []).length
+            ? data.risk_timeline.slice().reverse().map(r =>
+                `<div style="font-size:0.8em;margin:2px 0">🕓 ${escapeHtml((r.timestamp || '').slice(11, 19))} — risk <b>${Number(r.risk_score).toFixed(2)}</b> (${escapeHtml(r.severity || '')}) on ${escapeHtml(r.entity || 'system')}</div>`
+            ).join('')
+            : '<small>No risk events recorded yet.</small>';
+    }
+
+    const factors = document.getElementById('hiveTopFactors');
+    if (factors) {
+        factors.innerHTML = (data.top_risk_factors || []).length
+            ? data.top_risk_factors.map(([name, weight]) =>
+                `<div style="font-size:0.85em;margin:2px 0">${escapeHtml(name)} <b>${Number(weight).toFixed(2)}</b></div>`
+            ).join('')
+            : '<small>No risk factors accumulated yet.</small>';
+    }
+
+    const models = document.getElementById('hiveModels');
+    if (models) {
+        models.innerHTML = (data.models || []).map(m =>
+            `<div style="font-size:0.85em;margin:2px 0">🧮 <b>${escapeHtml(m.model_name)}</b> ${escapeHtml(m.model_version)} — ${escapeHtml(m.status)}</div>`
+        ).join('') + `<div style="font-size:0.8em;margin-top:6px;opacity:0.8">data quality: ${data.data_quality?.seen_events ?? 0} seen, ${data.data_quality?.rejected_total ?? 0} rejected (recorded)</div>`;
+    }
+
+    const incidents = document.getElementById('hiveIncidentsList');
+    if (incidents) {
+        incidents.innerHTML = (data.incidents || []).length
+            ? data.incidents.map(i => {
+                const badge = i.status === 'awaiting_approval'
+                    ? `<button style="margin-left:6px" onclick="coordinatorApprove('${escapeHtml(i.incident_id)}')">Approve</button><button style="margin-left:4px" onclick="coordinatorReject('${escapeHtml(i.incident_id)}')">Reject</button>`
+                    : `<span class="badge" style="margin-left:6px">${escapeHtml(i.status)}</span>`;
+                return `<div style="font-size:0.85em;margin:4px 0">🗂️ <b>${escapeHtml(i.incident_id)}</b> — ${escapeHtml(i.title)} ${badge}</div>`;
+            }).join('')
+            : '<small>No active incidents.</small>';
+    }
+}
+
+async function runCoordinatorDemo() {
+    const out = document.getElementById('hiveDemoOutput');
+    if (!out) return;
+    out.textContent = '⏳ Running labeled SIMULATION end-to-end scenario…';
+    try {
+        const res = await apiFetch('/coordinator/demo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ approver: sessionStorage.getItem('vrindhaUser') || 'dashboard-human' }),
+        });
+        out.textContent = `[SIMULATION] status: ${res.status}\n` +
+            `stages: ${res.stages.map(s => s.stage).join(' → ')}\n` +
+            `incident: ${res.incident_id}\n` +
+            `final: ${res.final_incident?.status} (approved by ${res.final_incident?.approved_by})\n` +
+            `response: ${res.final_incident?.response_result?.message || 'none'}`;
+        loadCoordinator();
+    } catch (e) {
+        out.textContent = `Demo failed: ${e.message} (admin role required for high-impact approval)`;
+    }
+}
+
+async function coordinatorApprove(incidentId) {
+    if (!window.confirm(`Approve the proposed defensive action for ${incidentId}?`)) return;
+    try {
+        const res = await apiFetch(`/commander/approve?incident_id=${encodeURIComponent(incidentId)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                approver: sessionStorage.getItem('vrindhaUser') || 'dashboard-human',
+                conclusion: 'confirmed_attack',
+                justification: 'Approved from the HIVE Intelligence dashboard panel',
+            }),
+        });
+        alert(`Approved: ${res.response_result?.message || res.status}`);
+        loadCoordinator();
+    } catch (e) { alert(`Approval failed: ${e.message}`); }
+}
+
+async function coordinatorReject(incidentId) {
+    const reason = window.prompt(`Reject incident ${incidentId} — reason:`) || 'Rejected from dashboard';
+    try {
+        await apiFetch(`/commander/reject?incident_id=${encodeURIComponent(incidentId)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ approver: sessionStorage.getItem('vrindhaUser') || 'dashboard-human', reason }),
+        });
+        loadCoordinator();
+    } catch (e) { alert(`Reject failed: ${e.message}`); }
+}
+
 // Init
 window.addEventListener('DOMContentLoaded', () => {
     loadStatus();
