@@ -2,8 +2,8 @@
 Automation Module - Per DAY 22-23 and START UP Automated Response System (Safe Mode)
 Responsibilities: Trigger actions based on threat level, execute safe system commands
 Actions: Block IP (iptables), Kill process, Send alert
-Rules: Do not execute destructive commands, confirm before high-risk actions
-BLUE TEAM CAN be automated
+Rules: Do not execute destructive commands, require analyst validation before high-impact containment
+BLUE TEAM can automate low-impact alerting/monitoring; containment stays human-validated
 """
 import ipaddress
 import subprocess
@@ -44,7 +44,7 @@ class AutomationActions:
                     "message": f"[SIMULATION] Would execute: sudo ufw deny from {validated_ip} (or iptables -A INPUT -s {validated_ip} -j DROP). Automated Blue Team response.",
                     "tool": "ufw",
                     "timestamp": datetime.now().isoformat(),
-                    "risk": "High threat auto-response per blueprint allowed"
+                    "risk": "High-impact containment must be human-validated before real execution"
                 }
             elif shutil.which("iptables"):
                 return {

@@ -108,6 +108,19 @@ def init_db():
                     timestamp TEXT
                 )
             """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS alert_feedback (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    alert_id TEXT,
+                    verdict TEXT,
+                    analyst TEXT,
+                    notes TEXT,
+                    risk_score REAL,
+                    source_ip TEXT,
+                    signal_summary TEXT
+                )
+            """)
 
         _run_db(create_tables)
         print(f"[DB] Initialized at {DB_PATH}")
@@ -206,7 +219,71 @@ def get_threats(limit: int = 50) -> List[Dict]:
         return []
 
 
+def add_alert_feedback(
+    alert_id: str,
+    verdict: str,
+    analyst: str,
+    notes: str = "",
+    risk_score: float | None = None,
+    source_ip: str = "",
+    signal_summary: Dict | str | None = None,
+) -> Dict:
+    """Store analyst validation for continuous improvement.
+
+    This table is intentionally separate from raw logs: only human/analyst
+    verdicts should be used as labels for model/rule evaluation.
+    """
+    try:
+        import json
+
+        normalized_verdict = (verdict or "").strip().lower()
+        allowed = {"true_positive", "false_positive", "benign", "unknown", "rejected", "approved"}
+        if normalized_verdict not in allowed:
+            return {"status": "error", "message": f"verdict must be one of {sorted(allowed)}"}
+        if not (analyst or "").strip():
+            return {"status": "error", "message": "analyst is required for validated feedback"}
+        if isinstance(signal_summary, str):
+            summary_text = signal_summary[:4000]
+        else:
+            summary_text = json.dumps(signal_summary or {}, sort_keys=True)[:4000]
+
+        def insert(conn):
+            conn.execute(
+                """
+                INSERT INTO alert_feedback (timestamp, alert_id, verdict, analyst, notes, risk_score, source_ip, signal_summary)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    datetime.now().isoformat(),
+                    (alert_id or "")[:128],
+                    normalized_verdict,
+                    analyst[:128],
+                    notes[:2000],
+                    risk_score,
+                    source_ip[:64],
+                    summary_text,
+                ),
+            )
+
+        _run_db(insert)
+        return {"status": "success", "alert_id": alert_id, "verdict": normalized_verdict, "analyst": analyst}
+    except Exception as e:
+        return ErrorHandler.handle_exception(e, "add_alert_feedback")
+
+
+def get_alert_feedback(limit: int = 50) -> List[Dict]:
+    try:
+        rows = _run_db(lambda conn: conn.execute(
+            "SELECT * FROM alert_feedback ORDER BY id DESC LIMIT ?", (limit,)
+        ).fetchall())
+        return [dict(row) for row in rows]
+    except Exception as e:
+        ErrorHandler.handle_exception(e, "get_alert_feedback")
+        return []
+
+
 def get_logs_by_risk(risk_level: str) -> List[Dict]:
+
     try:
         rows = _run_db(lambda conn: conn.execute(
             "SELECT * FROM logs WHERE risk_level=? ORDER BY id DESC", (risk_level,)

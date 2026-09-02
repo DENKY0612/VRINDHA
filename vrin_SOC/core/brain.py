@@ -2,8 +2,8 @@
 Vrindha Core Brain (Orchestrator) - MASTER BLUEPRINT
 Responsibilities: Interpret user commands, route tasks to agents, handle responses, maintain modular architecture
 System Modes: DEFENSIVE MODE (default), RED TEAM MODE (manual approval required)
-CORE RULES: NEVER execute offensive without approval, AUTOMATE defensive when threat, ALWAYS validate permissions, LOG every action, HANDLE errors gracefully
-WORKFLOW: Receive command -> Classify Red/Blue -> Red->Ask->Execute manual, Blue->Detect->Auto Respond -> Log Everything
+CORE RULES: NEVER execute offensive without approval, AUTOMATE low-impact defensive analysis/alerts, REQUIRE human validation for high-impact containment, ALWAYS validate permissions, LOG every action, HANDLE errors gracefully
+WORKFLOW: Receive command -> Classify Red/Blue -> Red->Ask->Execute manual, Blue->Detect->Risk Score->Human-validated Response -> Log Everything
 OUTPUT FORMAT: {mode, action, status, message, data}
 """
 import re
@@ -493,50 +493,72 @@ class Brain:
 
             # Threat detection
             if any(k in cmd_lower for k in ["threat", "attack", "breach", "malware"]):
-                # Analyze text for threat levels per Day 17
+                # Analyze text for threat levels per Day 17, then convert the
+                # answer into a risk score instead of a binary yes/no decision.
                 threat_result = threat_agent.analyze(command)
+                from vrin_SOC.ml.risk_scoring import risk_scoring
+                from vrin_SOC.automation.response_engine import response_engine
 
-                # Automated response if HIGH risk per Day 22-23
-                automated_action = None
+                risk_assessment = risk_scoring.score({
+                    "ip": target or "",
+                    "source_ip": target or "",
+                    "command": command,
+                    "severity": threat_result.get("threat_level"),
+                    "threat_level": threat_result.get("threat_level"),
+                    "risk_level": threat_result.get("risk_level"),
+                    "confidence": threat_result.get("confidence"),
+                    "indicators": threat_result.get("indicators", []),
+                    "failed_login_attempts": threat_result.get("failed_login_attempts", 0),
+                    "suspicious_ports": threat_result.get("suspicious_ports", []),
+                })
+
+                response_recommendation = None
                 try:
-                    from vrin_SOC.database.db import add_blocked_ip, add_threat
+                    from vrin_SOC.database.db import add_threat
                     add_threat(
                         ",".join(threat_result.get("indicators") or [threat_result.get("threat") or "analysis"]),
                         target or "",
-                        threat_result.get("risk_level", "LOW"),
+                        risk_assessment.get("risk_level", threat_result.get("risk_level", "LOW")),
                         command,
                     )
                 except Exception:
-                    add_blocked_ip = None  # type: ignore
-                    add_threat = None  # type: ignore
+                    pass
 
-                if threat_result.get("risk_level") == "HIGH" or threat_result.get("threat_level") == "HIGH":
-                    if target:
-                        automated_action = automation_actions.block_ip(target)
-                        if automated_action.get("status") != "error" and add_blocked_ip:
-                            add_blocked_ip(target, f"HIGH threat auto-response: {command[:160]}")
-                    else:
-                        automated_action = {
-                            "status": "skipped",
-                            "action": "block_ip",
-                            "message": "HIGH risk detected but no source IP was present to block",
-                        }
+                # High-risk/high-impact responses are no longer auto-blocked.
+                # They are parked at the human-validation gate.
+                if risk_assessment.get("requires_human_validation"):
+                    response_recommendation = response_engine.respond({
+                        "alert_id": f"brain-{self.last_command_id + 1}",
+                        "source_ip": target or "",
+                        "command": command,
+                        "threat": threat_result,
+                        "risk_assessment": risk_assessment,
+                    })
                     memory_system.save_memory({
-                        "event_type": "auto_response",
+                        "event_type": "human_validation_required",
                         "threat": command,
-                        "action_taken": "block_ip" if target else "alert_only",
-                        "outcome": str(automated_action),
-                        "risk_level": "HIGH"
+                        "action_taken": "awaiting_human_validation",
+                        "outcome": str(response_recommendation),
+                        "risk_level": risk_assessment.get("risk_level", "High"),
+                        "timestamp": datetime.now().isoformat(),
                     })
 
                 return {
                     "mode": "blue",
                     "action": "threat_detection",
                     "status": "success",
-                    "message": f"Threat analysis completed - Level: {threat_result.get('threat_level')} | Automated: {automated_action is not None}",
+                    "message": (
+                        f"Threat analysis completed - Risk Score: {risk_assessment.get('risk_score')}/100 "
+                        f"({risk_assessment.get('risk_level')}) | Confidence: {risk_assessment.get('confidence_score')}/100 | "
+                        f"Human validation required: {risk_assessment.get('requires_human_validation')}"
+                    ),
                     "data": {
                         "threat": threat_result,
-                        "automated_action": automated_action,
+                        "risk_assessment": risk_assessment,
+                        "response_recommendation": response_recommendation,
+                        # Legacy key retained for clients; no containment action
+                        # is executed here unless a human validates it later.
+                        "automated_action": response_recommendation,
                         "safety": safety,
                         "similar": similar,
                         "gita_guidance": gita_engine.get_ethical_guidance("defense")

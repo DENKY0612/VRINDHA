@@ -273,7 +273,7 @@ def build():
         ("1", "Detect", "SOC sees suspicious activity"),
         ("2", "Understand", "Threat Intelligence checks the indicator"),
         ("3", "Correlate", "Events from many systems are linked"),
-        ("4", "Analyze", "Risk engine scores severity"),
+        ("4", "Score", "Risk + confidence with reasons"),
         ("5", "Recommend", "SOC Analyst AI investigates"),
         ("6", "Approve", "Human authorizes high-impact action"),
         ("7", "Defend", "Commander AI coordinates response"),
@@ -295,7 +295,7 @@ def build():
         _set_run(p.add_run(), n, 14, NAVY, True)
         add_text(s, x + Inches(0.72), y + Inches(0.26), Inches(2.15), Inches(0.38), h, 18, WHITE, bold=True)
         add_text(s, x + Inches(0.2), y + Inches(0.85), Inches(2.65), Inches(0.9), b, 14, SOFT)
-    notes(s, "Security telemetry arrives. The SOC detects suspicious activity. Threat Intelligence checks whether the indicator is known. The risk engine evaluates severity. The SOC Analyst AI investigates. Commander AI coordinates the response. A human administrator approves high-impact actions. Then the system stores the incident and learns. Detect. Understand. Correlate. Analyze. Recommend. Human approval. Defend. Learn.")
+    notes(s, "Security telemetry arrives. Multiple detection layers inspect it. Threat Intelligence checks whether the indicator is known. The risk engine gives a risk and confidence score with reasons. The SOC Analyst AI investigates. A human administrator approves high-impact actions. Commander AI coordinates the controlled response. Then the system stores the analyst verdict and learns. Detect. Understand. Correlate. Score. Recommend. Human approval. Defend. Learn.")
 
     # ── 7 SOC + TI ───────────────────────────────────────────
     s = blank(prs)
@@ -427,7 +427,7 @@ def build():
     section_label(s, "11  ·  Differentiation")
     title(s, "What makes Vrindha innovative")
     add_text(s, Inches(0.5), Inches(1.45), Inches(12.2), Inches(0.45),
-             "The innovation is not “AI detects attacks.” The innovation is coordination.", 17, GOLD, italic=True)
+             "The innovation is not “AI is 100% accurate.” The innovation is reducing AI risk through coordination and validation.", 16, GOLD, italic=True)
 
     left_items = [
         ("Isolated tools", "Each product sees only its own slice of the problem."),
@@ -436,10 +436,10 @@ def build():
         ("No shared memory", "Incidents do not reliably improve the next detection."),
     ]
     right_items = [
-        ("Coordinated intelligence", "SOC, TI, risk, and response share one loop."),
-        ("Detect → Learn cycle", "Every incident can raise future detection quality."),
-        ("Specialized roles", "Each AI does one job well, then reports to the hive."),
-        ("Human remains accountable", "Recommendation is automated. Authority is not."),
+        ("Multi-layer detection", "Rules, anomaly, TI, behavior, SIEM, and AI reasoning are combined."),
+        ("Risk + confidence", "Vrindha reports a score and reasons instead of a yes/no claim."),
+        ("Validated learning", "Analyst true/false-positive feedback improves future detection."),
+        ("Human remains accountable", "Recommendation is automated. Critical authority is not."),
     ]
     add_text(s, Inches(0.55), Inches(2.05), Inches(5.8), Inches(0.35), "COMMON APPROACH", 12, MUTED, bold=True)
     add_text(s, Inches(6.95), Inches(2.05), Inches(5.8), Inches(0.35), "VRINDHA APPROACH", 12, CYAN, bold=True)
@@ -452,7 +452,7 @@ def build():
         rect(s, Inches(6.9), y, Inches(0.08), Inches(0.95), CYAN)
         add_text(s, Inches(7.15), y + Inches(0.1), Inches(5.45), Inches(0.3), h2, 14, WHITE, bold=True)
         add_text(s, Inches(7.15), y + Inches(0.42), Inches(5.45), Inches(0.42), b2, 13, SOFT)
-    notes(s, "What makes Vrindha different is the coordination of specialized AI capabilities. A suspicious IP detected by the SOC can be sent to Threat Intelligence. Threat Intelligence can determine whether that IP is associated with a known threat. The risk engine can then raise or lower the score. The SOC Analyst AI investigates related events. Commander AI coordinates. The system stores the incident and uses the lesson to improve future detection.")
+    notes(s, "What makes Vrindha different is not a claim that AI will be perfectly accurate. Vrindha reduces the impact of AI errors through multi-layer detection, threat-intelligence correlation, explainable risk and confidence scoring, analyst validation before critical response, and feedback learning from true-positive and false-positive decisions.")
 
     # ── 13 FUTURE ────────────────────────────────────────────
     s = blank(prs)

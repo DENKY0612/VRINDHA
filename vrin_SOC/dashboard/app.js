@@ -127,15 +127,16 @@ async function loadMLData() {
     const el = document.getElementById('mlData');
     el.textContent = "Loading ML intelligence (Anomaly, Risk, Prediction, Data Pipeline)...";
     try {
-        const [anomaly, risk, predict, pipeline] = await Promise.all([
+        const [anomaly, risk, feedback, predict, pipeline] = await Promise.all([
             apiFetch('/ml/anomaly', { method: 'POST', body: JSON.stringify({ command: 'scan network 127.0.0.1 multiple failed logins' }) }),
-            apiFetch('/ml/risk', { method: 'POST', body: JSON.stringify({ ip: '192.168.1.50', events: ['5 failed logins', 'unusual port 4444'] }) }),
+            apiFetch('/ml/risk', { method: 'POST', body: JSON.stringify({ ip: '192.168.1.50', events: ['5 failed logins', 'unusual port 4444'], correlated_alerts: [{type:'auth'}, {type:'network'}] }) }),
+            apiFetch('/ml/risk/feedback?limit=5'),
             apiFetch('/ml/predict'),
             apiFetch('/ml/pipeline')
         ]);
-        el.textContent = `ANOMALY: ${JSON.stringify(anomaly, null, 2)}\n\nRISK: ${JSON.stringify(risk, null, 2)}\n\nPREDICTION: ${JSON.stringify(predict, null, 2)}\n\nPIPELINE: ${JSON.stringify(pipeline, null, 2)}`;
+        el.textContent = `ANOMALY: ${JSON.stringify(anomaly, null, 2)}\n\nRISK + CONFIDENCE (not yes/no): ${JSON.stringify(risk, null, 2)}\n\nHUMAN FEEDBACK LOOP: ${JSON.stringify(feedback, null, 2)}\n\nPREDICTION: ${JSON.stringify(predict, null, 2)}\n\nPIPELINE: ${JSON.stringify(pipeline, null, 2)}`;
     } catch (e) {
-        el.textContent = `[SIMULATION] ML Intelligence:\n- Anomaly Detection: IsolationForest + KMeans (Scikit-learn)\n- Risk Scoring: {ip: 192.168.1.10, risk_score: 85, reason: multiple failed + unusual port}\n- Prediction: Attack likely in next 24h based on logs\n- Data Pipeline: Pandas CSV/SQLite cleaning\nError: ${e.message}`;
+        el.textContent = `[SIMULATION] ML Intelligence:\n- Multi-layer detection: rules + anomaly + TI + behavior + SIEM + AI reasoning\n- Risk Scoring: {ip: 192.168.1.10, risk_score: 85, confidence_score: 82, requires_human_validation: true}\n- Human feedback: true_positive / false_positive labels improve rules/models\n- Prediction: Attack likely in next 24h based on validated logs\n- Data Pipeline: Pandas CSV/SQLite cleaning\nError: ${e.message}`;
     }
 }
 
@@ -156,7 +157,8 @@ function loadAlertsFromResult(data) {
     const alertsBox = document.getElementById('alertsBox');
     const threat = data.data?.threat;
     if (threat) {
-        alertsBox.textContent = `🚨 Threat Level: ${threat.threat_level || threat.risk_level}\nIndicators: ${threat.indicators || threat.threat}\nConfidence: ${threat.confidence}\n\nDharma: ${data.data?.gita_guidance?.message || ''}\n\nAutomated Action: ${JSON.stringify(data.data?.automated_action || 'Monitoring', null, 2)}`;
+        const risk = data.data?.risk_assessment || {};
+        alertsBox.textContent = `🚨 Threat Level: ${threat.threat_level || threat.risk_level}\nRisk Score: ${risk.risk_score ?? 'n/a'}/100 | Confidence: ${risk.confidence_score ?? threat.confidence}\nIndicators: ${threat.indicators || threat.threat}\nHuman Validation Required: ${risk.requires_human_validation ?? false}\n\nDharma: ${data.data?.gita_guidance?.message || ''}\n\nResponse Gate: ${JSON.stringify(data.data?.response_recommendation || data.data?.automated_action || 'Monitoring', null, 2)}`;
     }
 }
 

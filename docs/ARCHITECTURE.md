@@ -110,6 +110,7 @@ rows live in SQLite via `vrin_SOC/database/db.py`).
 | Model metadata | in-process versioned registry (see `docs/MODEL_CARD.md`) |
 | Knowledge | SQLite `knowledge_lessons` + `incident_outcomes` (validated lessons only) |
 | Ethics audit | SQLite `ethics_audit_log` (every decision) |
+| Core SOC feedback | SQLite `alert_feedback` (analyst true-positive / false-positive / benign / unknown verdicts for continuous improvement) |
 
 ## 6. Real vs simulated
 
