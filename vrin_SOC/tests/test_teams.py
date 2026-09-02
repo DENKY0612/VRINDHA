@@ -9,9 +9,11 @@ from fastapi.testclient import TestClient
 from vrin_SOC.api import main as api_main
 from vrin_SOC.api.auth import AuthModule
 from vrin_SOC.automation.firewall import FirewallModule
+from vrin_SOC.automation.response_engine import response_engine
 from vrin_SOC.core.brain import Brain
 from vrin_SOC.core.local_sensors import tcp_connect_scan
 from vrin_SOC.database.db import get_blocked_ips, get_threats
+from vrin_SOC.ml.risk_scoring import risk_scoring
 from vrin_SOC.tools.nmap_tool import run_nmap
 from vrin_SOC.tools.whois_tool import run_whois
 
@@ -73,6 +75,52 @@ class BrainTeamTests(unittest.TestCase):
         self.assertEqual(result["action"], "threat_detection")
         self.assertNotEqual(result.get("action"), "goal_planned")
         self.assertGreaterEqual(len(get_threats(200)), before)
+        risk = result["data"]["risk_assessment"]
+        self.assertIn("risk_score", risk)
+        self.assertTrue(risk["requires_human_validation"])
+        self.assertEqual(result["data"]["response_recommendation"]["status"], "awaiting_human_validation")
+
+    def test_multi_layer_risk_is_explainable_not_binary(self):
+        risk = risk_scoring.score({
+            "source_ip": "10.0.0.22",
+            "severity": "high",
+            "failed_login_attempts": 6,
+            "threat_intelligence": {
+                "malicious": True,
+                "confidence": 0.9,
+                "sources": ["misp", "cisa-kev"],
+            },
+            "correlated_alerts": [{"type": "auth"}, {"type": "c2"}],
+            "behavior": {"abnormal_access_time": True},
+            "command": "suspicious login behavior malware source IP associated with known malicious activity",
+        })
+        self.assertGreaterEqual(risk["risk_score"], 70)
+        self.assertEqual(risk["decision_style"], "risk_score_not_binary")
+        self.assertGreaterEqual(risk["signal_summary"]["corroborating_layers"], 3)
+        self.assertTrue(risk["explanation"])
+        self.assertTrue(risk["requires_human_validation"])
+
+    def test_response_engine_requires_validation_before_containment(self):
+        initial = response_engine.respond({
+            "source_ip": "10.0.0.23",
+            "risk_assessment": {
+                "risk_score": 91,
+                "risk_level": "High",
+                "confidence_score": 88,
+                "signal_summary": {"corroborating_layers": 4},
+            },
+            "command": "malware from known bad ip",
+        })
+        self.assertEqual(initial["status"], "awaiting_human_validation")
+        self.assertTrue(initial["human_validation_required"])
+        approved = response_engine.validate_and_respond(
+            {"source_ip": "10.0.0.23", "risk_assessment": initial["risk_assessment"]},
+            analyst="unit-test-analyst",
+            decision="approve",
+            verdict="true_positive",
+        )
+        self.assertEqual(approved["status"], "success")
+        self.assertTrue(approved["approved"])
 
     def test_blue_block_requires_ip(self):
         result = Brain().process("block ip", session_id="blue-block")

@@ -2,13 +2,13 @@
 
 Vrindha is an ethical, defensive-first cybersecurity assistant with a CLI, FastAPI backend, browser dashboard, security-tool wrappers, SIEM-style logging, and lightweight ML analysis. Its policy layer uses intent analysis, authorization checks, and Bhagavad Gita-inspired guidance to keep active security operations controlled.
 
-> **Core policy:** Red Team operations always require a separate confirmation. Blue Team responses may be automated for high-risk events. Use Vrindha only on systems you own or are explicitly authorized to test.
+> **Core policy:** Red Team operations always require a separate confirmation. Blue Team analysis, alerting, and monitoring may be automated, but high-impact containment (block, isolate, kill, disable) requires human analyst validation. Use Vrindha only on systems you own or are explicitly authorized to test.
 
 ## Features
 
 - **Central orchestrator:** classifies commands and routes them to security agents.
 - **Red Team controls:** private/loopback targets by default, per-user confirmation, five-minute confirmation expiry, and no API auto-confirm bypass.
-- **Blue Team workflows:** threat analysis, alerts, firewall simulation, IDS monitoring, endpoint checks, and response orchestration.
+- **Blue Team workflows:** multi-layer threat analysis, explainable risk/confidence scoring, alerts, firewall simulation, IDS monitoring, endpoint checks, response recommendations, and human-validated containment.
 - **Tool wrappers:** nmap, whois, nikto, gobuster, dirb, amass, sublist3r, tcpdump, hashcat assistant, and related tools.
 - **Authentication:** bcrypt-only password hashes, secure first-user/bootstrap, and signed, expiring JWT access tokens via a Swagger-visible `BearerAuth` scheme.
 - **Dashboard:** command center, logs, status, Gita guidance, tool checks, and Chart.js visualizations.
@@ -41,16 +41,19 @@ flowchart TD
     Y -->|Yes| T[Safe Tool Executor]
     T --> W[Tool wrapper or simulation]
 
-    C -->|Blue Team| H[Threat Agent]
-    H --> K{Risk level}
+    C -->|Blue Team| H[Multi-layer detection]
+    H --> K{Risk + confidence score}
     K -->|Low| L[Log and monitor]
-    K -->|Medium| N[Alert and monitor]
-    K -->|High| O[Defensive response or simulation]
+    K -->|Medium| N[Alert and correlate]
+    K -->|High/Critical| V[Human validation gate]
+    V -->|Approve| O[Controlled containment or simulation]
+    V -->|Reject| F[Feedback: false positive / benign]
 
     W --> G[SIEM and SQLite logging]
     L --> G
     N --> G
     O --> G
+    F --> G
     G --> M[Memory and similar-case retrieval]
     M --> PL[Planning and knowledge layer]
     G --> ML[ML anomaly, risk, and prediction]
@@ -62,8 +65,9 @@ flowchart TD
 1. A command enters through the local CLI or authenticated API.
 2. The Brain applies Zero Trust, intent, Dharma, safety, and target-authorization checks.
 3. Red Team commands are restricted to authorized targets and saved as a pending operation. They execute only after a separate confirmation from the same user within five minutes.
-4. Blue Team commands are analyzed by risk level. High-risk events can trigger safe defensive responses; operations that do not change the host are explicitly labeled as simulations.
-5. Results flow into file/SQLite logging, memory, planning, ML analysis, and dashboard views.
+4. Blue Team commands are analyzed by risk and confidence score. Low-impact alerts/monitoring can run immediately; high-risk containment is parked for analyst validation before controlled response.
+5. Analyst decisions (true positive, false positive, benign, unknown) are stored as feedback so rules/models can improve without treating unvalidated AI output as ground truth.
+6. Results flow into file/SQLite logging, memory, planning, ML analysis, and dashboard views.
 
 ## Detailed component map
 
@@ -93,7 +97,7 @@ Vrindha AI SOC System
 │
 ├── 🔵 Blue Team Module — agents/ + automation/
 │   ├── Threat Agent — LOW, MEDIUM, and HIGH threat classification
-│   ├── Response Engine — high-risk defensive response orchestration
+│   ├── Response Engine — risk-based recommendations plus human-validation gate
 │   ├── Actions — validated IP block simulation, process safety, and alerts
 │   ├── Firewall Module — failed-login threshold and firewall response checks
 │   ├── IDS Monitor — Snort/Suricata monitoring and alerts

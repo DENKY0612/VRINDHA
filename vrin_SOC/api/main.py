@@ -97,6 +97,23 @@ class TeamConfirmRequest(BaseModel):
     decision: Literal["yes", "no"] = "yes"
 
 
+class IncidentValidationRequest(BaseModel):
+    threat_data: Dict[str, Any] = Field(default_factory=dict)
+    decision: Literal["approve", "reject"] = "approve"
+    verdict: Literal["true_positive", "false_positive", "benign", "unknown"] = "true_positive"
+    analyst: str = Field("", max_length=128)
+    notes: str = Field("", max_length=2000)
+
+
+class RiskFeedbackRequest(BaseModel):
+    alert_id: str = Field(min_length=1, max_length=128)
+    verdict: Literal["true_positive", "false_positive", "benign", "unknown"] = "unknown"
+    notes: str = Field("", max_length=2000)
+    risk_score: Optional[float] = Field(default=None, ge=0, le=100)
+    source_ip: str = Field("", max_length=64)
+    signal_summary: Dict[str, Any] = Field(default_factory=dict)
+
+
 RED_TEAM_ACTIONS = {
     "nmap": "scan network {target}",
     "recon": "scan network {target}",
@@ -378,6 +395,28 @@ async def incident_respond(payload: Dict[str, Any], user=Depends(get_current_adm
         raise internal_error("incident respond", exc)
 
 
+@app.post("/incident/respond/validate")
+async def incident_respond_validate(req: IncidentValidationRequest, user=Depends(get_current_admin)):
+    """Human validation gate for high-impact Blue Team response.
+
+    The initial ``/incident/respond`` call prepares and explains a proposed
+    action. This endpoint records the analyst verdict and only then executes
+    approved containment.
+    """
+    try:
+        from vrin_SOC.automation.response_engine import response_engine
+        analyst = req.analyst.strip() or str(user["sub"])
+        return response_engine.validate_and_respond(
+            req.threat_data,
+            analyst=analyst,
+            decision=req.decision,
+            verdict=req.verdict,
+            notes=req.notes,
+        )
+    except Exception as exc:
+        raise internal_error("incident respond validate", exc)
+
+
 @app.get("/autonomy/status")
 async def autonomy_status(user=Depends(get_current_user)):
     try:
@@ -463,6 +502,28 @@ async def check_anomaly(payload: Dict[str, Any], user=Depends(get_current_user))
 @app.post("/ml/risk")
 async def check_risk(payload: Dict[str, Any], user=Depends(get_current_user)):
     return risk_scoring.score(payload)
+
+
+@app.post("/ml/risk/feedback")
+async def record_risk_feedback(req: RiskFeedbackRequest, user=Depends(get_current_user)):
+    """Store analyst validation feedback for continuous improvement."""
+    from vrin_SOC.database.db import add_alert_feedback
+    analyst = str(user["sub"])
+    return add_alert_feedback(
+        alert_id=req.alert_id,
+        verdict=req.verdict,
+        analyst=analyst,
+        notes=req.notes,
+        risk_score=req.risk_score,
+        source_ip=req.source_ip,
+        signal_summary=req.signal_summary,
+    )
+
+
+@app.get("/ml/risk/feedback")
+async def list_risk_feedback(limit: int = Query(50, ge=1, le=500), user=Depends(get_current_user)):
+    from vrin_SOC.database.db import get_alert_feedback
+    return {"status": "success", "feedback": get_alert_feedback(limit)}
 
 
 @app.get("/ml/predict")

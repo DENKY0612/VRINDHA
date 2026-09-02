@@ -70,6 +70,7 @@ curl -X POST localhost:8000/coordinator/demo \
 ```
 
 Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+[`docs/RISK_VALIDATION.md`](docs/RISK_VALIDATION.md),
 [`docs/AGENT_PROTOCOL.md`](docs/AGENT_PROTOCOL.md),
 [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/API.md`](docs/API.md),

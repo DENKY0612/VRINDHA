@@ -12,8 +12,8 @@ confirmation gate).
   `POST /register`. Missing/invalid token ⇒ `401`; expired/disabled account
   ⇒ token rejected even if syntactically valid.
 - **High-impact operations are admin-only** (non-admin ⇒ `403`):
-  - `POST /commander/approve`, `POST /commander/reject` — the human approval
-    gate.
+  - `POST /commander/approve`, `POST /commander/reject` — the coordination-layer human approval gate.
+  - `POST /incident/respond`, `POST /incident/respond/validate` — the core SOC response recommendation and analyst-validation gate.
   - `POST /coordinator/demo` — triggers the (fully simulated) demonstration.
   - `POST /knowledge/record` — validated knowledge is guarded.
   - `POST /infrastructure/telemetry/emit` — bus publication.
@@ -37,6 +37,12 @@ automatically**:
    result is stored on the incident, and the incident trace records the
    approval.
 5. Rejection closes the incident without any action.
+
+The core SOC response engine follows the same pattern: `POST /incident/respond`
+returns `awaiting_human_validation` for high-impact containment, and
+`POST /incident/respond/validate` records the analyst verdict before executing
+(or rejecting) the response. Analyst labels are stored in `alert_feedback` for
+continuous improvement; unvalidated AI output is not treated as ground truth.
 
 In this deployment the execution layer (`automation/actions.py::block_ip`)
 runs in **simulation** for all backend modes (ufw/iptables/none): inputs are

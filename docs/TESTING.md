@@ -11,8 +11,7 @@ isolated user store / in-memory bus so they never touch production data.**
 vrin_SOC/.venv/bin/python -m pytest vrin_SOC/tests -q
 ```
 
-Current state: **149 passed** (92 coordination tests + 57 pre-existing
-SOC/TI/Gita/Hive/security/registration/teams tests, all still green).
+Current state: **212 passed** in this sandbox with the full `python -m pytest -q` suite.
 
 ## Test map
 

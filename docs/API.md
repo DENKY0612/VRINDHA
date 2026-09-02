@@ -76,6 +76,16 @@ required"}`.
 | `GET /coordinator/dashboard` | user | Aggregated HIVE Intelligence panel: 7 agent healths, bus stats, totals (events, active incidents, anomalies, critical risks, average risk), incidents, risk timeline, anomaly timeline, top risk factors, data quality, models |
 | `POST /coordinator/demo` ⭐ | admin | Runs the fully-labeled **SIMULATION** end-to-end scenario (brute force → C2 → ethics → human approval → simulated block → knowledge → DS feedback). Body: `{approver}`. The response repeats `SIMULATION: true` and the simulation note |
 
+## Core SOC risk validation endpoints
+
+| Method & path | Auth | Purpose |
+|---|---|---|
+| `POST /ml/risk` | user | Multi-layer 0–100 risk/confidence assessment with explanations; no action execution |
+| `POST /ml/risk/feedback` | user | Store analyst verdict (`true_positive`, `false_positive`, `benign`, `unknown`) for continuous improvement |
+| `GET /ml/risk/feedback?limit=50` | user | List recent validation feedback records |
+| `POST /incident/respond` ⭐ | admin | Prepare response recommendation. High-impact containment returns `awaiting_human_validation` instead of executing |
+| `POST /incident/respond/validate` ⭐ | admin | Analyst approval/rejection gate. Only `approve` executes the controlled response; `reject` records feedback and takes no containment action |
+
 ## Error conventions
 
 - `401` — missing/invalid bearer token (all endpoints).
