@@ -48,6 +48,7 @@ from vrin_SOC.ml.visualization import visualization_engine
 from vrin_SOC.core.intelligence_bus import intelligence_gateway
 from vrin_SOC.hive.coordinator import hive as hive_coordinator
 from vrin_SOC.api.coordination_routes import router as coordination_router
+from vrin_SOC.api.blockchain_routes import router as blockchain_router
 from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
 from Vrin_TI.normalization import InvalidIndicator
 
@@ -776,6 +777,9 @@ async def hive_reap(user=Depends(get_current_admin)):
 # Coordination layer (HIVE multi-agent: Commander, Infrastructure, Threat
 # Intelligence, SOC Analyst, Data Science, Knowledge, Ethics & Dharma).
 app.include_router(coordination_router)
+
+# Local, dependency-free blockchain ledger (integrity anchor, localhost-only).
+app.include_router(blockchain_router)
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"
 if dashboard_path.exists():
