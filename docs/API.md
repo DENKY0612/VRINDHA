@@ -40,8 +40,36 @@ required"}`.
 | `POST /commander/events` | user | Ingest an event into the full pipeline (human-approval gate applies) |
 | `GET /commander/incidents?limit=50` | user | Recent incidents (newest first) |
 | `GET /commander/incidents/{incident_id}` | user | Full incident: status, trace, proposed action, ethics, response |
-| `POST /commander/approve?incident_id=...` ⭐ | admin | **Human approval** of the proposed high-impact action; body: `{approver, conclusion, justification}`. Runs the authorized (simulated) response, stores the validated knowledge lesson, feeds DS labels, closes the incident |
-| `POST /commander/reject?incident_id=...` ⭐ | admin | Reject the proposal; body: `{approver, reason}`. No action is taken |
+| `POST /commander/approve?incident_id=...` ⭐ | admin | **Human approval** of the proposed action; body: `{approver, conclusion, justification, action_override?}`. Runs the controlled (simulated) response through the response engine (allowlist check, rollback record, expiry, no chaining), stores the validated knowledge lesson, feeds DS labels, closes the incident. `action_override` lets the human escalate to another catalog action (e.g. `block_ip`) — a justification is then required |
+| `POST /commander/reject?incident_id=...` ⭐ | admin | Reject the proposal; body: `{approver, reason}`. No action is taken; a `contained` incident's temporary containment is rolled back |
+| `POST /commander/incidents/{incident_id}/rollback` | admin | Roll back every reversible action recorded on the incident; body: `{operator, reason}` |
+
+Pipeline responses now carry `response_decision`, `action_preview` (the
+`ACTION PREVIEW` block) and `vrindha_response` (the `[VRINDHA RESPONSE]`
+block). A new status `contained_pending_review` is returned when an explicitly
+configured emergency policy applied temporary containment.
+
+## Controlled Autonomous Response (safety contract)
+
+See [`CONTROLLED_AUTONOMY.md`](CONTROLLED_AUTONOMY.md) for the full contract
+(three-level autonomy, critical assets, allowlist, reversibility, emergency
+policies, rollback, time limits, safe mode, audit).
+
+| Method & path | Auth | Purpose |
+|---|---|---|
+| `GET /response/prompt` | user | The verbatim 15-section safety contract |
+| `GET /response/policy` | user | Allowlist, thresholds, action catalog with autonomy levels, emergency policies, safe-mode state |
+| `PUT /response/policy/allowlist` | admin | Human-configured trusted-asset allowlist; body: `{operator, trusted_ips?, trusted_domains?, critical_servers?, security_tools?, administrative_accounts?, essential_processes?, internal_networks?}` |
+| `POST /response/policy/emergency` | admin | Register an explicit emergency policy `{operator, policy}`; invalid policies are **rejected** with reasons (LEVEL 3 / irreversible / unbounded policies are never accepted) |
+| `GET /response/safe-mode` · `POST /response/safe-mode` | user · admin | Read / enter / exit SAFE MODE `{operator, enabled, reason}` |
+| `POST /response/decide` | user | Classify a proposed response **without executing**; body: `{event, action, target}` → decision, `action_preview`, `vrindha_response` |
+| `GET /response/audit?limit=50` | user | Response audit — decision columns immutable; execution / rollback / human review appended |
+| `GET /response/{decision_id}` | user | One decision with its execution result, rollback info, reviews, preview and response block |
+| `GET /response/rollbacks?limit=50&active_only=false` | user | Rollback records (active temporary actions with `active_only=true`) |
+| `POST /response/rollbacks/{action_id}/rollback` | admin | Roll back one action `{operator, reason}` |
+| `POST /response/rollbacks/{action_id}/extend` | admin | Extend a temporary action after re-evaluation `{operator, minutes, justification}` |
+| `POST /response/expire` | admin | Roll back all temporary actions whose time limit has passed |
+| `POST /response/{decision_id}/review` · `GET /response/reviews` | user | §14 post-response review (validated reviews only feed learning) |
 
 ## Ethics & Compliance (Dharma + verified Gita)
 

@@ -1,0 +1,41 @@
+{
+  "_comment": "Vrindha controlled-autonomy policy. Human-configured; the engine never edits or invents policies. Override path with VRINDHA_AUTONOMY_POLICY.",
+  "allowlist": {
+    "trusted_ips": ["127.0.0.1", "::1"],
+    "trusted_domains": ["vrindha.local"],
+    "critical_servers": ["dc01", "auth-server", "siem-01", "backup-01"],
+    "security_tools": ["suricata", "zeek", "snort", "wazuh", "ossec", "falco", "osquery", "auditd", "vrindha"],
+    "administrative_accounts": ["root", "administrator", "admin", "sysadmin"],
+    "essential_processes": ["systemd", "init", "kthreadd", "sshd", "cron", "crond", "dbus-daemon", "systemd-journald", "systemd-logind", "auditd", "lsass.exe", "csrss.exe", "wininit.exe", "winlogon.exe", "services.exe", "smss.exe"],
+    "internal_networks": []
+  },
+  "thresholds": {
+    "medium": 40,
+    "high": 70,
+    "critical": 85,
+    "min_confidence_automatic": 70,
+    "critical_confidence_bonus": 15,
+    "min_independent_sources_irreversible": 2
+  },
+  "auto_level1": true,
+  "protect_private_ranges": true,
+  "default_duration_minutes": 15,
+  "chain_cooldown_minutes": 10,
+  "emergency_policies": [
+    {
+      "name": "confirmed-c2-temporary-restriction",
+      "enabled": false,
+      "_comment": "Disabled by default. Enable only after review. Scope: temporary (max 15 min) IP restriction of an external, TI-confirmed attacking source with >= 3 independent indicators.",
+      "triggers": {
+        "min_risk": 90,
+        "min_confidence": 90,
+        "min_independent_sources": 3,
+        "require_ti_confirmed": true,
+        "event_types": ["security_event", "network_event"]
+      },
+      "allowed_actions": ["temporary_ip_restriction", "rate_limit"],
+      "scope": {"target_kinds": ["ip"], "exclude_critical": true},
+      "max_duration_minutes": 15
+    }
+  ]
+}

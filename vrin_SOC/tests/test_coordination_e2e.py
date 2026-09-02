@@ -41,7 +41,17 @@ class EndToEndDemoTests(unittest.TestCase):
         pipeline_results = [s["result"] for s in result["stages"] if s["stage"] == "pipeline"]
         self.assertTrue(any(r.get("status") == "awaiting_approval" for r in pipeline_results))
         awaiting = next(r for r in pipeline_results if r.get("status") == "awaiting_approval")
-        self.assertIn("block_ip", str(awaiting["proposed_action"]["action"]))
+        # Controlled autonomy: the SOC recommended block_ip, the response
+        # engine proposes the reversible, time-limited alternative and keeps
+        # the original recommendation visible (reversibility first).
+        proposed = awaiting["proposed_action"]
+        self.assertEqual(proposed["original_action"], "block_ip")
+        self.assertEqual(proposed["action"], "temporary_ip_restriction")
+        self.assertIn(proposed["autonomy_level"], {"LEVEL 2", "LEVEL 3"})
+        self.assertEqual(proposed["execution"], "HUMAN APPROVAL")
+        self.assertTrue(proposed["rollback_available"])
+        self.assertIn("[VRINDHA RESPONSE]", awaiting["vrindha_response"])
+        self.assertIn("ACTION PREVIEW", awaiting["action_preview"])
         self.assertIsNotNone(awaiting.get("ethics"))
 
         # Human approval recorded with an approver identity (accountability).
@@ -49,10 +59,16 @@ class EndToEndDemoTests(unittest.TestCase):
         self.assertEqual(approval["status"], "success")
         self.assertEqual(approval["approved_by"], "e2e-test-human")
 
-        # Authorized defensive response executed (sandbox: simulated firewall).
+        # Authorized defensive response executed (sandbox: simulated firewall)
+        # through the controlled-response engine, with a rollback record and
+        # an expiry (time-limited temporary action).
         response = approval["response_result"]
-        self.assertEqual(response["action"], "block_ip")
+        self.assertEqual(response["action"], "temporary_ip_restriction")
+        self.assertEqual(response["original_action"], "block_ip")
         self.assertIn(response["status"], {"success", "simulated"})
+        self.assertIsNotNone(response["rollback_id"])
+        self.assertIsNotNone(response["expires_at"])
+        self.assertEqual(approval["rollback_ids"], [response["rollback_id"]])
 
         # Final incident closed with the knowledge link.
         final = result["final_incident"]
@@ -63,8 +79,8 @@ class EndToEndDemoTests(unittest.TestCase):
         # Incident trace is fully reconstructable (auditability, spec §23).
         stage_names = [t["stage"] for t in final["trace"]]
         for expected in ("ingest", "threat_intelligence", "data_science",
-                         "soc_investigation", "ethics", "human_approval",
-                         "authorized_response"):
+                         "soc_investigation", "ethics", "controlled_response",
+                         "human_approval", "authorized_response"):
             self.assertIn(expected, stage_names)
 
     def test_feedback_loop_reaches_data_science_evaluation(self):

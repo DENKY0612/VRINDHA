@@ -312,6 +312,126 @@ class ModelMetadata(BaseModel):
     status: str = "candidate"  # candidate | production | retired
 
 
+class AutonomyLevel(str, Enum):
+    """Controlled-autonomy level of a proposed response (safety contract §2).
+
+    * LEVEL_1 — low risk, read-only / observational; automatic when policy allows.
+    * LEVEL_2 — medium risk, reversible + time-limited; human approval required.
+    * LEVEL_3 — high risk / irreversible / critical target; multi-source
+      verification + policy validation + human approval (or an explicitly
+      configured emergency policy) + controlled execution + rollback.
+    """
+
+    LEVEL_1 = "LEVEL 1"
+    LEVEL_2 = "LEVEL 2"
+    LEVEL_3 = "LEVEL 3"
+
+
+class RiskTier(str, Enum):
+    """Risk tier of the *situation* (drives how much verification is needed).
+
+    LOW      → auto-monitor
+    MEDIUM   → recommend → human approval
+    HIGH     → verify → policy → controlled containment → audit → rollback
+    CRITICAL → multi-source verification → human approval / explicitly
+               configured emergency policy
+    """
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class ExecutionMode(str, Enum):
+    AUTOMATIC = "AUTOMATIC"
+    HUMAN_APPROVAL = "HUMAN APPROVAL"
+    BLOCKED = "BLOCKED"
+
+
+class AssetCriticality(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class ResponseDecision(BaseModel):
+    """The controlled-autonomy decision for ONE proposed response.
+
+    Mirrors the ``[VRINDHA RESPONSE]`` block of the safety contract (§15) and
+    carries everything the ``ACTION PREVIEW`` (§8) needs. It is produced by
+    :class:`~vrin_SOC.coordination.controlled_response.ControlledResponseEngine`
+    and stored on the incident, so an analyst can always see *why* Vrindha
+    intends to act (or refuses to).
+    """
+
+    decision_id: str = Field(default_factory=lambda: f"dec-{uuid4().hex[:12]}")
+    incident_id: Optional[str] = None
+    event_id: Optional[str] = None
+    correlation_id: Optional[str] = None
+    target: str = ""
+    target_kind: str = "unknown"  # ip | host | user | process | domain | system | unknown
+    threat: str = ""
+    evidence: List[str] = Field(default_factory=list)
+    threat_intelligence: ThreatIntelStatus = ThreatIntelStatus.UNKNOWN
+    risk: int = Field(ge=0, le=100)
+    confidence: int = Field(ge=0, le=100)
+    risk_tier: RiskTier = RiskTier.LOW
+    asset_criticality: AssetCriticality = AssetCriticality.LOW
+    asset_reasons: List[str] = Field(default_factory=list)
+    independent_sources: int = 0
+    original_action: str = ""
+    recommended_action: str = ""
+    expected_impact: str = "none"  # none | low | medium | high
+    autonomy_level: AutonomyLevel = AutonomyLevel.LEVEL_1
+    execution: ExecutionMode = ExecutionMode.HUMAN_APPROVAL
+    rollback_available: bool = False
+    reversible: bool = False
+    state_change: bool = False
+    duration_minutes: Optional[int] = None
+    human_approval_required: bool = True
+    allowlist_conflict: bool = False
+    high_priority_alert: bool = False
+    emergency_policy: Optional[str] = None
+    safe_mode: bool = False
+    degraded_inputs: List[str] = Field(default_factory=list)
+    policy: str = ""
+    verification: List[str] = Field(default_factory=list)
+    reason: str = ""
+    downgraded_from: Optional[str] = None
+    created_at: str = Field(default_factory=utc_now_iso)
+
+
+class RollbackRecord(BaseModel):
+    """Rollback record for a state-changing action (safety contract §9)."""
+
+    action_id: str = Field(default_factory=lambda: f"act-{uuid4().hex[:12]}")
+    decision_id: str = ""
+    incident_id: Optional[str] = None
+    event_id: Optional[str] = None
+    action: str = ""
+    target: str = ""
+    autonomy_level: AutonomyLevel = AutonomyLevel.LEVEL_1
+    execution: ExecutionMode = ExecutionMode.HUMAN_APPROVAL
+    previous_state: Dict[str, Any] = Field(default_factory=dict)
+    new_state: Dict[str, Any] = Field(default_factory=dict)
+    timestamp: str = Field(default_factory=utc_now_iso)
+    expires_at: Optional[str] = None
+    reason: str = ""
+    evidence: List[str] = Field(default_factory=list)
+    policy_used: str = ""
+    ai_recommendation: Dict[str, Any] = Field(default_factory=dict)
+    execution_result: Dict[str, Any] = Field(default_factory=dict)
+    rollback_procedure: str = ""
+    rollback_available: bool = False
+    executed_by: str = "vrindha-automatic"
+    status: str = "executed"  # executed | expired | rolled_back | failed | extended
+    rolled_back_at: Optional[str] = None
+    rolled_back_by: Optional[str] = None
+    rollback_result: Optional[Dict[str, Any]] = None
+
+
 class IncidentStatus(str, Enum):
     OPEN = "open"
     INVESTIGATING = "investigating"
@@ -319,6 +439,7 @@ class IncidentStatus(str, Enum):
     AWAITING_APPROVAL = "awaiting_approval"
     APPROVED = "approved"
     REJECTED = "rejected"
+    CONTAINED = "contained"  # temporary emergency containment, human review pending
     RESPONDED = "responded"
     CLOSED = "closed"
 
@@ -337,6 +458,10 @@ class Incident(BaseModel):
     approved_at: Optional[str] = None
     response_result: Optional[Dict[str, Any]] = None
     knowledge_id: Optional[str] = None
+    response_decision: Optional[Dict[str, Any]] = None
+    action_preview: Optional[str] = None
+    rollback_ids: List[str] = Field(default_factory=list)
+    safe_mode: bool = False
     created_at: str = Field(default_factory=utc_now_iso)
     updated_at: str = Field(default_factory=utc_now_iso)
     trace: List[Dict[str, Any]] = Field(default_factory=list)
@@ -363,6 +488,12 @@ __all__ = [
     "ClassifiedFinding",
     "SecurityAnalysis",
     "ModelMetadata",
+    "AutonomyLevel",
+    "RiskTier",
+    "ExecutionMode",
+    "AssetCriticality",
+    "ResponseDecision",
+    "RollbackRecord",
     "IncidentStatus",
     "Incident",
     "new_event_id",

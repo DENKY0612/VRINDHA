@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 
 from .deps import get_current_admin, get_current_user
 from vrin_SOC.coordination.commander import commander_ai
+from vrin_SOC.coordination.controlled_response import controlled_response_engine
 from vrin_SOC.coordination.data_science_ai import data_science_ai
 from vrin_SOC.coordination.demo import run_demonstration
 from vrin_SOC.coordination.evidence_analysis import vrindha_ai
@@ -85,6 +86,54 @@ class ApprovalRequest(BaseModel):
     approver: str = Field(min_length=1, max_length=128)
     conclusion: str = Field("confirmed_attack", pattern=r"^(confirmed_attack|false_positive|unknown)$")
     justification: str = Field("", max_length=2000)
+    action_override: Optional[str] = Field(None, max_length=64,
+                                           description="Human escalation to another catalog action (justification required)")
+
+
+class RollbackRequest(BaseModel):
+    operator: str = Field(min_length=1, max_length=128)
+    reason: str = Field("", max_length=2000)
+
+
+class ExtendRequest(BaseModel):
+    operator: str = Field(min_length=1, max_length=128)
+    minutes: int = Field(15, ge=1, le=240)
+    justification: str = Field("", max_length=2000)
+
+
+class SafeModeRequest(BaseModel):
+    operator: str = Field(min_length=1, max_length=128)
+    enabled: bool = True
+    reason: str = Field("", max_length=500)
+
+
+class AllowlistUpdateRequest(BaseModel):
+    operator: str = Field(min_length=1, max_length=128)
+    trusted_ips: Optional[List[str]] = None
+    trusted_domains: Optional[List[str]] = None
+    critical_servers: Optional[List[str]] = None
+    security_tools: Optional[List[str]] = None
+    administrative_accounts: Optional[List[str]] = None
+    essential_processes: Optional[List[str]] = None
+    internal_networks: Optional[List[str]] = None
+
+
+class EmergencyPolicyRequest(BaseModel):
+    operator: str = Field(min_length=1, max_length=128)
+    policy: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ResponseReviewRequest(BaseModel):
+    reviewer: str = Field(min_length=1, max_length=128)
+    threat_real: str = Field("unknown", pattern=r"^(yes|no|unknown)$")
+    risk_appropriate: str = Field("unknown", pattern=r"^(yes|no|too_high|too_low|unknown)$")
+    action_appropriate: str = Field("unknown", pattern=r"^(yes|no|unknown)$")
+    asset_critical: str = Field("unknown", pattern=r"^(yes|no|unknown)$")
+    response_successful: str = Field("unknown", pattern=r"^(yes|no|partial|unknown)$")
+    collateral_impact: str = Field("unknown", pattern=r"^(yes|no|unknown)$")
+    rollback_required: str = Field("unknown", pattern=r"^(yes|no|unknown)$")
+    notes: str = Field("", max_length=2000)
+    validated: bool = True
 
 
 class RejectRequest(BaseModel):
@@ -226,6 +275,7 @@ async def agents_health(user=Depends(get_current_user)):
         "knowledge": knowledge_ai,
         "ethics": ethics_ai,
         "vrindha_ai": vrindha_ai,
+        "controlled_response": controlled_response_engine,
     }
     return {
         "status": "success",
@@ -263,13 +313,152 @@ async def commander_incident(incident_id: str = APIPath(max_length=64), user=Dep
 @router.post("/commander/approve")
 async def commander_approve(req: ApprovalRequest, user=Depends(get_current_admin),
                             incident_id: str = Query(min_length=1, max_length=64)):
-    """Human approval of a proposed high-impact defensive action (admin only)."""
+    """Human approval of a proposed defensive action (admin only).
+
+    Execution runs through the controlled-response engine (allowlist check,
+    rollback record, time limit, no chaining). ``action_override`` lets the
+    human escalate to a different catalog action with a recorded justification.
+    """
     try:
         return await asyncio.to_thread(
-            commander_ai.approve, incident_id, req.approver, req.conclusion, req.justification
+            commander_ai.approve, incident_id, req.approver, req.conclusion, req.justification,
+            req.action_override,
         )
     except Exception as exc:
         raise internal_error("commander approve", exc)
+
+
+@router.post("/commander/incidents/{incident_id}/rollback")
+async def commander_rollback(req: RollbackRequest, incident_id: str = APIPath(max_length=64),
+                             user=Depends(get_current_admin)):
+    """Roll back every reversible action recorded on an incident (admin only)."""
+    try:
+        return await asyncio.to_thread(commander_ai.rollback_incident, incident_id, req.operator, req.reason)
+    except Exception as exc:
+        raise internal_error("commander rollback", exc)
+
+
+# ----------------------------------------------------------------------
+# Controlled Autonomous Response (safety contract)
+# ----------------------------------------------------------------------
+@router.get("/response/prompt")
+async def response_prompt(user=Depends(get_current_user)):
+    """The verbatim Controlled Autonomous Response & Safety contract (15 sections)."""
+    return await asyncio.to_thread(controlled_response_engine.prompt)
+
+
+@router.get("/response/policy")
+async def response_policy(user=Depends(get_current_user)):
+    """Allowlist, thresholds, action catalog (autonomy levels), emergency policies, safe mode."""
+    return await asyncio.to_thread(controlled_response_engine.policy_view)
+
+
+@router.put("/response/policy/allowlist")
+async def response_allowlist(req: AllowlistUpdateRequest, user=Depends(get_current_admin)):
+    """Human-configured trusted-asset allowlist (admin only; the engine never edits it)."""
+    updates = {k: v for k, v in req.model_dump().items() if k != "operator" and v is not None}
+    return await asyncio.to_thread(controlled_response_engine.update_allowlist, updates, req.operator)
+
+
+@router.post("/response/policy/emergency")
+async def response_emergency_policy(req: EmergencyPolicyRequest, user=Depends(get_current_admin)):
+    """Register an explicitly configured emergency policy (admin only, validated, never invented)."""
+    return await asyncio.to_thread(controlled_response_engine.add_emergency_policy, req.policy, req.operator)
+
+
+@router.get("/response/safe-mode")
+async def response_safe_mode(user=Depends(get_current_user)):
+    return controlled_response_engine.safe_mode_state()
+
+
+@router.post("/response/safe-mode")
+async def response_safe_mode_set(req: SafeModeRequest, user=Depends(get_current_admin)):
+    """Enter or exit SAFE MODE (admin only). Exiting always requires a human operator."""
+    if req.enabled:
+        return await asyncio.to_thread(controlled_response_engine.enter_safe_mode,
+                                       f"manual by {req.operator}: {req.reason or 'no reason given'}")
+    return await asyncio.to_thread(controlled_response_engine.exit_safe_mode, req.operator)
+
+
+@router.post("/response/decide")
+async def response_decide(payload: Dict[str, Any], user=Depends(get_current_user)):
+    """Classify a proposed response WITHOUT executing it.
+
+    Body: ``{"event": <SecurityEvent or flat shape>, "action": "block_ip", "target": "203.0.113.7"}``.
+    Returns the decision, the ACTION PREVIEW and the ``[VRINDHA RESPONSE]`` block.
+    """
+    try:
+        from vrin_SOC.coordination.controlled_response import render_action_preview, render_response
+
+        event = _event_from_payload(payload.get("event") or payload)
+        recommendation = {"action": payload.get("action") or "continue_monitoring",
+                          "target": payload.get("target") or (event.entity.primary() if event.entity else "system")}
+        decision = await asyncio.to_thread(controlled_response_engine.decide, event, recommendation)
+        return {
+            "status": "success",
+            "decision_id": decision.decision_id,
+            "decision": decision.model_dump(mode="json"),
+            "action_preview": render_action_preview(decision),
+            "vrindha_response": render_response(decision),
+            "note": "Decision only — nothing was executed.",
+        }
+    except Exception as exc:
+        raise internal_error("response decide", exc)
+
+
+@router.get("/response/audit")
+async def response_audit(limit: int = Query(50, ge=1, le=200), user=Depends(get_current_user)):
+    """Response audit (§13): decision columns are immutable; reviews are appended."""
+    return await asyncio.to_thread(controlled_response_engine.list_audit, limit)
+
+
+@router.get("/response/rollbacks")
+async def response_rollbacks(limit: int = Query(50, ge=1, le=200), active_only: bool = Query(False),
+                             user=Depends(get_current_user)):
+    return await asyncio.to_thread(controlled_response_engine.list_rollbacks, limit, active_only)
+
+
+@router.post("/response/rollbacks/{action_id}/rollback")
+async def response_rollback(req: RollbackRequest, action_id: str = APIPath(max_length=64),
+                            user=Depends(get_current_admin)):
+    return await asyncio.to_thread(controlled_response_engine.rollback, action_id, req.operator, req.reason)
+
+
+@router.post("/response/rollbacks/{action_id}/extend")
+async def response_extend(req: ExtendRequest, action_id: str = APIPath(max_length=64),
+                          user=Depends(get_current_admin)):
+    """Extend a temporary action after human re-evaluation (§10)."""
+    return await asyncio.to_thread(controlled_response_engine.extend, action_id, req.minutes,
+                                   req.operator, req.justification)
+
+
+@router.post("/response/expire")
+async def response_expire(user=Depends(get_current_admin)):
+    """Roll back every temporary action whose time limit has passed (§10)."""
+    return await asyncio.to_thread(controlled_response_engine.expire_due)
+
+
+@router.get("/response/reviews")
+async def response_reviews(limit: int = Query(50, ge=1, le=200), user=Depends(get_current_user)):
+    return await asyncio.to_thread(controlled_response_engine.list_reviews, limit)
+
+
+@router.get("/response/{decision_id}")
+async def response_decision(decision_id: str = APIPath(min_length=1, max_length=64),
+                            user=Depends(get_current_user)):
+    record = await asyncio.to_thread(controlled_response_engine.get_decision, decision_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Decision not found")
+    return record
+
+
+@router.post("/response/{decision_id}/review")
+async def response_review(req: ResponseReviewRequest, decision_id: str = APIPath(min_length=1, max_length=64),
+                          user=Depends(get_current_user)):
+    """Post-response review (§14) — only validated reviews feed learning."""
+    answers = req.model_dump(exclude={"reviewer", "notes", "validated"})
+    return await asyncio.to_thread(controlled_response_engine.record_review, decision_id, req.reviewer,
+                                   answers, req.notes, req.validated)
 
 
 @router.post("/commander/reject")
@@ -409,7 +598,21 @@ async def coordinator_dashboard(user=Depends(get_current_user)):
 def _coordinator_dashboard() -> Dict[str, Any]:
     incidents = commander_ai.list_incidents(limit=20)
     open_incidents = [i for i in incidents.get("incidents", []) if i["status"] in
-                      ("open", "investigating", "risk_assessed", "awaiting_approval", "approved", "responded")]
+                      ("open", "investigating", "risk_assessed", "awaiting_approval", "approved", "contained", "responded")]
+    for item in open_incidents:
+        full = commander_ai.incident(item["incident_id"])
+        if full is not None and full.response_decision:
+            item["autonomy_level"] = full.response_decision.get("autonomy_level")
+            item["execution"] = full.response_decision.get("execution")
+            item["recommended_action"] = full.response_decision.get("recommended_action")
+            item["original_action"] = full.response_decision.get("original_action")
+            item["rollback_ids"] = full.rollback_ids
+    response_audit = controlled_response_engine.list_audit(limit=100).get("records", [])
+    level_counts: Dict[str, int] = {"LEVEL 1": 0, "LEVEL 2": 0, "LEVEL 3": 0}
+    exec_counts: Dict[str, int] = {"AUTOMATIC": 0, "HUMAN APPROVAL": 0, "BLOCKED": 0}
+    for rec in response_audit:
+        level_counts[rec["autonomy_level"]] = level_counts.get(rec["autonomy_level"], 0) + 1
+        exec_counts[rec["execution"]] = exec_counts.get(rec["execution"], 0) + 1
     history = list(event_bus._history)  # noqa: SLF001 — same-process, deliberate
     recent = history[-100:]
     anomalies = [e for e in recent if (e.analysis or {}).get("anomaly", {}).get("is_anomaly")]
@@ -426,6 +629,7 @@ def _coordinator_dashboard() -> Dict[str, Any]:
             ("threat_intel", threat_intel_ai), ("soc_analyst", soc_analyst_ai),
             ("data_science", data_science_ai), ("knowledge", knowledge_ai),
             ("ethics", ethics_ai), ("vrindha_ai", vrindha_ai),
+            ("controlled_response", controlled_response_engine),
         ]},
         "bus": event_bus.stats(),
         "totals": {
@@ -449,6 +653,14 @@ def _coordinator_dashboard() -> Dict[str, Any]:
         "top_risk_factors": sorted(top_factors.items(), key=lambda kv: kv[1], reverse=True)[:8],
         "data_quality": {"rejected_total": quality["rejected_total"], "seen_events": quality["seen_events"]},
         "models": data_science_ai.models(),
+        "controlled_response": {
+            "safe_mode": controlled_response_engine.safe_mode_state(),
+            "autonomy_levels": level_counts,
+            "executions": exec_counts,
+            "active_temporary_actions": controlled_response_engine.list_rollbacks(limit=50, active_only=True).get("records", []),
+            "recent_decisions": response_audit[:10],
+            "emergency_policies": [p.to_dict() for p in controlled_response_engine.policy.emergency_policies],
+        },
     }
 
 
