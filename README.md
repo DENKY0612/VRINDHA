@@ -48,15 +48,24 @@ classification, verified Gita guidance, teach mode, ethics audit log), and
 FACT/INFERENCE/UNKNOWN separation, verified threat-intelligence state,
 explainable risk + confidence, structured `[SECURITY ANALYSIS]` reports,
 per-analysis audit trail, analyst feedback loop — recommend-only, never
-executes).
+executes), and the **Controlled Response Engine** (controlled autonomy: the
+level of automation is proportional to the risk and reversibility of the
+action — LOW → auto-monitor · MEDIUM → recommend → human approval · HIGH →
+verify → policy → controlled containment → audit → rollback · CRITICAL →
+multi-source verification → human approval / explicitly configured emergency
+policy; critical-asset + allowlist protection, reversibility first, time
+limits, rollback records, safe mode, immutable audit).
 
 Key properties:
 
 - Agents communicate only through a shared, strongly-typed **event bus**
   (publish/subscribe/correlate/acknowledge, dead-letter isolation).
-- **Human approval gate**: any high-impact defensive action (e.g. block IP)
-  parks at `awaiting_approval`; only an admin can approve or reject, and in
-  this deployment execution runs as a labeled **simulation**.
+- **Human approval gate**: every state-changing defensive action parks at
+  `awaiting_approval` with an **ACTION PREVIEW**; only an admin can approve or
+  reject, and in this deployment execution runs as a labeled **simulation**.
+  The AI proposes the least destructive option (e.g. a 15-minute
+  `temporary_ip_restriction` instead of a permanent `block_ip`) with a
+  rollback record and expiry; a human may escalate with a justification.
 - Nothing is fabricated: TI absence ≠ "clean", missing labels ⇒
   `insufficient_data` (never invented metrics), Gita verses served only from
   the stored 18-chapter dataset.
@@ -78,6 +87,7 @@ Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
 [`docs/RISK_VALIDATION.md`](docs/RISK_VALIDATION.md),
 [`docs/AGENT_PROTOCOL.md`](docs/AGENT_PROTOCOL.md),
 [`docs/ANTI_HALLUCINATION.md`](docs/ANTI_HALLUCINATION.md),
+[`docs/CONTROLLED_AUTONOMY.md`](docs/CONTROLLED_AUTONOMY.md),
 [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/API.md`](docs/API.md),
 [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md),

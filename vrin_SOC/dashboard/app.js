@@ -285,13 +285,98 @@ function renderCoordinator(data) {
     if (incidents) {
         incidents.innerHTML = (data.incidents || []).length
             ? data.incidents.map(i => {
-                const badge = i.status === 'awaiting_approval'
-                    ? `<button style="margin-left:6px" onclick="coordinatorApprove('${escapeHtml(i.incident_id)}')">Approve</button><button style="margin-left:4px" onclick="coordinatorReject('${escapeHtml(i.incident_id)}')">Reject</button>`
-                    : `<span class="badge" style="margin-left:6px">${escapeHtml(i.status)}</span>`;
-                return `<div style="font-size:0.85em;margin:4px 0">🗂️ <b>${escapeHtml(i.incident_id)}</b> — ${escapeHtml(i.title)} ${badge}</div>`;
+                const level = i.autonomy_level ? `<span class="badge" style="margin-left:4px">${escapeHtml(i.autonomy_level)}</span>` : '';
+                const action = i.recommended_action
+                    ? `<span style="opacity:0.8"> → ${escapeHtml(i.recommended_action)}${i.original_action && i.original_action !== i.recommended_action ? ` <s>${escapeHtml(i.original_action)}</s>` : ''}</span>`
+                    : '';
+                const preview = `<button style="margin-left:4px" onclick="coordinatorPreview('${escapeHtml(i.incident_id)}')">Preview</button>`;
+                let badge;
+                if (i.status === 'awaiting_approval') {
+                    badge = `${preview}<button style="margin-left:4px" onclick="coordinatorApprove('${escapeHtml(i.incident_id)}')">Approve</button><button style="margin-left:4px" onclick="coordinatorReject('${escapeHtml(i.incident_id)}')">Reject</button>`;
+                } else if (i.status === 'contained') {
+                    badge = `<span class="badge" style="margin-left:6px">contained (temporary)</span>${preview}<button style="margin-left:4px" onclick="coordinatorApprove('${escapeHtml(i.incident_id)}')">Confirm</button><button style="margin-left:4px" onclick="coordinatorReject('${escapeHtml(i.incident_id)}')">Reject + roll back</button>`;
+                } else {
+                    badge = `<span class="badge" style="margin-left:6px">${escapeHtml(i.status)}</span>${preview}`;
+                }
+                return `<div style="font-size:0.85em;margin:4px 0">🗂️ <b>${escapeHtml(i.incident_id)}</b> — ${escapeHtml(i.title)}${action} ${level} ${badge}</div>`;
             }).join('')
             : '<small>No active incidents.</small>';
     }
+
+    const cr = data.controlled_response || {};
+    const safe = document.getElementById('hiveSafeMode');
+    if (safe) {
+        const on = !!(cr.safe_mode && cr.safe_mode.safe_mode);
+        safe.textContent = on ? 'SAFE MODE' : 'normal operation';
+        safe.style.color = on ? 'var(--red-team)' : 'var(--soc-cyan)';
+        safe.title = on ? (cr.safe_mode.reason || '') : 'High-impact autonomy enabled only where policy allows';
+    }
+    const autonomy = document.getElementById('hiveAutonomy');
+    if (autonomy) {
+        const lv = cr.autonomy_levels || {};
+        const ex = cr.executions || {};
+        const policies = (cr.emergency_policies || []).map(p =>
+            `${escapeHtml(p.name)} (${p.enabled ? 'enabled' : 'disabled'}${(p.problems || []).length ? ', INVALID' : ''})`).join(', ') || 'none configured';
+        autonomy.innerHTML =
+            `<div style="font-size:0.85em">LEVEL 1 auto-monitor: <b>${lv['LEVEL 1'] || 0}</b> · LEVEL 2 recommend→approve: <b>${lv['LEVEL 2'] || 0}</b> · LEVEL 3 verify→policy→approve: <b>${lv['LEVEL 3'] || 0}</b></div>` +
+            `<div style="font-size:0.85em">AUTOMATIC: <b>${ex['AUTOMATIC'] || 0}</b> · HUMAN APPROVAL: <b>${ex['HUMAN APPROVAL'] || 0}</b> · BLOCKED (allowlist): <b>${ex['BLOCKED'] || 0}</b></div>` +
+            `<div style="font-size:0.8em;opacity:0.8">emergency policies: ${policies}</div>`;
+    }
+    const rollbacks = document.getElementById('hiveRollbacks');
+    if (rollbacks) {
+        rollbacks.innerHTML = (cr.active_temporary_actions || []).length
+            ? cr.active_temporary_actions.map(r =>
+                `<div style="font-size:0.8em;margin:2px 0">⏱️ <b>${escapeHtml(r.action)}</b> on ${escapeHtml(r.target)} — expires ${escapeHtml((r.expires_at || 'no limit').slice(0, 19))} ` +
+                `<button style="margin-left:4px" onclick="coordinatorRollback('${escapeHtml(r.action_id)}')">Roll back</button>` +
+                `<button style="margin-left:4px" onclick="coordinatorExtend('${escapeHtml(r.action_id)}')">Extend</button></div>`
+            ).join('')
+            : '<small>None.</small>';
+    }
+    const decisions = document.getElementById('hiveDecisions');
+    if (decisions) {
+        decisions.innerHTML = (cr.recent_decisions || []).length
+            ? cr.recent_decisions.map(d =>
+                `<div style="font-size:0.8em;margin:2px 0">${escapeHtml(d.autonomy_level)} · <b>${escapeHtml(d.execution)}</b> · ${escapeHtml(d.action)} → ${escapeHtml(d.target)} (risk ${d.risk}, conf ${d.confidence}, asset ${escapeHtml(d.asset_criticality)})</div>`
+            ).join('')
+            : '<small>None.</small>';
+    }
+}
+
+async function coordinatorPreview(incidentId) {
+    const pre = document.getElementById('hiveActionPreview');
+    if (!pre) return;
+    try {
+        const inc = await apiFetch(`/commander/incidents/${encodeURIComponent(incidentId)}`);
+        pre.style.display = 'block';
+        pre.textContent = (inc.action_preview || 'No ACTION PREVIEW recorded for this incident.') +
+            (inc.rollback_ids && inc.rollback_ids.length ? `\n\nRollback records: ${inc.rollback_ids.join(', ')}` : '');
+    } catch (e) { pre.style.display = 'block'; pre.textContent = `Preview failed: ${e.message}`; }
+}
+
+async function coordinatorRollback(actionId) {
+    const reason = window.prompt(`Roll back action ${actionId} — reason:`) || 'Rolled back from dashboard';
+    try {
+        const res = await apiFetch(`/response/rollbacks/${encodeURIComponent(actionId)}/rollback`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ operator: sessionStorage.getItem('vrindhaUser') || 'dashboard-human', reason }),
+        });
+        alert(`Rollback: ${res.status}`);
+        loadCoordinator();
+    } catch (e) { alert(`Rollback failed: ${e.message}`); }
+}
+
+async function coordinatorExtend(actionId) {
+    const minutes = parseInt(window.prompt('Extend by how many minutes (1-240)?', '15') || '0', 10);
+    if (!minutes) return;
+    const justification = window.prompt('Justification (evidence re-evaluated):') || '';
+    try {
+        const res = await apiFetch(`/response/rollbacks/${encodeURIComponent(actionId)}/extend`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ operator: sessionStorage.getItem('vrindhaUser') || 'dashboard-human', minutes, justification }),
+        });
+        alert(`Extended until ${res.expires_at || res.reason}`);
+        loadCoordinator();
+    } catch (e) { alert(`Extend failed: ${e.message}`); }
 }
 
 async function runCoordinatorDemo() {
@@ -304,11 +389,17 @@ async function runCoordinatorDemo() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ approver: sessionStorage.getItem('vrindhaUser') || 'dashboard-human' }),
         });
+        const rd = res.final_incident?.response_decision || {};
+        const rr = res.final_incident?.response_result || {};
         out.textContent = `[SIMULATION] status: ${res.status}\n` +
             `stages: ${res.stages.map(s => s.stage).join(' → ')}\n` +
             `incident: ${res.incident_id}\n` +
+            `autonomy: ${rd.autonomy_level || '–'} · ${rd.execution || '–'} · ${rd.recommended_action || '–'}` +
+            (rd.original_action && rd.original_action !== rd.recommended_action ? ` (reversible alternative to ${rd.original_action})` : '') + `\n` +
             `final: ${res.final_incident?.status} (approved by ${res.final_incident?.approved_by})\n` +
-            `response: ${res.final_incident?.response_result?.message || 'none'}`;
+            `response: ${rr.result?.message || rr.message || 'none'}\n` +
+            `rollback: ${rr.rollback_id || 'n/a'}${rr.expires_at ? ' expires ' + rr.expires_at : ''}\n\n` +
+            (res.final_incident?.action_preview || '');
         loadCoordinator();
     } catch (e) {
         out.textContent = `Demo failed: ${e.message} (admin role required for high-impact approval)`;
@@ -316,7 +407,7 @@ async function runCoordinatorDemo() {
 }
 
 async function coordinatorApprove(incidentId) {
-    if (!window.confirm(`Approve the proposed defensive action for ${incidentId}?`)) return;
+    if (!window.confirm(`Approve the proposed defensive action for ${incidentId}?\n(Use Preview to read the ACTION PREVIEW first.)`)) return;
     try {
         const res = await apiFetch(`/commander/approve?incident_id=${encodeURIComponent(incidentId)}`, {
             method: 'POST',
@@ -327,7 +418,8 @@ async function coordinatorApprove(incidentId) {
                 justification: 'Approved from the HIVE Intelligence dashboard panel',
             }),
         });
-        alert(`Approved: ${res.response_result?.message || res.status}`);
+        const rr = res.response_result || {};
+        alert(`Approved: ${rr.result?.message || rr.message || rr.reason || res.status}` + (rr.rollback_id ? `\nRollback record: ${rr.rollback_id}` : ''));
         loadCoordinator();
     } catch (e) { alert(`Approval failed: ${e.message}`); }
 }

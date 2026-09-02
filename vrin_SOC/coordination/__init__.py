@@ -14,7 +14,12 @@ central coordination, human accountability:
 * Vrindha AI — anti-hallucination, evidence-grounded security analysis
   (FACT/INFERENCE/UNKNOWN separation, verified TI, risk+confidence,
   structured reports, audit trail, feedback loop)
-* Human — authorizes high-impact decisions
+* Controlled Response Engine — controlled autonomy: LEVEL 1 auto-monitor,
+  LEVEL 2 recommend → human approval, LEVEL 3 verify → policy → human
+  approval → controlled containment → audit → rollback; critical-asset and
+  allowlist protection, reversibility first, explicit emergency policies,
+  time limits, safe mode
+* Human — authorizes every state-changing decision
 
 All agents communicate through :mod:`.event_bus`, never directly with each
 other. The existing Vrindha safety controls (Brain, Dharma Engine,
@@ -36,6 +41,16 @@ except ImportError:  # flat image / unpackaged checkout
 if bind_package is not None:
     bind_package(__name__)
 
+from .controlled_response import (
+    ACTION_CATALOG,
+    VRINDHA_RESPONSE_PROMPT,
+    AutonomyPolicy,
+    ControlledResponseEngine,
+    EmergencyPolicy,
+    controlled_response_engine,
+    render_action_preview,
+    render_response,
+)
 from .data_science_ai import FEATURE_NAMES, DataScienceAI, RiskConfig, data_science_ai
 from .event_bus import EventBus, InMemoryTransport, event_bus
 from .ethics_ai import (
@@ -51,7 +66,13 @@ from .knowledge_ai import KnowledgeAI, knowledge_ai
 from .observability import AgentMetrics, BaseAgent
 from .schemas import (
     AnomalyResult,
+    AssetCriticality,
+    AutonomyLevel,
     ClassifiedFinding,
+    ExecutionMode,
+    ResponseDecision,
+    RiskTier,
+    RollbackRecord,
     DataQualityReport,
     EntityRef,
     EthicsAssessment,
@@ -118,4 +139,18 @@ __all__ = [
     "vrindha_ai",
     "render_report",
     "enforce_claim_guard",
+    "ACTION_CATALOG",
+    "VRINDHA_RESPONSE_PROMPT",
+    "AutonomyPolicy",
+    "ControlledResponseEngine",
+    "EmergencyPolicy",
+    "controlled_response_engine",
+    "render_action_preview",
+    "render_response",
+    "AssetCriticality",
+    "AutonomyLevel",
+    "ExecutionMode",
+    "ResponseDecision",
+    "RiskTier",
+    "RollbackRecord",
 ]

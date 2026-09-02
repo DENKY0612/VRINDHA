@@ -2,7 +2,9 @@
 from collections import defaultdict, deque
 from pathlib import Path
 from typing import Any, Dict, Literal, Optional
+import asyncio
 import logging
+from contextlib import asynccontextmanager
 import os
 import re
 import time
@@ -53,7 +55,41 @@ from Vrin_TI.models import IntelligenceEvent, LookupRequest, SightingRequest
 from Vrin_TI.normalization import InvalidIndicator
 
 logger = logging.getLogger(__name__)
-app = FastAPI(title="Vrindha AI SOC System", description="Ethical agentic cybersecurity platform", version="1.1.0")
+
+
+@asynccontextmanager
+async def _lifespan(application: FastAPI):
+    """Controlled autonomy §10 — temporary actions expire on their own.
+
+    A small background loop rolls back due temporary actions (time limits)
+    and asks for human re-evaluation. Disable with
+    ``VRINDHA_RESPONSE_EXPIRY_INTERVAL=0`` (tests).
+    """
+    task = None
+    interval = float(os.getenv("VRINDHA_RESPONSE_EXPIRY_INTERVAL", "60") or 0)
+    if interval > 0:
+        from vrin_SOC.coordination.controlled_response import controlled_response_engine
+
+        async def loop() -> None:
+            while True:
+                try:
+                    await asyncio.sleep(interval)
+                    await asyncio.to_thread(controlled_response_engine.expire_due)
+                except asyncio.CancelledError:
+                    raise
+                except Exception:  # noqa: BLE001 — the loop must survive transient failures
+                    continue
+
+        task = asyncio.create_task(loop())
+    try:
+        yield
+    finally:
+        if task is not None:
+            task.cancel()
+
+
+app = FastAPI(title="Vrindha AI SOC System", description="Ethical agentic cybersecurity platform",
+              version="1.1.0", lifespan=_lifespan)
 
 origins = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "").split(",") if origin.strip()]
 if origins:
@@ -841,6 +877,7 @@ app.include_router(coordination_router)
 
 # Local, dependency-free blockchain ledger (integrity anchor, localhost-only).
 app.include_router(blockchain_router)
+
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"
 if dashboard_path.exists():

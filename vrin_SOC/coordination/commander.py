@@ -10,8 +10,13 @@ specialists through the event bus (spec §4/§20):
       → correlation + investigation (SOC Analyst AI)
       → incident summary (Commander)
       → ethics & compliance review (Ethics AI)
-      → HUMAN APPROVAL (mandatory for high-impact actions)
-      → authorized defensive response (existing automation actions)
+      → controlled-autonomy decision (ControlledResponseEngine:
+        LEVEL 1 auto-monitor / LEVEL 2 recommend→approve /
+        LEVEL 3 verify→policy→approve→controlled containment→rollback)
+      → HUMAN APPROVAL (mandatory for every state-changing action unless an
+        explicitly configured emergency policy applies)
+      → controlled defensive response (existing automation actions, with a
+        rollback record and time limit)
       → knowledge storage + feedback loop (Knowledge AI / Data Science)
 
 Every stage is traceable in the incident ``trace``; a failing stage degrades
@@ -22,6 +27,12 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List, Optional
 
+from .controlled_response import (
+    ControlledResponseEngine,
+    controlled_response_engine,
+    render_action_preview,
+    render_response,
+)
 from .data_science_ai import DataScienceAI, data_science_ai
 from .event_bus import EventBus, event_bus
 from .ethics_ai import EthicsAI, ethics_ai
@@ -29,8 +40,10 @@ from .infrastructure_ai import InfrastructureAI, infrastructure_ai
 from .knowledge_ai import KnowledgeAI, knowledge_ai
 from .observability import BaseAgent
 from .schemas import (
+    ExecutionMode,
     Incident,
     IncidentStatus,
+    ResponseDecision,
     SecurityEvent,
     new_event_id,
     utc_now_iso,
@@ -72,13 +85,15 @@ class CommanderAI(BaseAgent):
                  threat_intel: Optional[ThreatIntelAI] = None,
                  soc_analyst: Optional[SOCAnalystAI] = None,
                  knowledge: Optional[KnowledgeAI] = None,
-                 ethics: Optional[EthicsAI] = None) -> None:
+                 ethics: Optional[EthicsAI] = None,
+                 response: Optional[ControlledResponseEngine] = None) -> None:
         super().__init__(bus)
         self.data_science = data_science or data_science_ai
         self.threat_intel = threat_intel or threat_intel_ai
         self.soc_analyst = soc_analyst or soc_analyst_ai
         self.knowledge = knowledge or knowledge_ai
         self.ethics = ethics or ethics_ai
+        self.response = response or controlled_response_engine
         db = _db()
         db._run_db(_ensure_tables)  # noqa: SLF001
 
@@ -195,8 +210,100 @@ class CommanderAI(BaseAgent):
                 return self._finish(incident, trace, status="denied_by_ethics",
                                     proposed=proposed, summary=incident.summary)
 
-        # Stage 6 — human approval gate for high-impact actions
-        if incident.proposed_action and incident.proposed_action.get("requires_human_approval"):
+        # Stage 6 — controlled-autonomy decision (Detect → Verify → Assess
+        # Risk → Check Policy). Every proposed response is classified into
+        # LEVEL 1 / 2 / 3 with an execution mode; the AI never decides alone.
+        degraded: List[str] = []
+        if ti_result.get("enrichment_mode") == "unavailable" or ti_result.get("status") != "success":
+            degraded.append("threat intelligence failure")
+        if ds_result.get("status") != "success":
+            degraded.append("model failure")
+        if soc_result.get("status") != "success":
+            degraded.append("investigation failure")
+        decision_input = incident.proposed_action or proposed or (recommendations[0] if recommendations else None)
+        analysis = self._evidence_analysis(event)
+        decision = self.response.decide(event, decision_input, incident_id=incident.incident_id,
+                                        analysis=analysis, degraded_inputs=degraded)
+        incident.response_decision = decision.model_dump(mode="json")
+        incident.action_preview = render_action_preview(decision)
+        incident.safe_mode = decision.safe_mode
+        if decision_input is not None:
+            incident.proposed_action = {
+                **(decision_input or {}),
+                "action": decision.recommended_action,
+                "target": decision.target,
+                "impact": decision.expected_impact,
+                "requires_human_approval": decision.human_approval_required,
+                "autonomy_level": decision.autonomy_level.value,
+                "execution": decision.execution.value,
+                "rollback_available": decision.rollback_available,
+                "duration_minutes": decision.duration_minutes,
+                "original_action": decision.original_action,
+                "reason": decision.reason,
+            }
+        incident.add_trace("controlled_response", {
+            "decision_id": decision.decision_id,
+            "autonomy_level": decision.autonomy_level.value,
+            "execution": decision.execution.value,
+            "risk_tier": decision.risk_tier.value,
+            "asset_criticality": decision.asset_criticality.value,
+            "recommended_action": decision.recommended_action,
+            "original_action": decision.original_action,
+            "safe_mode": decision.safe_mode,
+            "allowlist_conflict": decision.allowlist_conflict,
+            "emergency_policy": decision.emergency_policy,
+        })
+        trace.append({"stage": "controlled_response", "autonomy_level": decision.autonomy_level.value,
+                      "execution": decision.execution.value, "action": decision.recommended_action,
+                      "original_action": decision.original_action, "safe_mode": decision.safe_mode})
+        vrindha_response = render_response(decision)
+
+        # Stage 6a — LEVEL 1 automatic action (read-only, policy-authorized):
+        # Detection → Verification → Automatic Action → Monitoring.
+        if decision.execution == ExecutionMode.AUTOMATIC and not decision.state_change:
+            auto = self.response.execute(decision)
+            incident.add_trace("automatic_level1_action", auto)
+            trace.append({"stage": "automatic_level1_action", "status": auto.get("status"),
+                          "action": auto.get("action")})
+
+        # Stage 6b — explicitly configured emergency containment (LEVEL 2,
+        # temporary, reversible) → immediate human notification → monitoring.
+        if decision.execution == ExecutionMode.AUTOMATIC and decision.state_change:
+            contained = self.response.execute(decision)
+            incident.add_trace("emergency_containment", contained)
+            trace.append({"stage": "emergency_containment", "status": contained.get("status"),
+                          "policy": decision.emergency_policy, "rollback_id": contained.get("rollback_id")})
+            if contained.get("rollback_id"):
+                incident.rollback_ids.append(contained["rollback_id"])
+                incident.status = IncidentStatus.CONTAINED
+                incident.response_result = contained
+                incident.summary += (f" Temporary emergency containment ({decision.recommended_action}, "
+                                     f"{decision.duration_minutes} min) applied under policy "
+                                     f"'{decision.emergency_policy}'; human review required.")
+                self._persist(incident)
+                return {
+                    "status": "contained_pending_review",
+                    "incident_id": incident.incident_id,
+                    "event_id": event.event_id,
+                    "correlation_id": event.correlation_id,
+                    "summary": incident.summary,
+                    "proposed_action": incident.proposed_action,
+                    "response_decision": incident.response_decision,
+                    "action_preview": incident.action_preview,
+                    "vrindha_response": vrindha_response,
+                    "containment": contained,
+                    "risk": event.risk,
+                    "trace": trace,
+                    "review": "Temporary containment expires automatically; a human must extend, remove or escalate.",
+                }
+            # Containment refused/failed → fall through to human approval (fail-safe).
+            decision.execution = ExecutionMode.HUMAN_APPROVAL
+            decision.human_approval_required = True
+
+        # Stage 7 — human approval gate: every state-changing action (LEVEL 2/3)
+        # and every allowlist-blocked action parks here.
+        if incident.proposed_action and (decision.human_approval_required or
+                                         decision.execution == ExecutionMode.BLOCKED):
             incident.status = IncidentStatus.AWAITING_APPROVAL
             self._persist(incident)
             trace.append({"stage": "awaiting_approval",
@@ -208,12 +315,19 @@ class CommanderAI(BaseAgent):
                 "correlation_id": event.correlation_id,
                 "summary": incident.summary,
                 "proposed_action": incident.proposed_action,
+                "response_decision": incident.response_decision,
+                "action_preview": incident.action_preview,
+                "vrindha_response": vrindha_response,
                 "ethics": incident.ethics,
                 "recommendations": incident.recommendations,
                 "risk": event.risk,
                 "anomaly": (event.analysis or {}).get("anomaly"),
                 "trace": trace,
-                "approval": "Call POST /commander/approve with this incident_id (human decision required).",
+                "approval": ("BLOCKED by the trusted-asset allowlist — human verification required; "
+                             "POST /commander/approve with a justification to proceed."
+                             if decision.execution == ExecutionMode.BLOCKED else
+                             f"{decision.autonomy_level.value}: call POST /commander/approve with this "
+                             "incident_id (human decision required)."),
             }
 
         # No high-impact action needed yet.
@@ -221,13 +335,13 @@ class CommanderAI(BaseAgent):
             # An explicit correlation means the investigation is ongoing —
             # keep the incident open so later correlated events attach to it.
             incident.status = IncidentStatus.OPEN
-            incident.summary += " No high-impact action required yet; correlation in progress."
+            incident.summary += " No state-changing action required yet; correlation in progress."
             self._persist(incident)
             return self._finish(incident, trace, status="open_monitoring",
                                 proposed=None, summary=incident.summary)
 
         incident.status = IncidentStatus.CLOSED
-        incident.summary += " No high-impact action required; incident closed under monitoring."
+        incident.summary += " No state-changing action required; incident closed under monitoring."
         self._persist(incident)
         self.knowledge.record_outcome(
             incident_id=incident.incident_id,
@@ -245,18 +359,25 @@ class CommanderAI(BaseAgent):
     # Human approval → authorized response → knowledge + feedback
     # ------------------------------------------------------------------
     def approve(self, incident_id: str, approver: str, conclusion: str = "confirmed_attack",
-                justification: str = "") -> Dict[str, Any]:
-        """Human approves a proposed defensive action; it executes then and only then."""
-        return self.run_guarded(self._approve, incident_id, approver, conclusion, justification)
+                justification: str = "", action_override: Optional[str] = None) -> Dict[str, Any]:
+        """Human approves a proposed defensive action; it executes then and only then.
+
+        Execution goes through the ControlledResponseEngine: allowlist check,
+        rollback record, time limit, no chaining. ``action_override`` lets the
+        human escalate to the SOC's original recommendation (e.g. ``block_ip``
+        instead of the reversible ``temporary_ip_restriction``) with a recorded
+        justification — that is a human decision, audited as such.
+        """
+        return self.run_guarded(self._approve, incident_id, approver, conclusion, justification, action_override)
 
     def _approve(self, incident_id: str, approver: str, conclusion: str,
-                 justification: str) -> Dict[str, Any]:
+                 justification: str, action_override: Optional[str] = None) -> Dict[str, Any]:
         incident = self._load(incident_id)
         if incident is None:
             return {"status": "error", "reason": f"incident {incident_id} not found"}
-        if incident.status != IncidentStatus.AWAITING_APPROVAL:
+        if incident.status not in {IncidentStatus.AWAITING_APPROVAL, IncidentStatus.CONTAINED}:
             return {"status": "error",
-                    "reason": f"incident is {incident.status.value}; approval only valid while awaiting_approval"}
+                    "reason": f"incident is {incident.status.value}; approval only valid while awaiting_approval or contained"}
         if conclusion not in {"confirmed_attack", "false_positive", "unknown"}:
             return {"status": "error", "reason": "conclusion must be confirmed_attack | false_positive | unknown"}
         if not approver:
@@ -266,12 +387,32 @@ class CommanderAI(BaseAgent):
         incident.approved_by = approver
         incident.approved_at = utc_now_iso()
         incident.add_trace("human_approval", {"approver": approver, "conclusion": conclusion,
-                                              "justification": justification[:500]})
+                                              "justification": justification[:500],
+                                              "action_override": action_override})
 
         proposed = incident.proposed_action or {}
         action = str(proposed.get("action", ""))
         result: Dict[str, Any]
-        if action in {"block_ip"}:
+        decision: Optional[ResponseDecision] = None
+        if incident.response_decision:
+            try:
+                decision = ResponseDecision.model_validate(incident.response_decision)
+            except Exception:  # noqa: BLE001
+                decision = None
+
+        if conclusion == "false_positive":
+            result = {"status": "success", "action": "none",
+                      "message": "Human concluded false positive; no defensive action executed."}
+            if decision is not None:
+                self.response._update_audit(decision.decision_id, execution_result=result,  # noqa: SLF001
+                                            human_review={"approver": approver, "conclusion": conclusion})
+        elif decision is not None:
+            # Controlled execution: allowlist + rollback + time limit + no chaining.
+            result = self.response.execute(decision, approver=approver, justification=justification,
+                                           action_override=action_override)
+            if result.get("rollback_id"):
+                incident.rollback_ids.append(result["rollback_id"])
+        elif action in {"block_ip"}:
             from vrin_SOC.automation.actions import automation_actions
 
             result = automation_actions.block_ip(str(proposed.get("target", "")))
@@ -334,6 +475,7 @@ class CommanderAI(BaseAgent):
             "approved_by": approver,
             "conclusion": conclusion,
             "response_result": result,
+            "rollback_ids": incident.rollback_ids,
             "knowledge": knowledge_result,
             "incident_status": incident.status.value,
         }
@@ -345,6 +487,12 @@ class CommanderAI(BaseAgent):
         incident = self._load(incident_id)
         if incident is None:
             return {"status": "error", "reason": f"incident {incident_id} not found"}
+        rollbacks = []
+        if incident.status == IncidentStatus.CONTAINED:
+            for action_id in incident.rollback_ids:
+                rollbacks.append(self.response.rollback(action_id, by=approver,
+                                                        reason=f"rejected by human: {reason or 'no reason given'}"))
+            incident.add_trace("rollback", {"records": rollbacks})
         incident.status = IncidentStatus.REJECTED
         incident.approved_by = approver
         incident.approved_at = utc_now_iso()
@@ -356,7 +504,19 @@ class CommanderAI(BaseAgent):
             pattern=incident.title[:80], validated_by=approver, validated=True,
         )
         return {"status": "success", "incident_id": incident.incident_id,
-                "incident_status": incident.status.value}
+                "incident_status": incident.status.value, "rollbacks": rollbacks}
+
+    def rollback_incident(self, incident_id: str, by: str, reason: str = "") -> Dict[str, Any]:
+        """Roll back every reversible action recorded on an incident (human request)."""
+        incident = self._load(incident_id)
+        if incident is None:
+            return {"status": "error", "reason": f"incident {incident_id} not found"}
+        if not by:
+            return {"status": "error", "reason": "operator identity required"}
+        results = [self.response.rollback(a, by=by, reason=reason) for a in incident.rollback_ids]
+        incident.add_trace("rollback", {"by": by, "reason": reason[:300], "records": results})
+        self._persist(incident)
+        return {"status": "success", "incident_id": incident_id, "rollbacks": results}
 
     # ------------------------------------------------------------------
     # Queries
@@ -454,7 +614,7 @@ class CommanderAI(BaseAgent):
 
     def _finish(self, incident: Incident, trace: List[Dict[str, Any]], status: str,
                 proposed: Optional[Dict[str, Any]], summary: str) -> Dict[str, Any]:
-        return {
+        out = {
             "status": status,
             "incident_id": incident.incident_id,
             "event_ids": incident.event_ids,
@@ -464,6 +624,25 @@ class CommanderAI(BaseAgent):
             "incident_status": incident.status.value,
             "trace": trace,
         }
+        if incident.response_decision:
+            out["response_decision"] = incident.response_decision
+            out["action_preview"] = incident.action_preview
+            try:
+                out["vrindha_response"] = render_response(ResponseDecision.model_validate(incident.response_decision))
+            except Exception:  # noqa: BLE001
+                pass
+        return out
+
+    def _evidence_analysis(self, event: SecurityEvent):
+        """Evidence-grounded analysis from Vrindha AI (never fatal to the pipeline)."""
+        try:
+            from .evidence_analysis import vrindha_ai
+            from .schemas import SecurityAnalysis
+
+            analysis = vrindha_ai.analyze(event)
+            return analysis if isinstance(analysis, SecurityAnalysis) else None
+        except Exception:  # noqa: BLE001
+            return None
 
     # ------------------------------------------------------------------
     # Observability
@@ -477,6 +656,7 @@ class CommanderAI(BaseAgent):
             "knowledge": self.knowledge.health(),
             "ethics": self.ethics.health(),
             "infrastructure": infrastructure_ai.health(),
+            "controlled_response": self.response.health(),
         }
         return base
 

@@ -547,7 +547,7 @@ Core Rules: NEVER offensive without approval, AUTOMATE defensive when threat, AL
 <div class="banner">
 One organization, many specialists, shared intelligence, common event model, central coordination, human accountability.<br>
 <b>Commander AI</b> coordinates • <b>Infrastructure AI</b> observes • <b>Threat Intel AI</b> contextualizes (never fabricated) • <b>SOC Analyst AI</b> investigates • <b>Data Science AI</b> analyzes + risk models • <b>Knowledge AI</b> remembers validated lessons • <b>Ethics & Dharma AI</b> governs • <b>Human</b> approves high-impact actions.<br>
-<small>High-impact actions always pass Commander → Ethics → Human approval. All agents communicate through the shared event bus.</small>
+<small><b>Controlled autonomy:</b> the level of automation is proportional to the risk and reversibility of the action — LOW → auto-monitor · MEDIUM → recommend → human approval · HIGH → verify → policy → controlled containment → audit → rollback · CRITICAL → multi-source verification → human approval / explicitly configured emergency policy. All agents communicate through the shared event bus.</small>
 </div>
 
 <div class="grid">
@@ -577,9 +577,18 @@ One organization, many specialists, shared intelligence, common event model, cen
 </div>
 
 <div class="grid grid-2" style="margin-top:12px">
+<div class="card gold">
+<div class="card-header"><div class="card-title">🛡️ Controlled Autonomous Response</div><span class="badge" id="hiveSafeMode">—</span></div>
+<div id="hiveAutonomy"><small>—</small></div>
+<div style="margin-top:8px;font-size:0.85em"><b>Active temporary actions (time-limited, reversible)</b></div>
+<div id="hiveRollbacks"><small>None.</small></div>
+<div style="margin-top:8px;font-size:0.85em"><b>Recent decisions</b></div>
+<div id="hiveDecisions" style="max-height:220px;overflow:auto"><small>None.</small></div>
+</div>
 <div class="card red">
 <div class="card-header"><div class="card-title">🗂️ Incidents & Human Approval</div><button onclick="loadCoordinator()">Refresh</button></div>
 <div id="hiveIncidentsList"><small>No incidents yet.</small></div>
+<pre id="hiveActionPreview" style="max-height:260px;overflow:auto;margin-top:8px;display:none"></pre>
 </div>
 <div class="card blue">
 <div class="card-header"><div class="card-title">🧪 Safe Demonstration (labeled SIMULATION)</div></div>

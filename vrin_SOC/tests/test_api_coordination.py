@@ -196,8 +196,87 @@ class CoordinationAPITests(unittest.TestCase):
         for key in ("agents", "bus", "totals", "incidents", "risk_timeline",
                     "anomaly_timeline", "top_risk_factors", "data_quality", "models"):
             self.assertIn(key, body)
-        self.assertEqual(len(body["agents"]), 8)  # 7 specialists + Vrindha AI
+        self.assertEqual(len(body["agents"]), 9)  # 7 specialists + Vrindha AI + response engine
         self.assertIn("vrindha_ai", body["agents"])
+        self.assertIn("controlled_response", body["agents"])
+        cr = body["controlled_response"]
+        for key in ("safe_mode", "autonomy_levels", "executions", "active_temporary_actions",
+                    "recent_decisions", "emergency_policies"):
+            self.assertIn(key, cr)
+
+    # ------------------------------------------------------------------
+    # Controlled Autonomous Response endpoints
+    # ------------------------------------------------------------------
+    def test_response_endpoints_require_auth_and_admin_where_needed(self):
+        for endpoint in ("/response/prompt", "/response/policy", "/response/audit", "/response/rollbacks",
+                         "/response/reviews", "/response/safe-mode"):
+            self.assertEqual(self.client.get(endpoint).status_code, 401, endpoint)
+        token = self._create_user("analyst-resp", self._bootstrap_admin())
+        self.assertEqual(self.client.post("/response/safe-mode", headers=self._headers(token),
+                                          json={"operator": "x", "enabled": True}).status_code, 403)
+        self.assertEqual(self.client.put("/response/policy/allowlist", headers=self._headers(token),
+                                         json={"operator": "x", "trusted_ips": ["203.0.113.1"]}).status_code, 403)
+        self.assertEqual(self.client.post("/response/policy/emergency", headers=self._headers(token),
+                                          json={"operator": "x", "policy": {}}).status_code, 403)
+        self.assertEqual(self.client.post("/response/expire", headers=self._headers(token)).status_code, 403)
+
+    def test_response_prompt_and_policy(self):
+        token = self._bootstrap_admin()
+        prompt = self.client.get("/response/prompt", headers=self._headers(token))
+        self.assertEqual(prompt.status_code, 200)
+        self.assertIn("Controlled Autonomous Response", prompt.json()["prompt"])
+        policy = self.client.get("/response/policy", headers=self._headers(token))
+        self.assertEqual(policy.status_code, 200)
+        body = policy.json()
+        self.assertIn("allowlist", body["policy"])
+        self.assertEqual(body["action_catalog"]["block_ip"]["autonomy_level"], "LEVEL 3")
+        self.assertEqual(body["action_catalog"]["collect_logs"]["autonomy_level"], "LEVEL 1")
+
+    def test_response_decide_does_not_execute(self):
+        token = self._bootstrap_admin()
+        response = self.client.post("/response/decide", headers=self._headers(token), json={
+            "event": {"event_type": "security_event", "entity": {"host": "lab", "ip": "10.0.0.5"}, "severity": "high",
+                      "risk": {"risk_score": 0.8, "confidence": 0.85},
+                      "data": {"authentication": {"failed_login_count": 20},
+                               "network": {"source_ips": ["203.0.113.8"], "outbound": {"ip": "203.0.113.8", "port": 4444}}}},
+            "action": "block_ip", "target": "203.0.113.8",
+        })
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["decision"]["original_action"], "block_ip")
+        self.assertEqual(body["decision"]["recommended_action"], "temporary_ip_restriction")
+        self.assertEqual(body["decision"]["execution"], "HUMAN APPROVAL")
+        self.assertIn("ACTION PREVIEW", body["action_preview"])
+        self.assertIn("[VRINDHA RESPONSE]", body["vrindha_response"])
+        record = self.client.get(f"/response/{body['decision_id']}", headers=self._headers(token))
+        self.assertEqual(record.status_code, 200)
+        self.assertIsNone(record.json()["execution_result"])  # nothing executed
+        review = self.client.post(f"/response/{body['decision_id']}/review", headers=self._headers(token),
+                                  json={"reviewer": "admin", "threat_real": "yes", "action_appropriate": "yes"})
+        self.assertEqual(review.status_code, 200)
+        self.assertEqual(review.json()["status"], "success")
+
+    def test_emergency_policy_validation_via_api(self):
+        token = self._bootstrap_admin()
+        bad = self.client.post("/response/policy/emergency", headers=self._headers(token), json={
+            "operator": "admin", "policy": {"name": "bad", "enabled": True, "allowed_actions": ["block_ip"],
+                                            "max_duration_minutes": 15}})
+        self.assertEqual(bad.status_code, 200)
+        self.assertEqual(bad.json()["status"], "rejected")
+        self.assertTrue(bad.json()["problems"])
+
+    def test_safe_mode_toggle_via_api(self):
+        token = self._bootstrap_admin()
+        on = self.client.post("/response/safe-mode", headers=self._headers(token),
+                              json={"operator": "admin", "enabled": True, "reason": "drill"})
+        self.assertTrue(on.json()["safe_mode"])
+        try:
+            state = self.client.get("/response/safe-mode", headers=self._headers(token)).json()
+            self.assertTrue(state["safe_mode"])
+        finally:
+            off = self.client.post("/response/safe-mode", headers=self._headers(token),
+                                   json={"operator": "admin", "enabled": False})
+            self.assertFalse(off.json()["safe_mode"])
 
     def test_demo_endpoint_runs_labeled_simulation(self):
         token = self._bootstrap_admin()
