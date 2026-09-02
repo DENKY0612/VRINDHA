@@ -196,7 +196,8 @@ class CoordinationAPITests(unittest.TestCase):
         for key in ("agents", "bus", "totals", "incidents", "risk_timeline",
                     "anomaly_timeline", "top_risk_factors", "data_quality", "models"):
             self.assertIn(key, body)
-        self.assertEqual(len(body["agents"]), 7)
+        self.assertEqual(len(body["agents"]), 8)  # 7 specialists + Vrindha AI
+        self.assertIn("vrindha_ai", body["agents"])
 
     def test_demo_endpoint_runs_labeled_simulation(self):
         token = self._bootstrap_admin()

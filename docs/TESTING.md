@@ -11,7 +11,7 @@ isolated user store / in-memory bus so they never touch production data.**
 vrin_SOC/.venv/bin/python -m pytest vrin_SOC/tests -q
 ```
 
-Current state: **212 passed** in this sandbox with the full `python -m pytest -q` suite.
+Current state: **246 passed** in this sandbox with the full `python -m pytest -q` suite.
 
 ## Test map
 
@@ -23,6 +23,7 @@ Current state: **212 passed** in this sandbox with the full `python -m pytest -q
 | `test_event_bus.py` | 9 | pub/sub delivery, wildcard, annotation merge-back, **dead-letter isolation of a failing subscriber**, correlation grouping, acknowledge/update, unsubscribe, stats accounting, pluggable transport |
 | `test_data_science_ai.py` | 24 | ingest reject rules (bad IP/timestamp/severity/duplicate/future), **no feature leakage** (pre-store extraction excludes the event), stable feature names, anomaly determinism + explanation, **unavailable TI ≠ clean**, explainable risk factors, registry register/promote/retire + **conflict rejection** + **no silent production replacement**, **contamination guard** (unvalidated outcomes rejected), evaluation without labels ⇒ `insufficient_data` (never fabricated) |
 | `test_ethics_dharma.py` | 20 | the 5-case decision matrix (theft ⇒ deny/high_risk + ASTEYA; authorized pentest ⇒ aligned; unknown-target scan ⇒ require_authorization; defensive ⇒ aligned; destructive ⇒ high_risk), verified-only Gita refs, **fabricated verse ⇒ None**, substring false-positive guard, high-impact ⇒ human approval, **no user moral scoring**, teach mode (educational, not shaming), audit log, ethics health (Gita KB shape) |
+| `test_evidence_analysis.py` | 34 | **Vrindha AI anti-hallucination contract**: verbatim 13-rule prompt served + asserted, the rule-3 canonical example (**"part of a ransomware campaign" never emitted**, the contract's exact recommended wording is, TI ⇒ `NOT CONFIRMED`), exact *"Insufficient evidence — further investigation required."* phrase, `[SECURITY ANALYSIS]` format + section order, FACT/INFERENCE separation (hedged inferences), TI `CONFIRMED` (sourced+fresh) / `NOT CONFIRMED` (unsourced, stale, mismatch) / `UNKNOWN` (unavailable, **never "clean"**), conflict handling (confidence halved, risk capped, contract phrases), multi-source corroboration raises confidence, human-approval gating (high-impact ⇒ REQUIRED, low-risk ⇒ NOT REQUIRED, low-confidence ⇒ "Human verification required."), claim-guard unit behavior, **13-field audit record**, append-only feedback loop (invalid decision / missing analyst / unknown id rejected), pipeline integration, SIMULATED-data honesty, REST endpoints (401s, roundtrip, 404, feedback 422) |
 
 ### Integration
 
@@ -40,7 +41,7 @@ Current state: **212 passed** in this sandbox with the full `python -m pytest -q
 
 | File | Tests | Covers |
 |---|---|---|
-| `test_api_coordination.py` | 13 | **every coordination endpoint requires auth** (401), **demo/approval require admin** (403), data-science health/models/ingest-reject/anomaly/risk, ethics deny + principles, **Gita verse verified + 422/404 (never fabricated)**, 18-chapter index, teach, commander incidents, coordinator dashboard shape (7 agents), demo returns a labeled simulation, infrastructure telemetry real/fallback label |
+| `test_api_coordination.py` | 13 | **every coordination endpoint requires auth** (401), **demo/approval require admin** (403), data-science health/models/ingest-reject/anomaly/risk, ethics deny + principles, **Gita verse verified + 422/404 (never fabricated)**, 18-chapter index, teach, commander incidents, coordinator dashboard shape (8 agents incl. Vrindha AI), demo returns a labeled simulation, infrastructure telemetry real/fallback label |
 
 The API tests follow the existing `test_registration.py` pattern: an isolated
 `AuthModule` (temp dir + dummy 48-char key) is swapped into `api.main`

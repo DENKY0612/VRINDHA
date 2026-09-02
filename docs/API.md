@@ -31,7 +31,7 @@ required"}`.
 
 | Method & path | Auth | Purpose |
 |---|---|---|
-| `GET /agents/health` | user | Health of all 7 coordination agents + bus stats |
+| `GET /agents/health` | user | Health of all 8 coordination agents + bus stats |
 
 ## Commander (incidents & approval gate)
 
@@ -62,6 +62,20 @@ required"}`.
 | `POST /knowledge/search` | user | Search lessons by pattern |
 | `POST /knowledge/record` ⭐ | admin | Store a **validated** outcome `{incident_id, conclusion, summary, event_ids, pattern, validated_by}` |
 
+## Vrindha AI — anti-hallucination, evidence-grounded analysis
+
+See [`ANTI_HALLUCINATION.md`](ANTI_HALLUCINATION.md) for the full contract
+(13 rules, TI states, claim guard, audit/feedback semantics).
+
+| Method & path | Auth | Purpose |
+|---|---|---|
+| `GET /analysis/prompt` | user | The verbatim 13-rule operating contract (auditable agent rules) |
+| `POST /analysis/security` | user | Structured evidence-grounded analysis for one event payload (full `SecurityEvent` shape or flat) → `SecurityAnalysis` + rendered `[SECURITY ANALYSIS]` report. **Recommend-only** — no defensive action is executed |
+| `GET /analysis/{analysis_id}` | user | The full preserved audit record (rule 13): alert id, timestamp, raw evidence, tools used, TI sources, rules triggered, correlation results, assessment, risk, confidence, recommended action, human decision, final action. `404` when unknown |
+| `GET /analysis/audit?limit=50` | user | Recent analysis audit records, newest first |
+| `POST /analysis/{analysis_id}/feedback` | user | Record an analyst decision `{analyst, decision, notes}` with `decision ∈ {true_positive, false_positive, insufficient_evidence, unknown}` (rule 12, append-only) |
+| `GET /analysis/feedback?limit=50` | user | The analyst feedback database, newest first |
+
 ## Infrastructure AI
 
 | Method & path | Auth | Purpose |
@@ -73,7 +87,7 @@ required"}`.
 
 | Method & path | Auth | Purpose |
 |---|---|---|
-| `GET /coordinator/dashboard` | user | Aggregated HIVE Intelligence panel: 7 agent healths, bus stats, totals (events, active incidents, anomalies, critical risks, average risk), incidents, risk timeline, anomaly timeline, top risk factors, data quality, models |
+| `GET /coordinator/dashboard` | user | Aggregated HIVE Intelligence panel: 8 agent healths, bus stats, totals (events, active incidents, anomalies, critical risks, average risk), incidents, risk timeline, anomaly timeline, top risk factors, data quality, models |
 | `POST /coordinator/demo` ⭐ | admin | Runs the fully-labeled **SIMULATION** end-to-end scenario (brute force → C2 → ethics → human approval → simulated block → knowledge → DS feedback). Body: `{approver}`. The response repeats `SIMULATION: true` and the simulation note |
 
 ## Core SOC risk validation endpoints

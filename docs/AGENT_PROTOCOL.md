@@ -97,6 +97,18 @@ deliberately has no moral-score column.
 rejected`), `event_ids`, `proposed_action`, `ethics` (assessment snapshot),
 `response_result`, `approved_by`, `knowledge_id`, `trace[]` (full stage audit).
 
+### SecurityAnalysis (anti-hallucination output)
+
+Vrindha AI's structured result: `analysis_id`, `event_id`, `facts[]`,
+`evidence[]`, `findings[]` (`ClassifiedFinding`: fact / evidence / inference /
+unknown / recommendation — one field per class of statement), `detection`,
+`assessment`, `risk_score` (0–100), `confidence` (0–100), `severity`
+(`low | medium | high | critical`), `threat_intelligence`
+(`confirmed | not_confirmed | unknown`), `ti_detail`, `unknown_information[]`,
+`recommended_action`, `action_impact`, `human_approval_required`, `reason`,
+`evidence_conflicting`, `insufficient_evidence`, `claim_guard_triggered`,
+`signals[]` (explainable layers), `mode`, `created_at`.
+
 ## 3. Event bus contract
 
 `EventBus` (in-process, pluggable transport):
@@ -171,5 +183,18 @@ intent → authorization → policy → law (guidance, not advice) → dharma �
 | Knowledge AI | `knowledge_lessons`, validated samples |
 | Ethics AI | `ethics_audit_log` |
 | Commander AI | `coordination_incidents` |
+| Vrindha AI | `evidence_audit` (one row per analysis; only `human_decision`/`final_action` are mutable), `analysis_feedback` (append-only) |
 
 No two agents write the same store.
+
+## 7. Vrindha AI — anti-hallucination contract
+
+`coordination/evidence_analysis.py` implements the 13-rule
+anti-hallucination contract (see [`ANTI_HALLUCINATION.md`](ANTI_HALLUCINATION.md)):
+FACT/INFERENCE/UNKNOWN separation, verified TI state
+(`CONFIRMED | NOT CONFIRMED | UNKNOWN`), explainable risk 0–100 + confidence
+0–100, conflict handling, the structured `[SECURITY ANALYSIS]` report,
+recommend-only high-impact actions (execution stays in the Commander →
+Ethics → human chain), the append-only analyst feedback loop, and the
+per-analysis audit row. Its operating rules are served verbatim at
+`GET /analysis/prompt`.

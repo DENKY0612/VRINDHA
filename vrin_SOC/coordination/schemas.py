@@ -233,6 +233,73 @@ class EthicsAssessment(BaseModel):
     evaluated_at: str = Field(default_factory=utc_now_iso)
 
 
+class ThreatIntelStatus(str, Enum):
+    """Verified threat-intelligence state of an observation (anti-fabrication).
+
+    * CONFIRMED     — a retrieved, sourced, fresh TI record matches the IOC.
+    * NOT_CONFIRMED — TI was checked (or a record exists but is stale/unmatched)
+                      and provides no supporting intelligence. Absence is never
+                      presented as "clean" and no reputation is invented.
+    * UNKNOWN       — TI could not be checked at this time (service unavailable
+                      or enrichment never ran), so the state cannot be verified.
+    """
+
+    CONFIRMED = "confirmed"
+    NOT_CONFIRMED = "not_confirmed"
+    UNKNOWN = "unknown"
+
+
+class ClassifiedFinding(BaseModel):
+    """One finding separated into fact / evidence / inference / unknown.
+
+    Rule 5 of the anti-hallucination contract: an inference is never presented
+    as a confirmed fact; each class of statement lives in its own field.
+    """
+
+    fact: str
+    evidence: str
+    inference: str
+    unknown: str = ""
+    recommendation: str = ""
+
+
+class SecurityAnalysis(BaseModel):
+    """Structured, evidence-grounded analysis of one security event.
+
+    Mirrors the ``[SECURITY ANALYSIS]`` report format of the Vrindha AI
+    anti-hallucination contract (see ``docs/ANTI_HALLUCINATION.md``). Every
+    numeric field is bounded, every claim traces back to ``facts`` /
+    ``evidence`` / ``signals``, and a missing piece of evidence lands in
+    ``unknown_information`` instead of being filled with an assumption.
+    """
+
+    analysis_id: str = Field(default_factory=lambda: f"ana-{uuid4().hex[:12]}")
+    event_id: str = ""
+    correlation_id: Optional[str] = None
+    event: str = ""
+    facts: List[str] = Field(default_factory=list)
+    evidence: List[str] = Field(default_factory=list)
+    findings: List[ClassifiedFinding] = Field(default_factory=list)
+    detection: str = ""
+    assessment: str = ""
+    risk_score: int = Field(ge=0, le=100)
+    confidence: int = Field(ge=0, le=100)
+    severity: str = "low"  # low | medium | high | critical
+    threat_intelligence: ThreatIntelStatus = ThreatIntelStatus.UNKNOWN
+    ti_detail: Dict[str, Any] = Field(default_factory=dict)
+    unknown_information: List[str] = Field(default_factory=list)
+    recommended_action: str = ""
+    action_impact: str = "none"  # none | low | high
+    human_approval_required: bool = False
+    reason: str = ""
+    evidence_conflicting: bool = False
+    insufficient_evidence: bool = False
+    claim_guard_triggered: bool = False
+    signals: List[Dict[str, Any]] = Field(default_factory=list)
+    mode: EventMode = EventMode.REAL
+    created_at: str = Field(default_factory=utc_now_iso)
+
+
 class ModelMetadata(BaseModel):
     model_name: str
     model_version: str
@@ -292,6 +359,9 @@ __all__ = [
     "EthicsClassification",
     "EthicsDecision",
     "EthicsAssessment",
+    "ThreatIntelStatus",
+    "ClassifiedFinding",
+    "SecurityAnalysis",
     "ModelMetadata",
     "IncidentStatus",
     "Incident",

@@ -18,6 +18,7 @@ from .deps import get_current_admin, get_current_user
 from vrin_SOC.coordination.commander import commander_ai
 from vrin_SOC.coordination.data_science_ai import data_science_ai
 from vrin_SOC.coordination.demo import run_demonstration
+from vrin_SOC.coordination.evidence_analysis import vrindha_ai
 from vrin_SOC.coordination.ethics_ai import ethics_ai, gita_knowledge_base
 from vrin_SOC.coordination.event_bus import event_bus
 from vrin_SOC.coordination.infrastructure_ai import infrastructure_ai
@@ -93,6 +94,12 @@ class RejectRequest(BaseModel):
 
 class DemoRequest(BaseModel):
     approver: str = Field("demo-human-approver", min_length=1, max_length=128)
+
+
+class AnalysisFeedbackRequest(BaseModel):
+    analyst: str = Field(min_length=1, max_length=128)
+    decision: str = Field(pattern=r"^(true_positive|false_positive|insufficient_evidence|unknown)$")
+    notes: str = Field("", max_length=2000)
 
 
 # ----------------------------------------------------------------------
@@ -218,6 +225,7 @@ async def agents_health(user=Depends(get_current_user)):
         "data_science": data_science_ai,
         "knowledge": knowledge_ai,
         "ethics": ethics_ai,
+        "vrindha_ai": vrindha_ai,
     }
     return {
         "status": "success",
@@ -417,7 +425,7 @@ def _coordinator_dashboard() -> Dict[str, Any]:
             ("commander", commander_ai), ("infrastructure", infrastructure_ai),
             ("threat_intel", threat_intel_ai), ("soc_analyst", soc_analyst_ai),
             ("data_science", data_science_ai), ("knowledge", knowledge_ai),
-            ("ethics", ethics_ai),
+            ("ethics", ethics_ai), ("vrindha_ai", vrindha_ai),
         ]},
         "bus": event_bus.stats(),
         "totals": {
@@ -451,3 +459,74 @@ async def coordinator_demo(req: DemoRequest, user=Depends(get_current_admin)):
         return await asyncio.to_thread(run_demonstration, req.approver)
     except Exception as exc:
         raise internal_error("coordinator demo", exc)
+
+
+# ----------------------------------------------------------------------
+# Vrindha AI — anti-hallucination, evidence-grounded analysis
+# ----------------------------------------------------------------------
+@router.get("/analysis/prompt")
+async def analysis_prompt(user=Depends(get_current_user)):
+    """The verbatim anti-hallucination operating contract (13 rules)."""
+    return await asyncio.to_thread(vrindha_ai.prompt)
+
+
+@router.post("/analysis/security")
+async def analysis_security(payload: Dict[str, Any], user=Depends(get_current_user)):
+    """Evidence-grounded structured analysis for one event.
+
+    Accepts a full ``SecurityEvent`` payload (or the flat legacy shape). The
+    result is a ``SecurityAnalysis`` plus its rendered ``[SECURITY ANALYSIS]``
+    report. No defensive action is executed — high-impact recommendations are
+    recommendations only (human approval required).
+    """
+    try:
+        event = _event_from_payload(payload)
+        analysis = await asyncio.to_thread(vrindha_ai.analyze, event)
+        from vrin_SOC.coordination.evidence_analysis import render_report
+        from vrin_SOC.coordination.schemas import SecurityAnalysis
+
+        if not isinstance(analysis, SecurityAnalysis):
+            return analysis  # graceful degradation error dict from run_guarded
+        return {
+            "status": "success",
+            "analysis_id": analysis.analysis_id,
+            "analysis": analysis.model_dump(mode="json"),
+            "report": render_report(analysis),
+        }
+    except Exception as exc:
+        raise internal_error("analysis security", exc)
+
+
+@router.get("/analysis/audit")
+async def analysis_audit(limit: int = Query(50, ge=1, le=200), user=Depends(get_current_user)):
+    """Recent analysis audit records (rule 13), newest first."""
+    return await asyncio.to_thread(vrindha_ai.list_audit, limit)
+
+
+@router.get("/analysis/feedback")
+async def analysis_feedback_list(limit: int = Query(50, ge=1, le=200), user=Depends(get_current_user)):
+    """The analyst feedback database (rule 12), newest first."""
+    return await asyncio.to_thread(vrindha_ai.list_feedback, limit)
+
+
+@router.get("/analysis/{analysis_id}")
+async def analysis_record(analysis_id: str = APIPath(min_length=1, max_length=64),
+                          user=Depends(get_current_user)):
+    """The full preserved audit record for one analysis (rule 13)."""
+    record = await asyncio.to_thread(vrindha_ai.get_audit, analysis_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+    return record
+
+
+@router.post("/analysis/{analysis_id}/feedback")
+async def analysis_feedback(req: AnalysisFeedbackRequest,
+                            analysis_id: str = APIPath(min_length=1, max_length=64),
+                            user=Depends(get_current_user)):
+    """Record an analyst decision (rule 12); the feedback log is append-only."""
+    try:
+        return await asyncio.to_thread(
+            vrindha_ai.record_feedback, analysis_id, req.analyst, req.decision, req.notes
+        )
+    except Exception as exc:
+        raise internal_error("analysis feedback", exc)

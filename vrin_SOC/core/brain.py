@@ -543,6 +543,41 @@ class Brain:
                         "timestamp": datetime.now().isoformat(),
                     })
 
+                # Anti-hallucination, evidence-grounded analysis (Vrindha AI
+                # contract): FACT/INFERENCE/UNKNOWN separation, verified TI
+                # state, explainable risk+confidence, structured report, and a
+                # persisted audit row. Additive: failures never break the
+                # legacy threat-detection response.
+                evidence_analysis = None
+                try:
+                    from vrin_SOC.coordination.evidence_analysis import render_report, vrindha_ai
+                    from vrin_SOC.coordination.schemas import SecurityEvent as _SecurityEvent
+
+                    analysis_event = _SecurityEvent(
+                        event_type="security_event",
+                        entity={"ip": target} if target else {},
+                        data={
+                            "command": command,
+                            "threat_level": threat_result.get("threat_level"),
+                            "risk_level": threat_result.get("risk_level"),
+                            "confidence": threat_result.get("confidence"),
+                            "indicators": threat_result.get("indicators") or [],
+                            "failed_login_attempts": threat_result.get("failed_login_attempts") or 0,
+                            "suspicious_ports": threat_result.get("suspicious_ports") or [],
+                            "threat_intelligence": threat_result.get("threat_intelligence") or {},
+                        },
+                        severity=str(threat_result.get("risk_level") or threat_result.get("threat_level") or "low").lower(),
+                    )
+                    analysis_result = vrindha_ai.analyze(analysis_event)
+                    if hasattr(analysis_result, "analysis_id"):
+                        evidence_analysis = {
+                            "analysis_id": analysis_result.analysis_id,
+                            "analysis": analysis_result.model_dump(mode="json"),
+                            "report": render_report(analysis_result),
+                        }
+                except Exception:  # noqa: BLE001 — analysis is advisory, not blocking
+                    evidence_analysis = None
+
                 return {
                     "mode": "blue",
                     "action": "threat_detection",
@@ -559,6 +594,7 @@ class Brain:
                         # Legacy key retained for clients; no containment action
                         # is executed here unless a human validates it later.
                         "automated_action": response_recommendation,
+                        "evidence_analysis": evidence_analysis,
                         "safety": safety,
                         "similar": similar,
                         "gita_guidance": gita_engine.get_ethical_guidance("defense")

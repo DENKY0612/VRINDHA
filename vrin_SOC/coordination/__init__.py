@@ -11,6 +11,9 @@ central coordination, human accountability:
 * Knowledge AI — remembers validated lessons
 * Ethics & Compliance AI — governs consequential actions (Dharma + Gita,
   law/policy guidance, verified verse references only)
+* Vrindha AI — anti-hallucination, evidence-grounded security analysis
+  (FACT/INFERENCE/UNKNOWN separation, verified TI, risk+confidence,
+  structured reports, audit trail, feedback loop)
 * Human — authorizes high-impact decisions
 
 All agents communicate through :mod:`.event_bus`, never directly with each
@@ -48,6 +51,7 @@ from .knowledge_ai import KnowledgeAI, knowledge_ai
 from .observability import AgentMetrics, BaseAgent
 from .schemas import (
     AnomalyResult,
+    ClassifiedFinding,
     DataQualityReport,
     EntityRef,
     EthicsAssessment,
@@ -57,7 +61,16 @@ from .schemas import (
     Provenance,
     RiskFactor,
     RiskResult,
+    SecurityAnalysis,
     SecurityEvent,
+    ThreatIntelStatus,
+)
+from .evidence_analysis import (
+    VRINDHA_AI_PROMPT,
+    VrindhaAI,
+    enforce_claim_guard,
+    render_report,
+    vrindha_ai,
 )
 from .soc_analyst_ai import SOCAnalystAI, soc_analyst_ai
 from .threat_intel_ai import ThreatIntelAI, threat_intel_ai
@@ -92,9 +105,17 @@ __all__ = [
     "Provenance",
     "RiskFactor",
     "RiskResult",
+    "SecurityAnalysis",
     "SecurityEvent",
     "SOCAnalystAI",
     "soc_analyst_ai",
     "ThreatIntelAI",
     "threat_intel_ai",
+    "ThreatIntelStatus",
+    "ClassifiedFinding",
+    "VRINDHA_AI_PROMPT",
+    "VrindhaAI",
+    "vrindha_ai",
+    "render_report",
+    "enforce_claim_guard",
 ]

@@ -42,8 +42,13 @@ existing SOC: **Commander AI** (orchestration + incident lifecycle) over
 correlation, investigation), **Data Science AI** (validated ingest → features
 with no leakage → interpretable anomaly → explainable weighted risk →
 evaluated on human-validated labels only), **Knowledge AI** (validated
-lessons only), and **Ethics & Compliance AI** (action-level Dharma
-classification, verified Gita guidance, teach mode, ethics audit log).
+lessons only), **Ethics & Compliance AI** (action-level Dharma
+classification, verified Gita guidance, teach mode, ethics audit log), and
+**Vrindha AI** (anti-hallucination, evidence-grounded security analysis:
+FACT/INFERENCE/UNKNOWN separation, verified threat-intelligence state,
+explainable risk + confidence, structured `[SECURITY ANALYSIS]` reports,
+per-analysis audit trail, analyst feedback loop — recommend-only, never
+executes).
 
 Key properties:
 
@@ -72,6 +77,7 @@ curl -X POST localhost:8000/coordinator/demo \
 Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
 [`docs/RISK_VALIDATION.md`](docs/RISK_VALIDATION.md),
 [`docs/AGENT_PROTOCOL.md`](docs/AGENT_PROTOCOL.md),
+[`docs/ANTI_HALLUCINATION.md`](docs/ANTI_HALLUCINATION.md),
 [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/API.md`](docs/API.md),
 [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md),

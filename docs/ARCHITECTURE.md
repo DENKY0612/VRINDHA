@@ -31,6 +31,7 @@ Core Brain, Red/Blue Team modules, SIEM, and the independent `Vrin_TI` service.
 | SOC Analyst AI | `coordination/soc_analyst_ai.py` | Triage, 15-minute correlation, investigation summary, recommendations | Recommends; humans approve |
 | Knowledge AI | `coordination/knowledge_ai.py` | Stores **validated** lessons; search; validated-sample feed for DS | Read/store validated outcomes only |
 | Ethics & Compliance AI | `coordination/ethics_ai.py` | Action-level Dharma classification, decision matrix, verified Gita guidance, teach mode, ethics audit log | Governs; judges the *action*, never the user |
+| Vrindha AI | `coordination/evidence_analysis.py` | Anti-hallucination, evidence-grounded analysis: FACT/INFERENCE/UNKNOWN separation, verified TI state, explainable risk+confidence, structured report, audit trail, feedback loop | Analyze + recommend only; **never executes** (see `docs/ANTI_HALLUCINATION.md`) |
 
 Every agent inherits `BaseAgent` (`coordination/observability.py`) which
 provides: identity (`name`, `agent_version`, `capabilities`), a call metric
