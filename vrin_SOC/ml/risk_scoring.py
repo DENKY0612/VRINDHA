@@ -14,16 +14,32 @@ independent detection layers:
 
 The result is advisory intelligence.  High-risk or high-impact responses are
 routed to a human-validation gate before any containment action is executed.
+
+Configuration is loaded from config/risk_config.json at startup (Phase 4 externalization).
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional
+import json
 import math
 import re
 
 from vrin_SOC.core.error_handler import ErrorHandler
+
+
+def _load_risk_config() -> Dict[str, Any]:
+    """Load risk configuration from JSON file."""
+    config_path = Path(__file__).resolve().parent.parent / "config" / "risk_config.json"
+    if config_path.exists():
+        with open(config_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+_RISK_CONFIG = _load_risk_config()
 
 
 @dataclass(frozen=True)
@@ -57,7 +73,7 @@ class RiskScoring:
     #: Relative weights for independent detection layers.  Only active layers
     #: are normalized into the final score, so missing TI does not incorrectly
     #: mean "safe"; it simply lowers confidence and removes corroboration.
-    LAYER_WEIGHTS: Mapping[str, float] = {
+    LAYER_WEIGHTS: Mapping[str, float] = _RISK_CONFIG.get("layer_weights", {
         "rule_signature_detection": 0.20,
         "anomaly_detection": 0.15,
         "threat_intelligence": 0.20,
@@ -65,9 +81,9 @@ class RiskScoring:
         "siem_log_correlation": 0.15,
         "ai_reasoning": 0.10,
         "declared_severity": 0.05,
-    }
+    })
 
-    SEVERITY_SCORE: Mapping[str, float] = {
+    SEVERITY_SCORE: Mapping[str, float] = _RISK_CONFIG.get("severity_score", {
         "informational": 5,
         "info": 5,
         "low": 20,
@@ -75,9 +91,9 @@ class RiskScoring:
         "moderate": 50,
         "high": 78,
         "critical": 93,
-    }
+    })
 
-    CONFIDENCE_VALUE: Mapping[str, float] = {
+    CONFIDENCE_VALUE: Mapping[str, float] = _RISK_CONFIG.get("confidence_value", {
         "none": 0.0,
         "low": 0.35,
         "medium": 0.60,
@@ -85,9 +101,21 @@ class RiskScoring:
         "high": 0.82,
         "critical": 0.92,
         "very_high": 0.95,
-    }
+    })
 
-    SUSPICIOUS_PORTS = {4444, 5555, 6666, 1337, 31337, 31338, 8081}
+    SUSPICIOUS_PORTS = set(_RISK_CONFIG.get("suspicious_ports", [4444, 5555, 6666, 1337, 31337, 31338, 8081]))
+
+    _CORROBORATION_THRESHOLD = _RISK_CONFIG.get("corroboration_threshold", 55)
+    _STRONG_THRESHOLD = _RISK_CONFIG.get("strong_threshold", 75)
+
+    _RISK_LEVEL_THRESHOLDS = _RISK_CONFIG.get("risk_level_thresholds", {
+        "critical": 90,
+        "high": 70,
+        "medium": 40,
+        "low": 0
+    })
+
+    _HUMAN_VALIDATION_THRESHOLD = _RISK_CONFIG.get("human_validation_threshold", 70)
 
     def __init__(self):
         self.name = "RiskScoring"
@@ -118,8 +146,8 @@ class RiskScoring:
             # Corroboration bonus: several independent layers saying the same
             # thing should raise risk and confidence more than one isolated AI
             # prediction.
-            corroborating = [s for s in active if s.score >= 55 and s.evidence]
-            strong = [s for s in active if s.score >= 75 and s.evidence]
+            corroborating = [s for s in active if s.score >= self._CORROBORATION_THRESHOLD and s.evidence]
+            strong = [s for s in active if s.score >= self._STRONG_THRESHOLD and s.evidence]
             if len(corroborating) >= 2:
                 weighted_score += min(8.0, 3.0 * (len(corroborating) - 1))
             if len(strong) >= 3:
@@ -430,11 +458,11 @@ class RiskScoring:
     # Helpers
     # ------------------------------------------------------------------
     def _risk_level(self, score: int) -> str:
-        if score >= 90:
+        if score >= self._RISK_LEVEL_THRESHOLDS["critical"]:
             return "Critical"
-        if score >= 70:
+        if score >= self._RISK_LEVEL_THRESHOLDS["high"]:
             return "High"
-        if score >= 40:
+        if score >= self._RISK_LEVEL_THRESHOLDS["medium"]:
             return "Medium"
         return "Low"
 
@@ -466,7 +494,7 @@ class RiskScoring:
         ]
         high_impact = bool(event.get("high_impact") or event.get("requires_human_validation"))
         high_impact = high_impact or any(term in text_lower for term in high_impact_terms)
-        return high_impact or risk_score >= 70
+        return high_impact or risk_score >= self._HUMAN_VALIDATION_THRESHOLD
 
     def _recommended_action(self, risk_score: int, requires_human: bool, ip: str) -> str:
         target = "the source" if ip == "unknown" else ip

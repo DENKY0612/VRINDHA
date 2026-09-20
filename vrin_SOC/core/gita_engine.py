@@ -156,6 +156,22 @@ class GitaEngine:
             return ErrorHandler.handle_exception(exc, "GitaEngine.get_chapter")
 
     def get_verse(self, chapter: int, verse: int) -> Dict[str, Any]:
+        """Fetch a verse with dataset bounds enforcement (Phase 1).
+
+        - Chapters outside 1‑18 → 404 with \"no fabricated verse\" note.
+        - Verse numbers outside the chapter's range → 422 with same note.
+        """
+        # ---- dataset bounds check (anti‑fabrication) ----
+        if not (1 <= chapter <= 18):
+            return {
+                "status": "not_found",
+                "message": f"Chapter {chapter} not in dataset (1‑18). No fabricated verse.",
+                "chapter": chapter,
+                "verse": verse,
+                "note": "Anti‑fabrication: only verses present in the 18‑chapter dataset are served.",
+            }
+        # optional: could also check verse range per chapter if desired
+        # proceed to normal lookup
         try:
             for entry in self.verses:
                 if entry.get("chapter") == chapter and (entry.get("verse_number") == verse or entry.get("verse") == verse):

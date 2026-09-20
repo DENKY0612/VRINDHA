@@ -461,6 +461,32 @@ async def autonomy_status(user=Depends(get_current_user)):
         raise internal_error("autonomy status", exc)
 
 
+@app.get("/autonomy/config")
+async def autonomy_config(user=Depends(get_current_user)):
+    """Return current autonomy configuration (Phase 2 observability)."""
+    from vrin_SOC.core.brain import brain
+    try:
+        # Load the policy file
+        from pathlib import Path
+        import json
+        policy_path = Path(__file__).resolve().parent.parent / "config" / "autonomy_policy.json"
+        if policy_path.exists():
+            with open(policy_path, "r", encoding="utf-8") as f:
+                policy_data = json.load(f)
+        else:
+            policy_data = {"error": "autonomy_policy.json not found"}
+
+        # Merge with brain's loaded thresholds
+        return {
+            "status": "success",
+            "policy": policy_data,
+            "active_thresholds": getattr(brain, "autonomy_thresholds", {}),
+            "autonomous_agent": autonomous_agent.status(),
+        }
+    except Exception as exc:
+        raise internal_error("autonomy config", exc)
+
+
 @app.post("/autonomy/start")
 async def autonomy_start(user=Depends(get_current_admin)):
     try:
@@ -554,6 +580,23 @@ async def record_risk_feedback(req: RiskFeedbackRequest, user=Depends(get_curren
         source_ip=req.source_ip,
         signal_summary=req.signal_summary,
     )
+
+
+@app.get("/ml/risk/config")
+async def risk_config(user=Depends(get_current_user)):
+    """Return current risk scoring configuration (Phase 4 externalization)."""
+    import json
+    from pathlib import Path
+    config_path = Path(__file__).resolve().parent.parent / "config" / "risk_config.json"
+    if config_path.exists():
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+    else:
+        config = {"error": "risk_config.json not found"}
+    return {
+        "status": "success",
+        "config": config,
+    }
 
 
 @app.get("/ml/risk/feedback")
@@ -871,12 +914,34 @@ async def hive_reap(user=Depends(get_current_admin)):
     return hive_coordinator.reap_stale()
 
 
+@app.get("/red-team/status", tags=["red-team"])
+async def red_team_status(user=Depends(get_current_user)):
+    """Red Team module status (Phase 3 ethical guard).
+
+    Shows that red team tools are disabled unless explicitly enabled.
+    """
+    import os
+    real_execution = os.getenv("VRINDHA_REAL_EXECUTION_ENABLED", "false").lower() == "true"
+    return {
+        "status": "success",
+        "real_execution_enabled": real_execution,
+        "mode": "simulation" if not real_execution else "live",
+        "ethical_guard": "EDUCATIONAL ONLY - all red team tools require explicit admin approval",
+        "modules": {
+            "exploit_assistant": {
+                "educational_only": True,
+                "requires_human_approval": True,
+            }
+        },
+    }
+
+
 # Coordination layer (HIVE multi-agent: Commander, Infrastructure, Threat
 # Intelligence, SOC Analyst, Data Science, Knowledge, Ethics & Dharma).
-app.include_router(coordination_router)
+app.include_router(coordination_router, prefix="/api/v1")
 
 # Local, dependency-free blockchain ledger (integrity anchor, localhost-only).
-app.include_router(blockchain_router)
+app.include_router(blockchain_router, prefix="/api/v1")
 
 
 dashboard_path = Path(__file__).parent.parent / "dashboard"

@@ -451,7 +451,8 @@ class Brain:
             try:
                 from vrin_SOC.database.db import add_log
                 add_log(command, str(result_data)[:2000], "Medium")
-            except:
+            except Exception as e:
+                # best‑effort: continue without logging
                 pass
 
             # Threat analysis on result
@@ -979,3 +980,18 @@ Red Team requires explicit "yes" confirmation.
 
 # Global brain instance
 brain = Brain()
+
+
+def set_autonomy_policy(thresholds: dict) -> None:
+    """Update the brain's autonomy policy thresholds from loaded config (Phase 1).
+
+    Called once at startup from main.py after loading autonomy_policy.json.
+    """
+    if hasattr(brain, "policy") and hasattr(brain.policy, "__dict__"):
+        # Store thresholds on the brain for easy access
+        brain.autonomy_thresholds = thresholds
+        # Also apply to the policy instance if it has relevant attributes
+        for key, value in thresholds.items():
+            if hasattr(brain.policy, key.upper()):
+                setattr(brain.policy, key.upper(), value)
+    print(f"[Brain] Autonomy thresholds loaded: {thresholds}")

@@ -55,7 +55,8 @@ class InMemoryTransport(EventTransport):
 class EventBus:
     """Thread-safe publish/subscribe/correlate bus with a dead-letter queue."""
 
-    def __init__(self, transport: Optional[EventTransport] = None, history_limit: int = 2000) -> None:
+    def __init__(self, transport: Optional[EventTransport] = None, history_limit: int = 2000,
+                 rate_limit_per_sec: int = 100) -> None:
         self.transport = transport or InMemoryTransport()
         self._lock = threading.RLock()
         self._subscribers: Dict[str, List[Dict[str, Any]]] = {}
@@ -65,6 +66,24 @@ class EventBus:
         self.published = 0
         self.delivered = 0
         self.failed = 0
+        # Rate limiting (Phase 3)
+        self._rate_limit = max(1, rate_limit_per_sec)
+        self._emit_timestamps: deque[float] = deque(maxlen=self._rate_limit * 2)
+
+    # ------------------------------------------------------------------
+    # Rate limiting helper (Phase 3)
+    # ------------------------------------------------------------------
+    def _check_rate_limit(self) -> bool:
+        """Return True if under rate limit, False if exceeded."""
+        now = time.time()
+        with self._lock:
+            # Remove timestamps older than 1 second
+            while self._emit_timestamps and self._emit_timestamps[0] < now - 1.0:
+                self._emit_timestamps.popleft()
+            if len(self._emit_timestamps) >= self._rate_limit:
+                return False
+            self._emit_timestamps.append(now)
+        return True
 
     # ------------------------------------------------------------------
     # Subscriptions
@@ -99,7 +118,18 @@ class EventBus:
     # Publishing
     # ------------------------------------------------------------------
     def publish(self, event: SecurityEvent) -> Dict[str, Any]:
-        """Validate-persist-deliver. Returns a delivery report."""
+        """Validate-persist-deliver. Returns a delivery report.
+
+        Adds TI availability metadata to the event (Phase 3 TI enforcement).
+        """
+        # Enforce TI availability metadata on every event
+        try:
+            from .ti_enforcer import ti_enforcer
+            ti_enforcer.enrich_event_metadata(event.metadata)
+        except Exception:
+            # TI enforcer not available - continue without it
+            pass
+
         started = time.perf_counter()
         self.transport.store(event)
         with self._lock:
@@ -138,7 +168,12 @@ class EventBus:
         return report
 
     def emit(self, **fields: Any) -> SecurityEvent:
-        """Convenience: build a SecurityEvent and publish it."""
+        """Convenience: build a SecurityEvent and publish it.
+        
+        Respects rate limiting (Phase 3) - raises if exceeded.
+        """
+        if not self._check_rate_limit():
+            raise RuntimeError(f"Event bus rate limit exceeded ({self._rate_limit} events/sec)")
         event = SecurityEvent(**fields)
         self.publish(event)
         return event
@@ -186,6 +221,8 @@ class EventBus:
             "subscribers": sum(len(v) for v in self._subscribers.values()),
             "history_size": len(self._history),
             "dead_letter_size": len(self._dead_letter),
+            "rate_limit_per_sec": self._rate_limit,
+            "recent_emit_rate": len(self._emit_timestamps),
         }
 
 

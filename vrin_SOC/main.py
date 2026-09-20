@@ -1,5 +1,5 @@
-"""
-Terminal AI Assistant Prompt - Per DAY 2, 4, 24 and MASTER BLUEPRINT
+# -*- coding: utf-8 -*-
+"""Terminal AI Assistant Prompt - Per DAY 2, 4, 24 and MASTER BLUEPRINT
 Build a command-line AI assistant for Vrindha
 Requirements: Accept user input continuously, pass input to Brain, display formatted output
 Features: Interactive loop, exit command, clean output formatting
@@ -9,25 +9,36 @@ Also: Multi-agent, logging, SIEM, Dharma integration, Gita wisdom
 from datetime import datetime
 from pathlib import Path
 import sys
+import json
 
 # Allow `python vrin_SOC/main.py` and `cd vrin_SOC && python main.py`.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+# Load autonomy policy dynamically (Phase 1 stability fix)
+_POLICY_PATH = _REPO_ROOT / "vrin_SOC" / "config" / "autonomy_policy.json"
+if _POLICY_PATH.exists():
+    with open(_POLICY_PATH, "r", encoding="utf-8") as _pf:
+        AUTO_POLICY = json.load(_pf)
+    # expose selected thresholds to the brain module
+    from vrin_SOC.core.brain import set_autonomy_policy
+    set_autonomy_policy(AUTO_POLICY.get("thresholds", {}))
+else:
+    AUTO_POLICY = {"medium": 40, "high": 70, "critical": 85}
+
 from vrin_SOC.core.brain import brain
 from vrin_SOC.core.gita_engine import gita_engine
 from vrin_SOC.tools.installer import verify_all_tools
 from vrin_SOC.database.db import init_db
-import json
 
 def print_banner():
     print("""
-╔════════════════════════════════════════════════════════════╗
+╔═════════════════════════════════════════════════════════════╗
 ║  🛡️  Vrindha AI SOC System - Ethical AI Cybersecurity     ║
 ║  Controlled + Automated | Red Team Manual, Blue Automated  ║
 ║  Dharma Engine | Gita Wisdom | Kali Linux Compatible       ║
-╚════════════════════════════════════════════════════════════╝
+╚═════════════════════════════════════════════════════════════╝
     """)
     print(f"Mode: DEFENSIVE (default) | Gita Loaded: {gita_engine.loaded} ({len(gita_engine.verses) if hasattr(gita_engine, 'verses') else 0} verses)")
     print(f"Time: {datetime.now().isoformat()}")
@@ -66,7 +77,46 @@ def format_output(result: dict):
     
     print("="*70 + "\n")
 
+def run_batch_mode(input_file: str = None) -> None:
+    """Batch mode: read JSON commands from stdin or file, output JSON results."""
+    import json
+    import sys
+
+    if input_file:
+        with open(input_file, "r", encoding="utf-8") as f:
+            commands = json.load(f)
+    else:
+        commands = json.load(sys.stdin)
+
+    if not isinstance(commands, list):
+        commands = [commands]
+
+    results = []
+    for cmd in commands:
+        if isinstance(cmd, str):
+            text = cmd
+        elif isinstance(cmd, dict):
+            text = cmd.get("command", cmd.get("text", ""))
+        else:
+            text = str(cmd)
+        result = brain.process(text)
+        results.append(result)
+
+    json.dump({"results": results}, sys.stdout, indent=2)
+    sys.stdout.write("\n")
+
+
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Vrindha AI SOC System")
+    parser.add_argument("--batch", action="store_true", help="Run in batch mode (read JSON from stdin, output JSON)")
+    parser.add_argument("--input", type=str, help="Input file for batch mode (default: stdin)")
+    args = parser.parse_args()
+
+    if args.batch:
+        run_batch_mode(args.input)
+        return
+
     print_banner()
     
     # Initial tool verification per blueprint advice: start with nmap → nikto → wireshark → fail2ban

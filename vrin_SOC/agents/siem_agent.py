@@ -33,7 +33,8 @@ class SIEMAgent:
             try:
                 from vrin_SOC.database.db import add_log as db_add
                 db_add(command, result, risk_level)
-            except:
+            except Exception as e:
+                # Best-effort: ignore error
                 pass
         except Exception as e:
             ErrorHandler.handle_exception(e, "SIEMAgent.add_log")
@@ -53,7 +54,8 @@ class SIEMAgent:
             try:
                 from vrin_SOC.database.db import get_logs as db_get
                 db_logs = db_get(limit)
-            except:
+            except Exception as e:
+                # Best-effort: ignore error
                 pass
             
             # Correlate events - simple correlation per blueprint
@@ -85,7 +87,8 @@ class SIEMAgent:
                 if "nmap" in low or "scan" in low:
                     threats.append({"event": log[:100], "type": "reconnaissance", "risk": "LOW"})
             return threats
-        except:
+        except Exception as e:
+            # Return empty list on error; could log via ErrorHandler if needed
             return []
 
 siem_agent = SIEMAgent()

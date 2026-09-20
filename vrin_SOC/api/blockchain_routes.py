@@ -128,4 +128,15 @@ async def blockchain_verify() -> Dict[str, Any]:
     return {"status": "success", **report}
 
 
+@router.get("/blockchain/difficulty")
+async def blockchain_difficulty() -> Dict[str, Any]:
+    """Get current blockchain proof-of-work difficulty (Phase 2)."""
+    chain = get_chain()
+    return {
+        "status": "success",
+        "difficulty": chain.difficulty,
+        "note": "Number of leading zero hex digits required in block hash. 0 = mining disabled.",
+    }
+
+
 __all__ = ["router", "get_chain"]

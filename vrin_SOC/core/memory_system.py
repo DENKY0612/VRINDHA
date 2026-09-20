@@ -85,7 +85,8 @@ class MemorySystem:
                     score = sum(1 for word in query_lower.split() if word in text)
                     if score > 0:
                         scored.append((score, data))
-                except:
+                except Exception as e:
+                    # best‑effort: skip unparseable entry, continue scanning
                     continue
             
             scored.sort(key=lambda x: x[0], reverse=True)

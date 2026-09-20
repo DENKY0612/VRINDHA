@@ -1,0 +1,40 @@
+{
+  "_comment": "Vrindha Risk Scoring Configuration. Loaded at startup; changes take effect after reload.",
+  "layer_weights": {
+    "rule_signature_detection": 0.20,
+    "anomaly_detection": 0.15,
+    "threat_intelligence": 0.20,
+    "behavioral_analysis": 0.15,
+    "siem_log_correlation": 0.15,
+    "ai_reasoning": 0.10,
+    "declared_severity": 0.05
+  },
+  "severity_score": {
+    "informational": 5,
+    "info": 5,
+    "low": 20,
+    "medium": 50,
+    "moderate": 50,
+    "high": 78,
+    "critical": 93
+  },
+  "confidence_value": {
+    "none": 0.0,
+    "low": 0.35,
+    "medium": 0.60,
+    "moderate": 0.60,
+    "high": 0.82,
+    "critical": 0.92,
+    "very_high": 0.95
+  },
+  "suspicious_ports": [4444, 5555, 6666, 1337, 31337, 31338, 8081],
+  "corroboration_threshold": 55,
+  "strong_threshold": 75,
+  "risk_level_thresholds": {
+    "critical": 90,
+    "high": 70,
+    "medium": 40,
+    "low": 0
+  },
+  "human_validation_threshold": 70
+}

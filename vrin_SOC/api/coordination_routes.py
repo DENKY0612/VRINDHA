@@ -277,11 +277,15 @@ async def agents_health(user=Depends(get_current_user)):
         "vrindha_ai": vrindha_ai,
         "controlled_response": controlled_response_engine,
     }
+    # Include bus dead-letter count (Phase 2 observability)
+    bus_stats = event_bus.stats()
+    dead_letter_count = bus_stats.get("dead_letter_size", 0)
     return {
         "status": "success",
         "count": len(agents),
         "agents": {key: agent.health() for key, agent in agents.items()},
-        "bus": event_bus.stats(),
+        "bus": bus_stats,
+        "dead_letter_count": dead_letter_count,
     }
 
 
