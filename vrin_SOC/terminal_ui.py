@@ -121,6 +121,92 @@ def print_startup_banner(brain_loaded: bool = True, tools_count: int = 0,
     console.print()
 
 
+def _parse_tool_output(data: Dict) -> str:
+    """Parse messy tool result dicts into clean readable output."""
+    if not isinstance(data, dict):
+        return str(data)[:500]
+    
+    lines = []
+    
+    # Network scan / nmap
+    if data.get('type') == 'network_scan' or 'nmap' in str(data.get('raw', {}).get('engine', '')):
+        raw = data.get('raw', {})
+        findings = raw.get('findings', [])
+        lines.append(f"[bold]Target:[/bold] {raw.get('target', data.get('target', 'unknown'))}")
+        lines.append(f"[bold]Scanner:[/bold] {raw.get('tool', data.get('tool_used', 'nmap'))}")
+        lines.append(f"[bold]Status:[/bold] [green]SUCCESS[/green]")
+        lines.append("")
+        if findings:
+            lines.append("[bold cyan]Open Ports:[/bold cyan]")
+            for f in findings:
+                port = f.get('port', '?')
+                state = f.get('state', 'open')
+                service = f.get('service', 'unknown')
+                lines.append(f"  [bold]{port}[/bold]/tcp  [green]{state}[/green]  {service}")
+        else:
+            lines.append("[dim]No open ports found in scan.[/dim]")
+        return "\n".join(lines)
+    
+    # Whois
+    if data.get('type') == 'whois':
+        raw_result = data.get('result', '')
+        if isinstance(raw_result, str):
+            # Parse key fields
+            for line in raw_result.split('\n'):
+                line = line.strip()
+                if not line:
+                    continue
+                if line.startswith('@url:'):
+                    continue  # skip markdown noise
+                if ':' in line and not line.startswith(' '):
+                    lines.append(line[:120])
+                elif line.startswith('Domain Status'):
+                    lines.append(f"  [dim]{line[:120]}[/dim]")
+        lines = lines[:12]  # cap output
+        lines.insert(0, f"[bold]Target:[/bold] {data.get('target', 'unknown')}")
+        return "\n".join(lines)
+    
+    # Vulnerability scan
+    if data.get('type') == 'vulnerability_scan':
+        findings = data.get('findings', [])
+        lines.append(f"[bold]Target:[/bold] {data.get('target', 'unknown')}")
+        lines.append(f"[bold]Scanner:[/bold] {data.get('tool_used', 'nikto')}")
+        lines.append(f"[bold]Status:[/bold] [green]SUCCESS[/green]")
+        lines.append("")
+        if findings:
+            lines.append("[bold yellow]Findings:[/bold yellow]")
+            for f in findings[:10]:
+                lines.append(f"  • {str(f)[:100]}")
+        else:
+            lines.append("[dim]No critical findings.[/dim]")
+        return "\n".join(lines)
+    
+    # Generic fallback: show key fields, skip nested raw dicts
+    skip_keys = {'raw', 'result'}  # too verbose
+    for key in ['type', 'agent', 'target', 'tool_used', 'status', 'engine']:
+        if key in data:
+            val = data[key]
+            if isinstance(val, str):
+                lines.append(f"[bold]{key.replace('_',' ').title()}:[/bold] {val[:100]}")
+    
+    # Show findings if present
+    findings = data.get('findings', [])
+    if findings:
+        lines.append("")
+        lines.append("[bold]Findings:[/bold]")
+        for f in findings[:10]:
+            lines.append(f"  • {str(f)[:100]}")
+    
+    # Show result text (trimmed)
+    result_text = data.get('result', '')
+    if isinstance(result_text, str) and result_text:
+        lines.append("")
+        lines.append("[bold]Output:[/bold]")
+        lines.append(result_text[:800])
+    
+    return "\n".join(lines) if lines else str(data)[:500]
+
+
 def print_result(result: Dict):
     """Print formatted result in a beautiful way."""
     mode = result.get('mode', 'unknown').upper()
@@ -169,26 +255,38 @@ def print_result(result: Dict):
     if not data:
         return
     
+    # Threat Analysis (compact)
     if 'threat' in data or 'threat_analysis' in data:
         threat = data.get('threat') or data.get('threat_analysis')
-        threat_table = Table(
-            title="🛡️  Threat Analysis",
-            box=box.DOUBLE_EDGE,
-            border_style=COLORS['red'],
-            width=console.width - 4,
-        )
-        threat_table.add_column("Field", style=f"bold {COLORS['gray']}")
-        threat_table.add_column("Value", style=COLORS['text'])
-        for k, v in (threat.items() if isinstance(threat, dict) else []):
-            threat_table.add_row(str(k), str(v)[:200])
-        console.print(threat_table)
+        if isinstance(threat, dict):
+            t_table = Table(
+                title="🛡️  Threat Analysis",
+                box=box.SIMPLE_HEAVY,
+                border_style=COLORS['blue'],
+                show_header=False,
+                padding=(0, 2),
+            )
+            t_table.add_column("Key", style=f"bold {COLORS['gray']}", width=20)
+            t_table.add_column("Value", style=COLORS['text'])
+            for k in ['threat_level', 'risk_level', 'confidence', 'threat_detected', 'failed_login_attempts', 'indicators', 'anomaly_score']:
+                if k in threat:
+                    v = threat[k]
+                    if k == 'threat_detected':
+                        v = '[red]YES[/red]' if v else '[green]NO[/green]'
+                    elif k == 'indicators' and not v:
+                        v = '[dim]none[/dim]'
+                    elif k == 'threat_level':
+                        v = f"[bold {_threat_color(str(v))}]{v}[/bold {_threat_color(str(v))}]"
+                    t_table.add_row(k.replace('_', ' ').title(), str(v)[:100])
+            console.print(t_table)
     
+    # Gita Wisdom
     if 'gita_verse' in data and data['gita_verse']:
         gv = data['gita_verse']
         if isinstance(gv, dict):
             verse_text = f"🕉️  Chapter {gv.get('chapter')}, Verse {gv.get('verse')}\n"
-            verse_text += f"\"{gv.get('text', '')[:300]}\"\n"
-            verse_text += f"[dim]Meaning: {gv.get('meaning', '')[:400]}[/dim]"
+            verse_text += f"\"{gv.get('text', '')[:250]}\"\n"
+            verse_text += f"[dim]Meaning: {gv.get('meaning', '')[:300]}[/dim]"
             console.print(
                 Panel(
                     verse_text,
@@ -198,6 +296,7 @@ def print_result(result: Dict):
                 )
             )
     
+    # Dharma
     if 'dharma' in data:
         dharma = data['dharma']
         if isinstance(dharma, dict):
@@ -222,10 +321,19 @@ def print_result(result: Dict):
                 )
             )
     
+    # Tool Output (clean formatted)
     if 'result' in data:
+        result_data = data['result']
+        if isinstance(result_data, dict):
+            formatted = _parse_tool_output(result_data)
+        elif isinstance(result_data, str):
+            formatted = result_data[:800]
+        else:
+            formatted = str(result_data)[:500]
+        
         console.print(
             Panel(
-                str(data['result'])[:2000],
+                formatted,
                 title="📋 Tool Output",
                 border_style=COLORS['cyan'],
                 width=console.width - 4,
@@ -233,6 +341,17 @@ def print_result(result: Dict):
         )
     
     console.print()
+
+
+def _threat_color(level: str) -> str:
+    level = level.upper()
+    if level == 'HIGH' or level == 'CRITICAL':
+        return COLORS['red']
+    if level == 'MEDIUM':
+        return COLORS['yellow']
+    if level == 'LOW':
+        return COLORS['green']
+    return COLORS['gray']
 
 
 def print_help():

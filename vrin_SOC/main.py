@@ -7,6 +7,7 @@ import sys
 import os
 from pathlib import Path
 from datetime import datetime
+from typing import Dict
 
 # Ensure we can import vrin_SOC package
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -186,6 +187,70 @@ def main():
             continue
 
 
+def _format_tool_output_fallback(data: Dict) -> str:
+    """Format tool output cleanly without rich."""
+    lines = []
+    if not isinstance(data, dict):
+        return str(data)[:500]
+    
+    # Network scan
+    if data.get('type') == 'network_scan' or 'nmap' in str(data.get('raw', {}).get('engine', '')):
+        raw = data.get('raw', {})
+        findings = raw.get('findings', [])
+        lines.append(f"Target: {raw.get('target', data.get('target', 'unknown'))}")
+        lines.append(f"Scanner: {raw.get('tool', data.get('tool_used', 'nmap'))}")
+        lines.append(f"Status: SUCCESS")
+        if findings:
+            lines.append("")
+            lines.append("Open Ports:")
+            for f in findings:
+                port = f.get('port', '?')
+                state = f.get('state', 'open')
+                service = f.get('service', 'unknown')
+                lines.append(f"  {port}/tcp  {state}  {service}")
+        else:
+            lines.append("No open ports found in scan.")
+        return "\n".join(lines)
+    
+    # Whois
+    if data.get('type') == 'whois':
+        raw_result = data.get('result', '')
+        if isinstance(raw_result, str):
+            for line in raw_result.split('\n'):
+                line = line.strip()
+                if not line or line.startswith('@url:'):
+                    continue
+                if ':' in line and not line.startswith(' '):
+                    lines.append(line[:120])
+                elif line.startswith('Domain Status'):
+                    lines.append(f"  {line[:120]}")
+        lines = lines[:12]
+        lines.insert(0, f"Target: {data.get('target', 'unknown')}")
+        return "\n".join(lines)
+    
+    # Generic: show key fields only
+    for key in ['type', 'agent', 'target', 'tool_used', 'status', 'engine']:
+        if key in data:
+            val = data[key]
+            if isinstance(val, str):
+                lines.append(f"{key.replace('_',' ').title()}: {val[:100]}")
+    
+    findings = data.get('findings', [])
+    if findings:
+        lines.append("")
+        lines.append("Findings:")
+        for f in findings[:10]:
+            lines.append(f"  • {str(f)[:100]}")
+    
+    result_text = data.get('result', '')
+    if isinstance(result_text, str) and result_text:
+        lines.append("")
+        lines.append("Output:")
+        lines.append(result_text[:800])
+    
+    return "\n".join(lines) if lines else str(data)[:500]
+
+
 def print_fallback_result(result: dict):
     """Fallback result printing without rich."""
     print("\n" + "="*70)
@@ -197,17 +262,23 @@ def print_fallback_result(result: dict):
     if data:
         if 'threat' in data or 'threat_analysis' in data:
             threat = data.get('threat') or data.get('threat_analysis')
-            print(f"\n--- Threat Analysis ---")
-            import json
-            print(json.dumps(threat, indent=2)[:1000])
+            if isinstance(threat, dict):
+                print("\n--- Threat Analysis ---")
+                for k in ['threat_level', 'risk_level', 'confidence', 'threat_detected', 'failed_login_attempts', 'indicators']:
+                    if k in threat:
+                        print(f"  {k.replace('_',' ').title()}: {threat[k]}")
         if 'gita_verse' in data and data['gita_verse']:
             gv = data['gita_verse']
             if isinstance(gv, dict):
-                print(f"\n--- 🕉️ Gita Wisdom ---")
+                print(f"\n--- Gita Wisdom ---")
                 print(f"Chapter {gv.get('chapter')}, Verse {gv.get('verse')}: {gv.get('text','')[:200]}")
         if 'result' in data:
-            print(f"\n--- Tool Output ---")
-            print(str(data['result'])[:1000])
+            print("\n--- Tool Output ---")
+            result_data = data['result']
+            if isinstance(result_data, dict):
+                print(_format_tool_output_fallback(result_data))
+            else:
+                print(str(result_data)[:800])
     print("="*70 + "\n")
 
 
