@@ -1,38 +1,56 @@
 # -*- coding: utf-8 -*-
-"""Terminal AI Assistant Prompt - Per DAY 2, 4, 24 and MASTER BLUEPRINT
-Build a command-line AI assistant for Vrindha
-Requirements: Accept user input continuously, pass input to Brain, display formatted output
-Features: Interactive loop, exit command, clean output formatting
-File: main.py, Flow: while True: input -> brain.process() -> print output
-Also: Multi-agent, logging, SIEM, Dharma integration, Gita wisdom
 """
-from datetime import datetime
-from pathlib import Path
+Vrindha AI SOC — Main Entry Point
+Beautiful terminal UI + auto-launching security tools.
+"""
 import sys
-import json
+import os
+from pathlib import Path
+from datetime import datetime
 
-# Allow `python vrin_SOC/main.py` and `cd vrin_SOC && python main.py`.
+# Ensure we can import vrin_SOC package
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-# Load autonomy policy dynamically (Phase 1 stability fix)
+# Load autonomy policy
 _POLICY_PATH = _REPO_ROOT / "vrin_SOC" / "config" / "autonomy_policy.json"
 if _POLICY_PATH.exists():
+    import json
     with open(_POLICY_PATH, "r", encoding="utf-8") as _pf:
         AUTO_POLICY = json.load(_pf)
-    # expose selected thresholds to the brain module
     from vrin_SOC.core.brain import set_autonomy_policy
     set_autonomy_policy(AUTO_POLICY.get("thresholds", {}))
 else:
     AUTO_POLICY = {"medium": 40, "high": 70, "critical": 85}
 
+# Import Vrindha components
 from vrin_SOC.core.brain import brain
 from vrin_SOC.core.gita_engine import gita_engine
 from vrin_SOC.tools.installer import verify_all_tools
 from vrin_SOC.database.db import init_db
 
-def print_banner():
+# Import terminal UI
+try:
+    from vrin_SOC.terminal_ui import (
+        console, print_startup_banner, print_result, print_help,
+        print_gita_verse, print_tool_verification, print_status,
+        print_live_event_bus, COLORS, STATUS_EMOJI
+    )
+    HAS_RICH_UI = True
+except ImportError:
+    HAS_RICH_UI = False
+
+# Import tool orchestrator
+try:
+    from vrin_SOC.tool_orchestrator import orchestrator
+    HAS_ORCHESTRATOR = True
+except ImportError:
+    HAS_ORCHESTRATOR = False
+
+
+def print_fallback_banner():
+    """Fallback banner if rich is not available."""
     print("""
 ╔═════════════════════════════════════════════════════════════╗
 ║  🛡️  Vrindha AI SOC System - Ethical AI Cybersecurity     ║
@@ -44,7 +62,125 @@ def print_banner():
     print(f"Time: {datetime.now().isoformat()}")
     print("Type 'help' for commands, 'exit' to quit, 'yes/no' for Red Team confirmations\n")
 
-def format_output(result: dict):
+
+def launch_tools_if_enabled():
+    """Launch security tools in separate terminals if enabled."""
+    if not HAS_ORCHESTRATOR:
+        return
+    
+    # Check if auto-launch is enabled (default: True)
+    auto_launch = os.environ.get("VRINDHA_AUTO_LAUNCH_TOOLS", "true").lower() == "true"
+    if not auto_launch:
+        return
+    
+    orchestrator.launch_all(only_available=True)
+
+
+def main():
+    """Main entry point for Vrindha SOC."""
+    import argparse
+    parser = argparse.ArgumentParser(description="Vrindha AI SOC System")
+    parser.add_argument("--batch", action="store_true", help="Run in batch mode")
+    parser.add_argument("--input", type=str, help="Input file for batch mode")
+    parser.add_argument("--no-tools", action="store_true", help="Don't auto-launch tools")
+    parser.add_argument("--tools-only", action="store_true", help="Only launch tools, don't start CLI")
+    args = parser.parse_args()
+    
+    # Batch mode
+    if args.batch:
+        run_batch_mode(args.input)
+        return
+    
+    # Print banner
+    if HAS_RICH_UI:
+        print_startup_banner(
+            brain_loaded=True,
+            tools_count=verify_all_tools()["installed_count"],
+            tools_total=verify_all_tools()["total"],
+            agents=[
+                "Commander", "Threat Intel", "Data Science",
+                "SOC Analyst", "Infrastructure", "Ethics",
+                "Knowledge", "Vrindha"
+            ],
+        )
+    else:
+        print_fallback_banner()
+        tools = verify_all_tools()
+        print(f"[Startup] Tool verification: {tools['installed_count']}/{tools['total']} installed")
+    
+    # Welcome verse
+    verse = gita_engine.get_random_verse()
+    if HAS_RICH_UI:
+        console.print(f"  [bold #f0e68c]🕉️  {verse.get('meaning', 'Perform your duty with detachment')} (Ch {verse.get('chapter')}.{verse.get('verse')})[/bold #f0e68c]\n")
+    else:
+        print(f"🕉️ Gita Wisdom: {verse.get('meaning', '')} (Ch {verse.get('chapter')}.{verse.get('verse')})\n")
+    
+    # Launch tools
+    if not args.no_tools:
+        launch_tools_if_enabled()
+    
+    # If tools-only mode, just launch and exit
+    if args.tools_only:
+        console.print("[dim]Tools launched. Press Ctrl+C to exit.[/dim]" if HAS_RICH_UI else "Tools launched.")
+        try:
+            while True:
+                import time
+                time.sleep(1)
+        except KeyboardInterrupt:
+            console.print("\n[bold #ff5f5f]⏹ Stopping all tools...[/bold #ff5f5f]" if HAS_RICH_UI else "\nStopping tools...")
+            orchestrator.stop_all()
+        return
+    
+    # Main CLI loop
+    if HAS_RICH_UI:
+        console.print()
+        console.print(f"  [{COLORS['gray']}]Type [bold]help[/bold] for commands, [bold]exit[/bold] to quit[/{COLORS['gray']}]")
+        console.print()
+    
+    while True:
+        try:
+            if HAS_RICH_UI:
+                from rich.prompt import Prompt
+                user_input = Prompt.ask("[bold #7c4dff]Vrindha[/bold #7c4dff]").strip()
+            else:
+                user_input = input("Vrindha> ").strip()
+            
+            if not user_input:
+                continue
+            
+            if user_input.lower() in ["exit", "quit", "bye"]:
+                if HAS_RICH_UI:
+                    console.print("[bold #77dd77]Exiting Vrindha AI SOC — Stay protected! Dharma protects those who protect Dharma. 🛡️[/bold #77dd77]")
+                else:
+                    print("Exiting Vrindha AI SOC - Stay protected! Dharma protects those who protect Dharma. 🛡️")
+                break
+            
+            # Process via Brain
+            result = brain.process(user_input)
+            
+            if HAS_RICH_UI:
+                print_result(result)
+            else:
+                print_fallback_result(result)
+            
+        except KeyboardInterrupt:
+            if HAS_RICH_UI:
+                console.print("\n[dim]Use 'exit' to quit safely[/dim]")
+            else:
+                print("\nUse 'exit' to quit safely")
+            continue
+        except EOFError:
+            break
+        except Exception as e:
+            if HAS_RICH_UI:
+                console.print(f"\n[bold #ff5f5f]❌ Error (but system continues): {e}[/bold #ff5f5f]")
+            else:
+                print(f"\n❌ Error (but system continues): {e}")
+            continue
+
+
+def print_fallback_result(result: dict):
+    """Fallback result printing without rich."""
     print("\n" + "="*70)
     print(f"MODE: {result.get('mode','').upper()} | ACTION: {result.get('action','')} | STATUS: {result.get('status','').upper()}")
     print("-"*70)
@@ -52,45 +188,35 @@ def format_output(result: dict):
     
     data = result.get('data', {})
     if data:
-        # Pretty print key parts
-        if 'result' in data:
-            print(f"\n--- Tool Output ---")
-            print(str(data['result'])[:1000])
         if 'threat' in data or 'threat_analysis' in data:
             threat = data.get('threat') or data.get('threat_analysis')
             print(f"\n--- Threat Analysis ---")
+            import json
             print(json.dumps(threat, indent=2)[:1000])
         if 'gita_verse' in data and data['gita_verse']:
             gv = data['gita_verse']
             if isinstance(gv, dict):
                 print(f"\n--- 🕉️ Gita Wisdom ---")
                 print(f"Chapter {gv.get('chapter')}, Verse {gv.get('verse')}: {gv.get('text','')[:200]}")
-                print(f"Meaning: {gv.get('meaning','')[:300]}")
-        if 'dharma' in data:
-            dharma = data['dharma']
-            if isinstance(dharma, dict):
-                print(f"\n--- Dharma Engine ---")
-                print(f"Decision: {dharma.get('decision')} | Reason: {dharma.get('reason')}")
-        if 'safety' in data:
-            print(f"\n--- Safety ---")
-            print(json.dumps(data.get('safety'), indent=2)[:500])
-    
+        if 'result' in data:
+            print(f"\n--- Tool Output ---")
+            print(str(data['result'])[:1000])
     print("="*70 + "\n")
 
-def run_batch_mode(input_file: str = None) -> None:
-    """Batch mode: read JSON commands from stdin or file, output JSON results."""
-    import json
-    import sys
 
+def run_batch_mode(input_file: str = None):
+    """Batch mode: read JSON commands from stdin or file."""
+    import json
+    
     if input_file:
         with open(input_file, "r", encoding="utf-8") as f:
             commands = json.load(f)
     else:
         commands = json.load(sys.stdin)
-
+    
     if not isinstance(commands, list):
         commands = [commands]
-
+    
     results = []
     for cmd in commands:
         if isinstance(cmd, str):
@@ -101,62 +227,10 @@ def run_batch_mode(input_file: str = None) -> None:
             text = str(cmd)
         result = brain.process(text)
         results.append(result)
-
+    
     json.dump({"results": results}, sys.stdout, indent=2)
     sys.stdout.write("\n")
 
-
-def main():
-    import argparse
-    parser = argparse.ArgumentParser(description="Vrindha AI SOC System")
-    parser.add_argument("--batch", action="store_true", help="Run in batch mode (read JSON from stdin, output JSON)")
-    parser.add_argument("--input", type=str, help="Input file for batch mode (default: stdin)")
-    args = parser.parse_args()
-
-    if args.batch:
-        run_batch_mode(args.input)
-        return
-
-    print_banner()
-    
-    # Initial tool verification per blueprint advice: start with nmap → nikto → wireshark → fail2ban
-    tools = verify_all_tools()
-    print(f"[Startup] Tool verification: {tools['installed_count']}/{tools['total']} installed")
-    if tools['missing']:
-        print(f"         Missing: {', '.join(tools['missing'][:5])}... Install via: sudo apt install <tool>")
-    print()
-    
-    # Welcome verse
-    verse = gita_engine.get_random_verse()
-    print(f"🕉️ Gita Wisdom: {verse.get('meaning','Perform your duty with detachment')} (Ch {verse.get('chapter')}.{verse.get('verse')})\n")
-    
-    while True:
-        try:
-            user_input = input("Vrindha> ").strip()
-            
-            if not user_input:
-                continue
-            
-            if user_input.lower() in ["exit", "quit", "bye"]:
-                print("Exiting Vrindha AI SOC - Stay protected! Dharma protects those who protect Dharma. 🛡️")
-                break
-            
-            # Process via Brain
-            result = brain.process(user_input)
-            format_output(result)
-            
-            # Special handling for confirmation_required - Brain already stores pending, just loop will handle yes/no next iteration
-            
-        except KeyboardInterrupt:
-            print("\nUse 'exit' to quit safely per error handling blueprint")
-            continue
-        except EOFError:
-            print("\nExiting...")
-            break
-        except Exception as e:
-            print(f"\n❌ Error (but system continues per Error Handling Prompt): {e}")
-            print("System continues running - never crash per blueprint")
-            continue
 
 if __name__ == "__main__":
     main()
