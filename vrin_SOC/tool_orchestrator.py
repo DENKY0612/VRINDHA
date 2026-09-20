@@ -119,15 +119,25 @@ class ToolOrchestrator:
                 full_cmd = f'start "{title}" cmd /k "echo VRINDHA SOC TOOL: {name} ({description}) && echo. && {cmd_str} && echo. && echo Tool ready. Type commands above."'
                 proc = subprocess.Popen(full_cmd, shell=True)
             elif self.is_linux():
-                # Linux: try gnome-terminal, then xterm
+                # Linux/WSL: check for display server
+                display = os.environ.get("DISPLAY")
+                if not display:
+                    # No display server (headless/WSL) - skip terminal window
+                    console.print(f"  [bold #f0e68c]⚠[/bold #f0e68c] {name} [dim](no display - use CLI directly)[/dim]")
+                    return None
+                # Try gnome-terminal, then xterm
                 try:
                     proc = subprocess.Popen([
                         "gnome-terminal", "--title", title, "--", "bash", "-c"
                     ])
                 except FileNotFoundError:
-                    proc = subprocess.Popen([
-                        "xterm", "-title", title, "-e", "bash", "-c"
-                    ])
+                    try:
+                        proc = subprocess.Popen([
+                            "xterm", "-title", title, "-e", "bash", "-c"
+                        ])
+                    except FileNotFoundError:
+                        console.print(f"  [bold #ff5f5f]✗[/bold #ff5f5f] {name} [dim](no terminal emulator)[/dim]")
+                        return None
             else:
                 console.print(f"  [bold #ff5f5f]✗[/bold #ff5f5f] {name} [dim](unsupported platform)[/dim]")
                 return None

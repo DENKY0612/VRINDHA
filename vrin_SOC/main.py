@@ -69,9 +69,15 @@ def launch_tools_if_enabled():
     if not HAS_ORCHESTRATOR:
         return
     
-    # Check if auto-launch is enabled (default: True)
-    auto_launch = os.environ.get("VRINDHA_AUTO_LAUNCH_TOOLS", "true").lower() == "true"
+    # Check if auto-launch is enabled (default: False for WSL compatibility)
+    auto_launch = os.environ.get("VRINDHA_AUTO_LAUNCH_TOOLS", "false").lower() == "true"
     if not auto_launch:
+        return
+    
+    # Check for display server (required for terminal windows)
+    import sys
+    if sys.platform.startswith("linux") and not os.environ.get("DISPLAY"):
+        # No display server in WSL - tools are available via CLI only
         return
     
     orchestrator.launch_all(only_available=True)
