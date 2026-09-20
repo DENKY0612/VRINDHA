@@ -138,19 +138,15 @@ def main():
         console.print()
         console.print(f"  [{COLORS['gray']}]Type [bold]help[/bold] for commands, [bold]exit[/bold] to quit[/{COLORS['gray']}]")
         console.print()
-    
-    use_rich_input = HAS_RICH_UI and not args.force_auto_confirm
-    
     while True:
         try:
-            if use_rich_input:
+            if HAS_RICH_UI:
                 try:
                     from rich.prompt import Prompt
                     user_input = Prompt.ask("[bold #7c4dff]Vrindha[/bold #7c4dff]").strip()
                 except (EOFError, KeyboardInterrupt):
                     raise
                 except Exception:
-                    # Fallback to basic input if rich fails (WSL compatibility)
                     user_input = input("Vrindha> ").strip()
             else:
                 user_input = input("Vrindha> ").strip()
