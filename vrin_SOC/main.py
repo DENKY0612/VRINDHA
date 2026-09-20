@@ -80,10 +80,12 @@ def main():
     """Main entry point for Vrindha SOC."""
     import argparse
     parser = argparse.ArgumentParser(description="Vrindha AI SOC System")
-    parser.add_argument("--batch", action="store_true", help="Run in batch mode")
-    parser.add_argument("--input", type=str, help="Input file for batch mode")
+    parser.add_argument("--batch", action="store_true", help="Run in batch mode (read JSON from stdin, output JSON)")
+    parser.add_argument("--input", type=str, help="Input file for batch mode (default: stdin)")
     parser.add_argument("--no-tools", action="store_true", help="Don't auto-launch tools")
     parser.add_argument("--tools-only", action="store_true", help="Only launch tools, don't start CLI")
+    parser.add_argument("--auto-confirm", action="store_true", help="Auto-confirm Red Team commands (admin only)")
+    parser.add_argument("--force-auto-confirm", action="store_true", help="Force auto-confirm for CLI demo (bypasses admin check)")
     args = parser.parse_args()
     
     # Batch mode
@@ -137,11 +139,19 @@ def main():
         console.print(f"  [{COLORS['gray']}]Type [bold]help[/bold] for commands, [bold]exit[/bold] to quit[/{COLORS['gray']}]")
         console.print()
     
+    use_rich_input = HAS_RICH_UI and not args.force_auto_confirm
+    
     while True:
         try:
-            if HAS_RICH_UI:
-                from rich.prompt import Prompt
-                user_input = Prompt.ask("[bold #7c4dff]Vrindha[/bold #7c4dff]").strip()
+            if use_rich_input:
+                try:
+                    from rich.prompt import Prompt
+                    user_input = Prompt.ask("[bold #7c4dff]Vrindha[/bold #7c4dff]").strip()
+                except (EOFError, KeyboardInterrupt):
+                    raise
+                except Exception:
+                    # Fallback to basic input if rich fails (WSL compatibility)
+                    user_input = input("Vrindha> ").strip()
             else:
                 user_input = input("Vrindha> ").strip()
             
@@ -156,7 +166,8 @@ def main():
                 break
             
             # Process via Brain
-            result = brain.process(user_input)
+            user_token = "admin" if args.force_auto_confirm else None
+            result = brain.process(user_input, auto_confirm=args.auto_confirm or args.force_auto_confirm, user_token=user_token)
             
             if HAS_RICH_UI:
                 print_result(result)
