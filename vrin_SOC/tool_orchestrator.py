@@ -35,7 +35,7 @@ TOOL_CONFIGS: List[Dict] = [
     },
     {
         "name": "Zphisher",
-        "command": ["cd", "~/.config/zphisher", "&&", "bash", "zphisher.sh"],
+        "command": ["zphisher"],
         "title": "VRINDHA :: Zphisher",
         "description": "Phishing toolkit (authorized use only)",
         "auto_start": False,
@@ -75,6 +75,13 @@ TOOL_CONFIGS: List[Dict] = [
         "description": "Hash cracker (assistant only)",
         "auto_start": False,
     },
+    {
+        "name": "Fail2Ban",
+        "command": ["fail2ban-client", "--version"],
+        "title": "VRINDHA :: Fail2Ban",
+        "description": "Brute-force protection",
+        "auto_start": False,
+    },
 ]
 
 
@@ -95,7 +102,28 @@ class ToolOrchestrator:
     def is_tool_available(self, tool_name: str) -> bool:
         """Check if a tool is installed and available."""
         import shutil
-        return shutil.which(tool_name.lower()) is not None
+        # Map tool names to their actual binary names
+        tool_bin_map = {
+            "nmap": ["nmap"],
+            "sqlmap": ["sqlmap"],
+            "zphisher": ["zphisher"],
+            "nikto": ["nikto"],
+            "gobuster": ["gobuster"],
+            "tcpdump": ["tcpdump"],
+            "snort": ["snort"],
+            "hashcat": ["hashcat"],
+            "fail2ban": ["fail2ban-client", "fail2ban-server"],
+            "wireshark": ["wireshark", "tshark"],
+            "whois": ["whois"],
+            "amass": ["amass"],
+            "dirb": ["dirb"],
+            "rkhunter": ["rkhunter"],
+            "chkrootkit": ["chkrootkit"],
+            "ufw": ["ufw"],
+            "suricata": ["suricata"],
+        }
+        binaries = tool_bin_map.get(tool_name.lower(), [tool_name.lower()])
+        return any(shutil.which(b) for b in binaries)
     
     def launch_tool(self, tool_config: Dict) -> Optional[subprocess.Popen]:
         """

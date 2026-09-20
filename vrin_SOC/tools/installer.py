@@ -81,20 +81,39 @@ def install_multiple_tools(tools: List[str], auto_confirm: bool = False) -> Dict
         "missing": [r["tool"] for r in results if r["status"] == "requires_confirmation"]
     }
 
+# Map tool names to their binary names for verification
+TOOL_BINARIES = {
+    "nmap": ["nmap"],
+    "wireshark": ["wireshark", "tshark"],
+    "nikto": ["nikto"],
+    "gobuster": ["gobuster"],
+    "snort": ["snort"],
+    "fail2ban": ["fail2ban-client", "fail2ban-server"],
+    "rkhunter": ["rkhunter"],
+    "whois": ["whois"],
+    "amass": ["amass"],
+    "dirb": ["dirb"],
+    "tcpdump": ["tcpdump"],
+    "chkrootkit": ["chkrootkit"],
+    "ufw": ["ufw"],
+    "suricata": ["suricata"],
+    "hashcat": ["hashcat"],
+}
+
 def verify_all_tools() -> Dict:
     """Verification module per blueprint"""
-    all_tools = TOOL_STACK["all"]
     installed = []
     missing = []
-    for tool in all_tools:
-        if shutil.which(tool):
+    for tool, binaries in TOOL_BINARIES.items():
+        found = any(shutil.which(b) for b in binaries)
+        if found:
             installed.append(tool)
         else:
             missing.append(tool)
     return {
         "installed": installed,
         "missing": missing,
-        "total": len(all_tools),
+        "total": len(TOOL_BINARIES),
         "installed_count": len(installed),
         "missing_count": len(missing),
         "suggestion": f"Install missing via: sudo apt install {' '.join(missing)}" if missing else "All tools installed"
