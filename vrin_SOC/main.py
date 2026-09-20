@@ -161,6 +161,14 @@ def main():
             if not user_input:
                 continue
             
+            if user_input.lower() in ["clear", "cls"]:
+                # Clear terminal screen
+                if os.name == 'nt':
+                    os.system('cls')
+                else:
+                    os.system('clear')
+                continue
+            
             if user_input.lower() in ["exit", "quit", "bye"]:
                 if HAS_RICH_UI:
                     console.print("[bold #77dd77]Exiting Vrindha AI SOC — Stay protected! Dharma protects those who protect Dharma. 🛡️[/bold #77dd77]")
