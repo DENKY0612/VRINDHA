@@ -58,6 +58,67 @@ class Brain:
         recovery_result = self.scheduler.recover_stuck_tasks()
         print(f"[Brain] Vrindha AI SOC System initialized in {self.mode.upper()} MODE. Autonomous recovery: {recovery_result.get('status')}")
 
+    def _parse_nmap_command(self, command: str) -> tuple:
+        """Parse nmap command to extract target, flags, and scan type.
+        
+        Returns: (target, flags_list, scan_type_str)
+        """
+        lower = command.lower().strip()
+        
+        # Remove 'nmap' prefix if present
+        if lower.startswith('nmap '):
+            lower = lower[5:].strip()
+        
+        # Known scan type presets
+        preset_map = {
+            'syn': 'syn', 'syn stealth': 'syn', 'stealth': 'syn',
+            'tcp connect': 'tcp', 'tcp': 'tcp',
+            'udp': 'udp', 'udp scan': 'udp',
+            'ack': 'ack', 'ack scan': 'ack',
+            'null': 'null', 'null scan': 'null',
+            'fin': 'fin', 'fin scan': 'fin',
+            'xmas': 'xmas', 'xmas scan': 'xmas',
+            'ping': 'ping', 'ping scan': 'ping',
+            'no ping': 'no-ping', 'no-ping': 'no-ping',
+            'syn ping': 'syn-ping', 'syn-ping': 'syn-ping',
+            'ack ping': 'ack-ping', 'ack-ping': 'ack-ping',
+            'udp ping': 'udp-ping', 'udp-ping': 'udp-ping',
+            'arp ping': 'arp-ping', 'arp-ping': 'arp-ping',
+            'version': 'version', 'version detect': 'version',
+            'os detect': 'os-detect', 'os': 'os-detect',
+            'aggressive': 'aggressive', 'aggressive scan': 'aggressive',
+            'paranoid': 'paranoid', 'sneaky': 'sneaky',
+            'polite': 'polite', 'normal': 'normal',
+            'insane': 'insane',
+            'scripts': 'scripts', 'script scan': 'scripts',
+            'vuln': 'vuln', 'vuln scan': 'vuln',
+            'fast': 'fast', 'fast scan': 'fast',
+            'all ports': 'all-ports', 'all-ports': 'all-ports',
+            'fragment': 'fragment',
+        }
+        
+        # Check for preset keywords in command
+        scan_type = None
+        for keyword, preset in preset_map.items():
+            if keyword in lower:
+                scan_type = preset
+                break
+        
+        # Extract target (IP or domain)
+        target = self.extract_target(command)
+        
+        # If no preset matched, check for raw flags
+        flags = None
+        if not scan_type:
+            # Look for -sV, -sS, -O, -A, -T4, -p, etc.
+            import re
+            flag_pattern = r'(-[a-zA-Z](?:\s+\S+)?|--[a-z-]+(?:=\S+)?)'
+            matches = re.findall(flag_pattern, command)
+            if matches:
+                flags = matches
+        
+        return target, flags, scan_type
+
     def _is_concrete_team_command(self, command: str) -> bool:
         lower = command.lower()
         markers = (
@@ -362,7 +423,24 @@ class Brain:
     def _build_red_preview(self, command: str, target: str) -> str:
         cmd_lower = command.lower()
         if "nmap" in cmd_lower or "scan network" in cmd_lower:
-            return f"Run nmap -sV on {target or '127.0.0.1'} to discover open ports and services"
+            # Detect scan type for preview
+            scan_type_map = {
+                'syn': 'SYN Stealth', 'tcp': 'TCP Connect', 'udp': 'UDP',
+                'ack': 'ACK', 'null': 'Null', 'xmas': 'Xmas', 'fin': 'FIN',
+                'version': 'Version Detect', 'os-detect': 'OS Detection',
+                'aggressive': 'Aggressive (-A)', 'fast': 'Fast (-F)',
+                'all-ports': 'All Ports (-p-)', 'vuln': 'Vulnerability (NSE)',
+                'scripts': 'Scripts (-sC)', 'ping': 'Ping Scan (-sn)',
+                'fragment': 'Fragmented (-f)', 'paranoid': 'Paranoid (-T0)',
+                'sneaky': 'Sneaky (-T1)', 'polite': 'Polite (-T2)',
+                'insane': 'Insane (-T5)',
+            }
+            scan_desc = "Standard scan"
+            for keyword, desc in scan_type_map.items():
+                if keyword in cmd_lower:
+                    scan_desc = desc
+                    break
+            return f"Run {scan_desc} nmap on {target or '127.0.0.1'}"
         if "whois" in cmd_lower:
             return f"Run whois lookup on {target or 'example.com'}"
         if "vuln" in cmd_lower or "nikto" in cmd_lower:
@@ -396,8 +474,12 @@ class Brain:
 
             # Route to appropriate agent per 30-day and startup blueprints
             if "scan network" in cmd_lower or "nmap" in cmd_lower:
-                result_data = recon_agent.run(target)
-                message = f"Nmap scan completed on {target}"
+                # Parse for flags/scan_type
+                from vrin_SOC.tools.nmap_tool import run_nmap
+                target, flags, scan_type = self._parse_nmap_command(command)
+                result_data = run_nmap(target or "127.0.0.1", flags=flags, scan_type=scan_type)
+                scan_desc = result_data.get("scan_type", "Standard")
+                message = f"Nmap {scan_desc} scan completed on {target}"
             elif "whois" in cmd_lower:
                 from vrin_SOC.tools.whois_tool import run_whois
                 result_data = run_whois(target if target else "google.com")

@@ -194,11 +194,13 @@ def _format_tool_output_fallback(data: Dict) -> str:
         return str(data)[:500]
     
     # Network scan
-    if data.get('type') == 'network_scan' or 'nmap' in str(data.get('raw', {}).get('engine', '')):
-        raw = data.get('raw', {})
-        findings = raw.get('findings', [])
-        lines.append(f"Target: {raw.get('target', data.get('target', 'unknown'))}")
-        lines.append(f"Scanner: {raw.get('tool', data.get('tool_used', 'nmap'))}")
+    result_data = data.get('result', {})
+    if isinstance(result_data, dict) and (result_data.get('type') == 'network_scan' or 'nmap' in str(result_data.get('engine', ''))):
+        findings = result_data.get('findings', [])
+        scan_type = result_data.get('scan_type', 'Standard')
+        lines.append(f"Target: {result_data.get('target', data.get('target', 'unknown'))}")
+        lines.append(f"Scan Type: {scan_type}")
+        lines.append(f"Scanner: {result_data.get('tool', result_data.get('tool_used', 'nmap'))}")
         lines.append(f"Status: SUCCESS")
         if findings:
             lines.append("")
@@ -210,6 +212,22 @@ def _format_tool_output_fallback(data: Dict) -> str:
                 lines.append(f"  {port}/tcp  {state}  {service}")
         else:
             lines.append("No open ports found in scan.")
+        return "\n".join(lines)
+    # Handle string result
+    if isinstance(result_data, str) and 'nmap' in result_data.lower():
+        lines.append(f"Scanner: nmap")
+        lines.append(f"Status: SUCCESS")
+        lines.append("")
+        lines.append("Output:")
+        lines.append(result_data[:800])
+        return "\n".join(lines)
+    # Handle string result
+    if isinstance(result, str) and 'nmap' in result.lower():
+        lines.append(f"Scanner: nmap")
+        lines.append(f"Status: SUCCESS")
+        lines.append("")
+        lines.append("Output:")
+        lines.append(result[:800])
         return "\n".join(lines)
     
     # Whois

@@ -122,18 +122,29 @@ def print_startup_banner(brain_loaded: bool = True, tools_count: int = 0,
 
 
 def _parse_tool_output(data: Dict) -> str:
-    """Parse messy tool result dicts into clean readable output."""
+    """Parse messy tool result dicts into clean readable output.
+    
+    `data` may be either the tool result dict directly (from brain's data['result'])
+    or the full data dict. We detect network_scan by checking both the top-level
+    and nested 'result' key.
+    """
     if not isinstance(data, dict):
         return str(data)[:500]
     
     lines = []
     
+    # Determine where the actual tool result lives
+    tool_result = data
+    if 'result' in data and isinstance(data['result'], dict):
+        tool_result = data['result']
+    
     # Network scan / nmap
-    if data.get('type') == 'network_scan' or 'nmap' in str(data.get('raw', {}).get('engine', '')):
-        raw = data.get('raw', {})
-        findings = raw.get('findings', [])
-        lines.append(f"[bold]Target:[/bold] {raw.get('target', data.get('target', 'unknown'))}")
-        lines.append(f"[bold]Scanner:[/bold] {raw.get('tool', data.get('tool_used', 'nmap'))}")
+    if tool_result.get('type') == 'network_scan' or 'nmap' in str(tool_result.get('engine', '')):
+        findings = tool_result.get('findings', [])
+        scan_type = tool_result.get('scan_type', 'Standard')
+        lines.append(f"[bold]Target:[/bold] {tool_result.get('target', 'unknown')}")
+        lines.append(f"[bold]Scan Type:[/bold] {scan_type}")
+        lines.append(f"[bold]Scanner:[/bold] {tool_result.get('tool', tool_result.get('tool_used', 'nmap'))}")
         lines.append(f"[bold]Status:[/bold] [green]SUCCESS[/green]")
         lines.append("")
         if findings:
@@ -184,13 +195,13 @@ def _parse_tool_output(data: Dict) -> str:
     # Generic fallback: show key fields, skip nested raw dicts
     skip_keys = {'raw', 'result'}  # too verbose
     for key in ['type', 'agent', 'target', 'tool_used', 'status', 'engine']:
-        if key in data:
-            val = data[key]
+        if key in tool_result:
+            val = tool_result[key]
             if isinstance(val, str):
                 lines.append(f"[bold]{key.replace('_',' ').title()}:[/bold] {val[:100]}")
     
     # Show findings if present
-    findings = data.get('findings', [])
+    findings = tool_result.get('findings', [])
     if findings:
         lines.append("")
         lines.append("[bold]Findings:[/bold]")
@@ -198,7 +209,7 @@ def _parse_tool_output(data: Dict) -> str:
             lines.append(f"  • {str(f)[:100]}")
     
     # Show result text (trimmed)
-    result_text = data.get('result', '')
+    result_text = tool_result.get('result', '')
     if isinstance(result_text, str) and result_text:
         lines.append("")
         lines.append("[bold]Output:[/bold]")
