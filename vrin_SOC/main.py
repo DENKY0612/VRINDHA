@@ -227,7 +227,22 @@ def _format_tool_output_fallback(data: Dict) -> str:
         lines = lines[:12]
         lines.insert(0, f"Target: {data.get('target', 'unknown')}")
         return "\n".join(lines)
-    
+
+    # Vulnerability scan
+    if data.get('type') == 'vulnerability_scan':
+        findings = data.get('findings', [])
+        lines.append(f"Target: {data.get('target', 'unknown')}")
+        lines.append(f"Scanner: {data.get('tool_used', 'nikto')}")
+        lines.append(f"Status: SUCCESS")
+        if findings:
+            lines.append("")
+            lines.append("Findings:")
+            for f in findings[:10]:
+                lines.append(f"  • {str(f)[:100]}")
+        else:
+            lines.append("No critical findings.")
+        return "\n".join(lines)
+
     # Generic: show key fields only
     for key in ['type', 'agent', 'target', 'tool_used', 'status', 'engine']:
         if key in data:
