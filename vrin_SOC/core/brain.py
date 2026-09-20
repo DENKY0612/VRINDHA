@@ -146,6 +146,13 @@ class Brain:
                 candidate = tokens[i+1]
                 if "." in candidate or candidate == "localhost" or candidate == "127.0.0.1":
                     return candidate
+        # Handle tcpdump interface extraction: "tcpdump eth0" -> "eth0"
+        if "tcpdump" in command.lower():
+            lower = command.lower()
+            idx = lower.find("tcpdump")
+            after = command[idx + 7:].strip()
+            if after:
+                return after.split()[0]
         return ""
 
     def process(self, command: str, auto_confirm: bool = False, user_token: str = None, session_id: str = "cli") -> Dict[str, Any]:
