@@ -1,0 +1,110 @@
+[
+  {
+    "topic": "firewall",
+    "explanation": "A firewall is a network security device that monitors and filters incoming and outgoing network traffic based on an organization's previously established security policies. It acts as a barrier between a trusted network and an untrusted network, like the internet. Firewalls can be hardware-based, software-based, or both.",
+    "level": "beginner",
+    "fun_fact": "The term 'firewall' originally referred to a wall intended to confine a fire within a building. The computing metaphor was first used in the 1983 movie 'WarGames'!"
+  },
+  {
+    "topic": "nmap",
+    "explanation": "Nmap (Network Mapper) is a free and open-source network scanner created by Gordon Lyon. It is used for network discovery and security auditing. Nmap sends raw IP packets to determine what hosts are available on the network, what services those hosts are offering, what operating systems they are running, and what type of packet filters/firewalls are in use.",
+    "level": "intermediate",
+    "fun_fact": "Nmap has been featured in many movies including 'The Matrix Reloaded', 'Die Hard 4', and 'The Bourne Ultimatum'!"
+  },
+  {
+    "topic": "CVE",
+    "explanation": "CVE stands for Common Vulnerabilities and Exposures. It is a list of publicly disclosed cybersecurity vulnerabilities, each with a unique ID number. CVE provides a standardized method for identifying and naming vulnerabilities, making it easier for organizations to share data across separate vulnerability databases and security tools.",
+    "level": "beginner",
+    "fun_fact": "The CVE system was launched in 1999 and is maintained by the MITRE Corporation with funding from the US Department of Homeland Security. Thousands of new CVEs are added every year!"
+  },
+  {
+    "topic": "brute force",
+    "explanation": "A brute force attack is a trial-and-error method used to decode sensitive data such as passwords or encryption keys by systematically trying all possible combinations until the correct one is found. These attacks are automated and can attempt millions of combinations per second.",
+    "level": "beginner",
+    "fun_fact": "The password '123456' is consistently one of the most common passwords worldwide, making it one of the first tried in brute force attacks!"
+  },
+  {
+    "topic": "encryption",
+    "explanation": "Encryption is the process of converting plaintext (readable data) into ciphertext (unreadable data) using an algorithm and an encryption key. Only authorized parties with the correct decryption key can convert the ciphertext back to plaintext. Encryption is fundamental to securing data at rest and in transit.",
+    "level": "beginner",
+    "fun_fact": "Julius Caesar used a simple substitution cipher (now called the Caesar Cipher) to encrypt military messages, shifting each letter by 3 positions in the alphabet!"
+  },
+  {
+    "topic": "phishing",
+    "explanation": "Phishing is a type of social engineering attack where cybercriminals trick individuals into revealing sensitive information such as passwords, credit card numbers, or personal data. Attackers typically disguise themselves as trustworthy entities through email, text messages, or fake websites.",
+    "level": "beginner",
+    "fun_fact": "The term 'phishing' was first used in 1996 by hackers stealing America Online accounts. The 'f' was replaced with 'ph' as a nod to 'phone phreaking', an early form of hacking telephone systems!"
+  },
+  {
+    "topic": "malware",
+    "explanation": "Malware (malicious software) is any program or file that is harmful to a computer user. This includes viruses, worms, trojans, ransomware, spyware, adware, and more. Malware can steal data, damage systems, spy on users, or gain unauthorized access to networks.",
+    "level": "beginner",
+    "fun_fact": "The first known computer virus, 'Creeper', was detected in the early 1970s on ARPANET. Its creator, Bob Thomas, described it as a harmless experiment that displayed the message: 'I'M THE CREEPER: CATCH ME IF YOU CAN!'"
+  },
+  {
+    "topic": "ransomware",
+    "explanation": "Ransomware is a type of malicious software designed to block access to a computer system or data until a sum of money (ransom) is paid. It typically encrypts files on the infected system, making them inaccessible. Attackers demand payment, usually in cryptocurrency, in exchange for the decryption key.",
+    "level": "intermediate",
+    "fun_fact": "The WannaCry ransomware attack in 2017 infected over 200,000 computers across 150 countries in just a few days, causing billions of dollars in damages. It was stopped by a 22-year-old security researcher who discovered a 'kill switch' in the code!"
+  },
+  {
+    "topic": "DDoS",
+    "explanation": "A Distributed Denial of Service (DDoS) attack is a malicious attempt to disrupt the normal traffic of a targeted server, service, or network by overwhelming it with a flood of internet traffic. DDoS attacks achieve effectiveness by utilizing multiple compromised computer systems as sources of attack traffic.",
+    "level": "intermediate",
+    "fun_fact": "The largest DDoS attack recorded was 2.54 Tbps against Google in 2017. For comparison, that's roughly equivalent to downloading 300,000 HD movies simultaneously!"
+  },
+  {
+    "topic": "VPN",
+    "explanation": "A Virtual Private Network (VPN) creates a secure, encrypted connection over a less-secure network, like the internet. It extends a private network across a public network, allowing users to send and receive data as if their computing devices were directly connected to the private network. VPNs protect privacy and secure data.",
+    "level": "beginner",
+    "fun_fact": "The first VPN was created in 1996 by a Microsoft employee named Gurdeep Singh Pall. He wanted to enable secure remote access for employees, and the protocol he created (PPTP) is still used today!"
+  },
+  {
+    "topic": "zero-day",
+    "explanation": "A zero-day vulnerability is a software security flaw that is unknown to the vendor and has no patch available. 'Zero-day' refers to the fact that developers have had zero days to fix the issue. These are highly valuable to attackers and can be exploited until a patch is released.",
+    "level": "advanced",
+    "fun_fact": "The Stuxnet worm, discovered in 2010, exploited four zero-day vulnerabilities to target Iranian nuclear facilities. It is considered one of the most sophisticated cyberweapons ever deployed!"
+  },
+  {
+    "topic": "patching",
+    "explanation": "Patching is the process of updating software to fix security vulnerabilities, bugs, or improve functionality. Regular patching is one of the most critical cybersecurity practices because it closes security holes that attackers can exploit. Unpatched systems are a leading cause of security breaches.",
+    "level": "beginner",
+    "fun_fact": "The famous 'Patch Tuesday' is Microsoft's monthly schedule for releasing security updates, occurring on the second Tuesday of every month since October 2003!"
+  },
+  {
+    "topic": "social engineering",
+    "explanation": "Social engineering is the psychological manipulation of people into performing actions or divulging confidential information. It exploits human psychology rather than technical hacking techniques. Common tactics include pretexting, baiting, tailgating, and phishing. Humans are often the weakest link in security.",
+    "level": "beginner",
+    "fun_fact": "Kevin Mitnick, once one of the FBI's Most Wanted hackers, used social engineering to break into dozens of companies. After serving time, he became one of the world's most sought-after security consultants!"
+  },
+  {
+    "topic": "DNS",
+    "explanation": "DNS (Domain Name System) is the phonebook of the internet. It translates human-readable domain names (like www.example.com) into IP addresses that computers use to identify each other on the network. DNS is essential for internet navigation and is often targeted in cyber attacks like DNS spoofing or hijacking.",
+    "level": "intermediate",
+    "fun_fact": "There are only 13 logical DNS root server clusters worldwide (named A through M), though each has many physical locations. They handle billions of requests every single day!"
+  },
+  {
+    "topic": "SSL/TLS",
+    "explanation": "SSL (Secure Sockets Layer) and its successor TLS (Transport Layer Security) are cryptographic protocols designed to provide secure communication over a computer network. They encrypt data transmitted between a web server and a browser, ensuring privacy, integrity, and authentication. HTTPS indicates a website uses SSL/TLS.",
+    "level": "intermediate",
+    "fun_fact": "TLS 1.3, the latest version, reduced connection establishment time by eliminating an entire round-trip compared to TLS 1.2, making secure connections faster than ever before!"
+  },
+  {
+    "topic": "incident response",
+    "explanation": "Incident response is the organized approach to addressing and managing the aftermath of a security breach or cyberattack. The goal is to handle the situation in a way that limits damage, reduces recovery time and costs, and ensures lessons are learned. It follows phases like preparation, detection, containment, eradication, recovery, and lessons learned.",
+    "level": "advanced",
+    "fun_fact": "The SANS Institute's incident response framework is one of the most widely adopted. Their PICERL model (Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned) is used by SOC teams worldwide!"
+  },
+  {
+    "topic": "penetration testing",
+    "explanation": "Penetration testing (pen testing) is the practice of testing a computer system, network, or web application to find security vulnerabilities that an attacker could exploit. It simulates real-world attacks to identify weaknesses before malicious hackers do. Pen testers use the same tools and techniques as attackers, but with permission.",
+    "level": "advanced",
+    "fun_fact": "The term 'penetration testing' originated in the 1960s when military and government experts would test security systems by attempting to 'penetrate' them. The first 'tiger teams' were groups of experts hired to break into facilities to test their defenses!"
+  },
+  {
+    "topic": "SIEM",
+    "explanation": "SIEM (Security Information and Event Management) is a technology that provides real-time analysis of security alerts generated by applications and network hardware. It aggregates log data from across an organization's technology infrastructure, identifies deviations, and takes appropriate action. SIEM tools are essential for threat detection and compliance.",
+    "level": "intermediate",
+    "fun_fact": "The concept of SIEM was first introduced in 2005 by Gartner analysts Mark Nicolett and Amrit Williams. Modern SIEM platforms can process millions of events per second from thousands of devices!"
+  }
+]

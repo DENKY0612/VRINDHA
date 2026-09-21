@@ -31,6 +31,7 @@ from vrin_SOC.autonomous.state_manager import state_manager
 from vrin_SOC.autonomous.task_manager import task_manager
 from vrin_SOC.autonomous.models import AutonomyLevel
 from vrin_SOC.hive.coordinator import hive
+from vrin_SOC.core.daily_talk import DailyTalk
 
 # Agents will be imported lazily to avoid circular imports
 class Brain:
@@ -55,6 +56,8 @@ class Brain:
             self.mode = "defensive"
         else:
             self.mode = self.autonomous_agent.current_mode or self.mode
+        self.daily_mode = False
+        self.daily_talk = DailyTalk()
         recovery_result = self.scheduler.recover_stuck_tasks()
         print(f"[Brain] Vrindha AI SOC System initialized in {self.mode.upper()} MODE. Autonomous recovery: {recovery_result.get('status')}")
 
@@ -243,6 +246,23 @@ class Brain:
             if command.lower() in ["no", "n", "cancel", "abort"] and pending:
                 self.pending_confirmations.pop(session_id, None)
                 return {"mode": "red", "action": "cancelled", "status": "success", "message": "Action cancelled by user per Red Team safety", "data": {}}
+
+            # Daily Talk mode: enter with 'daily' or 'talk'
+            if command.lower() in ["daily", "talk"]:
+                self.daily_mode = True
+                greeting = self.daily_talk.enter()
+                return {"mode": "daily", "action": "daily_talk_enter", "status": "success", "message": greeting, "data": {"knowledge_topics": len(self.daily_talk.knowledge_base)}}
+
+            # Daily Talk mode: exit with 'back'/'exit'/'quit'
+            if self.daily_mode and command.lower() in ["back", "exit", "quit"]:
+                exit_msg = self.daily_talk.exit()
+                self.daily_mode = False
+                return {"mode": "daily", "action": "daily_talk_exit", "status": "success", "message": exit_msg, "data": {}}
+
+            # Daily Talk mode: route all other messages to daily_talk.chat()
+            if self.daily_mode:
+                chat_result = self.daily_talk.chat(command, self.daily_talk.conversation_history)
+                return {"mode": "daily", "action": "daily_talk_chat", "status": "success", "message": chat_result["response"], "data": {"knowledge_shared": chat_result["knowledge_shared"], "topic": chat_result["topic"]}}
 
             # Handle basic commands per 30-day plan
             if command.lower() in ["hello", "hi"]:
@@ -1065,6 +1085,10 @@ Vrindha AI SOC - Help
 🕉️ DHARMA ENGINE:
 All actions evaluated for ethical compliance per Bhagavad Gita.
 Red Team requires explicit "yes" confirmation.
+
+🌸 DAILY TALK (Cybersecurity Education):
+- daily / talk - Enter Daily Talk mode for friendly security learning
+- back - Exit Daily Talk mode and return to SOC mode
 """
 
 # Global brain instance
