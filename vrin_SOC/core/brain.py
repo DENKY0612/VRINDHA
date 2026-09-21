@@ -32,6 +32,7 @@ from vrin_SOC.autonomous.task_manager import task_manager
 from vrin_SOC.autonomous.models import AutonomyLevel
 from vrin_SOC.hive.coordinator import hive
 from vrin_SOC.core.daily_talk import DailyTalk
+from vrin_SOC.dev.ollama_dev import OllamaDev
 
 # Agents will be imported lazily to avoid circular imports
 class Brain:
@@ -58,6 +59,8 @@ class Brain:
             self.mode = self.autonomous_agent.current_mode or self.mode
         self.daily_mode = False
         self.daily_talk = DailyTalk()
+        self.dev_mode = False
+        self.dev_assistant = OllamaDev()
         recovery_result = self.scheduler.recover_stuck_tasks()
         print(f"[Brain] Vrindha AI SOC System initialized in {self.mode.upper()} MODE. Autonomous recovery: {recovery_result.get('status')}")
 
@@ -263,6 +266,25 @@ class Brain:
             if self.daily_mode:
                 chat_result = self.daily_talk.chat(command, self.daily_talk.conversation_history)
                 return {"mode": "daily", "action": "daily_talk_chat", "status": "success", "message": chat_result["response"], "data": {"knowledge_shared": chat_result["knowledge_shared"], "topic": chat_result["topic"]}}
+
+            # Dev Assistant mode: enter with 'dev' or 'develop'
+            if command.lower() in ["dev", "develop", "assistant"]:
+                self.dev_mode = True
+                greeting = self.dev_assistant.enter()
+                return {"mode": "dev", "action": "dev_enter", "status": "success", "message": greeting, "data": {}}
+
+            # Dev Assistant mode: exit with 'back'/'exit'/'quit'
+            if self.dev_mode and command.lower() in ["back", "exit", "quit"]:
+                exit_msg = self.dev_assistant.exit_dev()
+                self.dev_mode = False
+                return {"mode": "dev", "action": "dev_exit", "status": "success", "message": exit_msg, "data": {}}
+
+            # Dev Assistant mode: route all other messages to dev_assistant.process()
+            if self.dev_mode:
+                result = self.dev_assistant.process(command)
+                if result.get("exit"):
+                    self.dev_mode = False
+                return {"mode": "dev", "action": "dev_chat", "status": "success", "message": result["output"], "data": {"files_modified": result.get("files_modified", [])}}
 
             # Handle basic commands per 30-day plan
             if command.lower() in ["hello", "hi"]:
@@ -1085,6 +1107,14 @@ Vrindha AI SOC - Help
 🕉️ DHARMA ENGINE:
 All actions evaluated for ethical compliance per Bhagavad Gita.
 Red Team requires explicit "yes" confirmation.
+
+🌸 DAILY TALK (Casual Chat):
+- daily / talk - Enter Daily Talk mode for casual conversation
+- (type 'back' to exit)
+
+🛡️ DEV ASSISTANT (Developer Mode):
+- dev / develop - Enter Dev Assistant for code review, editing, and project management
+- (type 'back' to exit)
 
 🌸 DAILY TALK (Cybersecurity Education):
 - daily / talk - Enter Daily Talk mode for friendly security learning
