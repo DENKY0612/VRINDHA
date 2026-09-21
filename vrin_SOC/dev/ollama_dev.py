@@ -37,14 +37,48 @@ class OllamaDev:
         return current
 
     def _check_ollama(self) -> bool:
-        """Check if Ollama server is available."""
+        """Check if Ollama server is available, try to start if binary exists."""
         try:
             import urllib.request
             req = urllib.request.Request("http://localhost:11434/api/tags")
             with urllib.request.urlopen(req, timeout=3) as resp:
                 return resp.status == 200
         except Exception:
-            return False
+            pass
+        
+        # Server not running - try to auto-start
+        ollama_bin = self._find_ollama_binary()
+        if ollama_bin:
+            try:
+                subprocess.Popen(
+                    [str(ollama_bin), "serve"],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                )
+                # Wait for server to start
+                import time
+                time.sleep(3)
+                # Re-check
+                import urllib.request
+                req = urllib.request.Request("http://localhost:11434/api/tags")
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    return resp.status == 200
+            except Exception:
+                pass
+        
+        return False
+    
+    def _find_ollama_binary(self) -> Optional[Path]:
+        """Find ollama binary in common locations."""
+        candidates = [
+            Path("/usr/local/bin/ollama"),
+            Path("/usr/bin/ollama"),
+            Path("/home/kali/.local/bin/ollama"),
+            Path.home() / ".local" / "bin" / "ollama",
+        ]
+        for p in candidates:
+            if p.exists() and p.is_file():
+                return p
+        return None
 
     def _get_python_path(self) -> str:
         """Get the path to the project's Python interpreter."""
