@@ -237,6 +237,13 @@ class Brain:
             if not command:
                 return {"mode": "blue", "action": "empty", "status": "error", "message": "Empty command", "data": {}}
 
+            # Log interaction for self-improvement
+            try:
+                from vrin_SOC.dev.self_improvement import get_improvement_engine
+                improvement_engine = get_improvement_engine()
+            except Exception:
+                improvement_engine = None
+
             # Confirmations are isolated by authenticated API user (or the CLI
             # session) so one user can never approve another user's operation.
             pending = self.pending_confirmations.get(session_id)
@@ -290,6 +297,10 @@ class Brain:
                 if result.get("exit"):
                     self.dev_mode = False
                 return {"mode": "dev", "action": "dev_chat", "status": "success", "message": result["output"], "data": {"files_modified": result.get("files_modified", [])}}
+
+            # Self-Improvement commands
+            if command.lower().startswith("improve "):
+                return self._handle_improve_command(command[8:].strip())
 
             # Handle basic commands per 30-day plan
             if command.lower() in ["hello", "hi"]:
@@ -594,6 +605,14 @@ class Brain:
             # Threat analysis on result
             threat_analysis = threat_agent.analyze(str(result_data))
 
+            # Build scan summary for result message
+            scan_summary = ""
+            if isinstance(result_data, dict):
+                if result_data.get("type") == "network_scan":
+                    scan_summary = _build_network_scan_summary(result_data)
+                elif result_data.get("type") == "vulnerability_scan":
+                    scan_summary = _build_vuln_scan_summary(result_data)
+
             return {
                 "mode": "red",
                 "action": "executed",
@@ -606,6 +625,7 @@ class Brain:
                     "result": result_data,
                     "threat_analysis": threat_analysis,
                     "target": target,
+                    "scan_summary": scan_summary,
                     "gita_guidance": gita_engine.get_ethical_guidance("defense")
                 }
             }
@@ -618,6 +638,37 @@ class Brain:
                 "message": "Execution failed after confirmation",
                 "data": err
             }
+
+    def _build_network_scan_summary(self, result_data: dict) -> str:
+        """Build a summary string for network scan results."""
+        lines = []
+        if result_data.get("target_ip_type"):
+            lines.append(f"IP Type: {result_data['target_ip_type']}")
+        if result_data.get("target_reverse_dns"):
+            lines.append(f"Reverse DNS: {result_data['target_reverse_dns']}")
+        if result_data.get("scan_duration_seconds"):
+            lines.append(f"Duration: {result_data['scan_duration_seconds']}s")
+        if result_data.get("open_ports") is not None:
+            lines.append(f"Open: {result_data['open_ports']}, Filtered: {result_data.get('filtered_ports', 0)}, Closed: {result_data.get('closed_ports', 0)}")
+        if result_data.get("os_guess"):
+            lines.append(f"OS: {result_data['os_guess']}")
+        return " | ".join(lines)
+
+    def _build_vuln_scan_summary(self, result_data: dict) -> str:
+        """Build a summary string for vulnerability scan results."""
+        lines = []
+        if result_data.get("target_ip_type"):
+            lines.append(f"IP Type: {result_data['target_ip_type']}")
+        if result_data.get("target_reverse_dns"):
+            lines.append(f"Reverse DNS: {result_data['target_reverse_dns']}")
+        if result_data.get("scan_duration_seconds"):
+            lines.append(f"Duration: {result_data['scan_duration_seconds']}s")
+        if result_data.get("highest_severity"):
+            lines.append(f"Highest Severity: {result_data['highest_severity']}")
+        if result_data.get("severity_summary"):
+            s = result_data["severity_summary"]
+            lines.append(f"Crit:{s.get('Critical',0)} High:{s.get('High',0)} Med:{s.get('Medium',0)} Low:{s.get('Low',0)}")
+        return " | ".join(lines)
 
     def _handle_blue_team(self, command: str, target: str, classification: Dict, safety: Dict, similar: Dict, plan: Dict) -> Dict:
         """Blue Team → CAN be automated per blueprint"""
@@ -1121,6 +1172,11 @@ Red Team requires explicit "yes" confirmation.
 - dev / develop - Enter Dev Assistant for code review, editing, and project management
 - (type 'back' to exit)
 
+🧠 SELF-IMPROVEMENT (Learning System):
+- improve status - View self-improvement report
+- improve run - Run auto-improvement analysis
+- improve report - Detailed usage analytics
+
 🌸 DAILY TALK (Cybersecurity Education):
 - daily / talk - Enter Daily Talk mode for friendly security learning
 - back - Exit Daily Talk mode and return to SOC mode
@@ -1143,3 +1199,28 @@ def set_autonomy_policy(thresholds: dict) -> None:
             if hasattr(brain.policy, key.upper()):
                 setattr(brain.policy, key.upper(), value)
     print(f"[Brain] Autonomy thresholds loaded: {thresholds}")
+
+
+    def _handle_improve_command(self, subcommand: str) -> Dict[str, Any]:
+        """Handle self-improvement commands: improve status, improve run, improve report."""
+        try:
+            from vrin_SOC.dev.self_improvement import get_improvement_engine
+            
+            engine = get_improvement_engine()
+            
+            if subcommand.lower() in ["status", "report"]:
+                report = engine.get_improvement_report()
+                return {"mode": "blue", "action": "improve_status", "status": "success", "message": report, "data": {}}
+            elif subcommand.lower() in ["run", "auto", "improve"]:
+                results = engine.auto_improve()
+                msg = f"🧠 Self-improvement run complete:\n" + "\n".join(f"  • {a}" for a in results["actions_taken"])
+                if results["suggestions"]:
+                    msg += "\n\n💡 Suggestions:\n" + "\n".join(f"  • {s}" for s in results["suggestions"])
+                return {"mode": "blue", "action": "improve_run", "status": "success", "message": msg, "data": results}
+            else:
+                return {"mode": "blue", "action": "improve_help", "status": "success",
+                        "message": "Usage: improve status | improve report | improve run",
+                        "data": {}}
+        except Exception as e:
+            return {"mode": "blue", "action": "improve_error", "status": "error",
+                    "message": f"Self-improvement error: {e}", "data": {}}
