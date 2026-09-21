@@ -138,59 +138,17 @@ def _parse_tool_output(data: Dict) -> str:
     if 'result' in data and isinstance(data['result'], dict):
         tool_result = data['result']
     
-    # Network scan / nmap
+    # Network scan / nmap - RICH DETAILED OUTPUT
     if tool_result.get('type') == 'network_scan' or 'nmap' in str(tool_result.get('engine', '')):
-        findings = tool_result.get('findings', [])
-        scan_type = tool_result.get('scan_type', 'Standard')
-        lines.append(f"[bold]Target:[/bold] {tool_result.get('target', 'unknown')}")
-        lines.append(f"[bold]Scan Type:[/bold] {scan_type}")
-        lines.append(f"[bold]Scanner:[/bold] {tool_result.get('tool', tool_result.get('tool_used', 'nmap'))}")
-        lines.append(f"[bold]Status:[/bold] [green]SUCCESS[/green]")
-        lines.append("")
-        if findings:
-            lines.append("[bold cyan]Open Ports:[/bold cyan]")
-            for f in findings:
-                port = f.get('port', '?')
-                state = f.get('state', 'open')
-                service = f.get('service', 'unknown')
-                lines.append(f"  [bold]{port}[/bold]/tcp  [green]{state}[/green]  {service}")
-        else:
-            lines.append("[dim]No open ports found in scan.[/dim]")
-        return "\n".join(lines)
+        return _format_network_scan_rich(tool_result)
     
     # Whois
     if data.get('type') == 'whois':
-        raw_result = data.get('result', '')
-        if isinstance(raw_result, str):
-            # Parse key fields
-            for line in raw_result.split('\n'):
-                line = line.strip()
-                if not line:
-                    continue
-                if line.startswith('@url:'):
-                    continue  # skip markdown noise
-                if ':' in line and not line.startswith(' '):
-                    lines.append(line[:120])
-                elif line.startswith('Domain Status'):
-                    lines.append(f"  [dim]{line[:120]}[/dim]")
-        lines = lines[:12]  # cap output
-        lines.insert(0, f"[bold]Target:[/bold] {data.get('target', 'unknown')}")
-        return "\n".join(lines)
+        return _format_whois_rich(data)
     
-    # Vulnerability scan
+    # Vulnerability scan - RICH DETAILED OUTPUT
     if data.get('type') == 'vulnerability_scan':
-        findings = data.get('findings', [])
-        lines.append(f"[bold]Target:[/bold] {data.get('target', 'unknown')}")
-        lines.append(f"[bold]Scanner:[/bold] {data.get('tool_used', 'nikto')}")
-        lines.append(f"[bold]Status:[/bold] [green]SUCCESS[/green]")
-        lines.append("")
-        if findings:
-            lines.append("[bold yellow]Findings:[/bold yellow]")
-            for f in findings[:10]:
-                lines.append(f"  • {str(f)[:100]}")
-        else:
-            lines.append("[dim]No critical findings.[/dim]")
-        return "\n".join(lines)
+        return _format_vulnerability_scan_rich(data)
     
     # Generic fallback: show key fields, skip nested raw dicts
     skip_keys = {'raw', 'result'}  # too verbose
@@ -216,6 +174,229 @@ def _parse_tool_output(data: Dict) -> str:
         lines.append(result_text[:800])
     
     return "\n".join(lines) if lines else str(data)[:500]
+
+
+def _severity_color_rich(severity: str) -> str:
+    """Return Rich color markup for severity levels."""
+    level = severity.upper()
+    if level == 'CRITICAL':
+        return f"bold {COLORS['red']}"
+    if level == 'HIGH':
+        return f"bold {COLORS['orange']}"
+    if level == 'MEDIUM':
+        return f"bold {COLORS['yellow']}"
+    if level == 'LOW':
+        return f"bold {COLORS['green']}"
+    return COLORS['gray']
+
+
+def _format_network_scan_rich(data: Dict) -> str:
+    """Format network scan results with rich detail."""
+    lines = []
+    
+    # Header section
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    lines.append(f"[bold cyan]  🔍 NETWORK SCAN REPORT[/bold cyan]")
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    lines.append("")
+    
+    # Target Information
+    lines.append(f"[bold]📡 Target Information[/bold]")
+    lines.append(f"   Target: [bold white]{data.get('target', 'unknown')}[/bold white]")
+    lines.append(f"   IP Type: [dim]{data.get('target_ip_type', 'IPv4')}[/dim]")
+    if data.get('target_reverse_dns'):
+        lines.append(f"   Reverse DNS: [cyan]{data['target_reverse_dns']}[/cyan]")
+    lines.append(f"   Scanner: [dim]{data.get('tool', data.get('tool_used', 'nmap'))}[/dim]")
+    lines.append(f"   Scan Type: [bold yellow]{data.get('scan_type', 'Standard')}[/bold yellow]")
+    lines.append("")
+    
+    # Timing
+    if data.get('scan_duration_seconds'):
+        lines.append(f"[bold]⏱️  Scan Timing[/bold]")
+        lines.append(f"   Duration: [bold]{data['scan_duration_seconds']}s[/bold]")
+        lines.append("")
+    
+    # Summary Statistics
+    lines.append(f"[bold]📊 Port Statistics[/bold]")
+    open_count = data.get('open_ports', 0)
+    filtered_count = data.get('filtered_ports', 0)
+    closed_count = data.get('closed_ports', 0)
+    total_ports = data.get('ports_scanned', data.get('total_ports', 0))
+    lines.append(f"   Ports Scanned: [bold]{total_ports}[/bold]")
+    lines.append(f"   Open: [bold green]{open_count}[/bold green] | Filtered: [bold yellow]{filtered_count}[/bold yellow] | Closed: [bold red]{closed_count}[/bold red]")
+    lines.append("")
+    
+    # OS Detection
+    if data.get('os_guess'):
+        lines.append(f"[bold]🖥️  OS Detection[/bold]")
+        lines.append(f"   {data['os_guess']}")
+        lines.append("")
+    
+    # Open Ports Details
+    findings = data.get('findings', [])
+    if findings:
+        open_findings = [f for f in findings if f.get('state') == 'open']
+        filtered_findings = [f for f in findings if f.get('state') == 'filtered']
+        
+        if open_findings:
+            lines.append(f"[bold]🚪 Open Ports & Services[/bold]")
+            for f in open_findings:
+                port = f.get('port', '?')
+                state = f.get('state', 'open')
+                service = f.get('service', 'unknown')
+                version = f.get('version', '')
+                if version:
+                    lines.append(f"   [bold green]{port:<6}[/bold green]/tcp  [green]{state:<10}[/green]  [cyan]{service}[/cyan]  [dim]{version}[/dim]")
+                else:
+                    lines.append(f"   [bold green]{port:<6}[/bold green]/tcp  [green]{state:<10}[/green]  [cyan]{service}[/cyan]")
+            lines.append("")
+        
+        if filtered_findings:
+            lines.append(f"[bold]🔒 Filtered Ports[/bold]")
+            for f in filtered_findings[:10]:
+                port = f.get('port', '?')
+                service = f.get('service', 'unknown')
+                lines.append(f"   [bold yellow]{port:<6}[/bold yellow]/tcp  [yellow]{'filtered':<10}[/yellow]  [dim]{service}[/dim]")
+            if len(filtered_findings) > 10:
+                lines.append(f"   [dim]... and {len(filtered_findings) - 10} more filtered ports[/dim]")
+            lines.append("")
+    else:
+        lines.append(f"[dim]   No open ports detected in scan range.[/dim]")
+        lines.append("")
+    
+    # Recommendations
+    if data.get('recommendations'):
+        lines.append(f"[bold]💡 Recommendations[/bold]")
+        for rec in data['recommendations']:
+            lines.append(f"   {rec}")
+        lines.append("")
+    
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    
+    return "\n".join(lines)
+
+
+def _format_vulnerability_scan_rich(data: Dict) -> str:
+    """Format vulnerability scan results with rich detail."""
+    lines = []
+    
+    # Header section
+    lines.append(f"[bold red]════════════════════════════════════════════════════════════════[/bold red]")
+    lines.append(f"[bold red]  🛡️  VULNERABILITY SCAN REPORT[/bold red]")
+    lines.append(f"[bold red]════════════════════════════════════════════════════════════════[/bold red]")
+    lines.append("")
+    
+    # Target Information
+    lines.append(f"[bold]📡 Target Information[/bold]")
+    lines.append(f"   Target: [bold white]{data.get('target', 'unknown')}[/bold white]")
+    lines.append(f"   IP Type: [dim]{data.get('target_ip_type', 'IPv4')}[/dim]")
+    if data.get('target_reverse_dns'):
+        lines.append(f"   Reverse DNS: [cyan]{data['target_reverse_dns']}[/cyan]")
+    lines.append(f"   Scanner: [dim]{data.get('tool_used', 'nikto')}[/dim]")
+    lines.append("")
+    
+    # Timing
+    if data.get('scan_duration_seconds'):
+        lines.append(f"[bold]⏱️  Scan Timing[/bold]")
+        lines.append(f"   Duration: [bold]{data['scan_duration_seconds']}s[/bold]")
+        lines.append("")
+    
+    # Severity Summary
+    severity_summary = data.get('severity_summary', {})
+    severity_counts = data.get('severity_counts', {})
+    
+    lines.append(f"[bold]🎯 Severity Summary[/bold]")
+    crit = severity_summary.get('Critical', 0)
+    high = severity_summary.get('High', 0)
+    med = severity_summary.get('Medium', 0)
+    low = severity_summary.get('Low', 0)
+    total = data.get('vulnerability_count', len(data.get('vulnerabilities', [])))
+    
+    crit_color = COLORS['red'] if crit > 0 else COLORS['gray']
+    high_color = COLORS['orange'] if high > 0 else COLORS['gray']
+    med_color = COLORS['yellow'] if med > 0 else COLORS['gray']
+    low_color = COLORS['green'] if low > 0 else COLORS['gray']
+    
+    lines.append(f"   🔴 Critical: [bold {crit_color}]{crit}[/bold {crit_color}] | 🟠 High: [bold {high_color}]{high}[/bold {high_color}] | 🟡 Medium: [bold {med_color}]{med}[/bold {med_color}] | 🟢 Low: [bold {low_color}]{low}[/bold {low_color}]")
+    lines.append(f"   Total Vulnerabilities: [bold]{total}[/bold]")
+    
+    if data.get('highest_severity'):
+        sev_color = _severity_color_rich(data['highest_severity'])
+        lines.append(f"   Highest Severity: [{sev_color}]{data['highest_severity']}[/{sev_color}]")
+    lines.append("")
+    
+    # Vulnerability Details
+    vulnerabilities = data.get('vulnerabilities', [])
+    if vulnerabilities:
+        lines.append(f"[bold]📋 Vulnerability Details[/bold]")
+        for i, vuln in enumerate(vulnerabilities, 1):
+            name = vuln.get('name', 'Unknown')
+            severity = vuln.get('severity', 'Low')
+            description = vuln.get('description', '')
+            recommendation = vuln.get('recommendation', '')
+            
+            sev_color = _severity_color_rich(severity)
+            
+            lines.append(f"   [{sev_color}]#{i} {name}[/{sev_color}]")
+            lines.append(f"      Severity: [{sev_color}]{severity}[/{sev_color}]")
+            if description:
+                lines.append(f"      Description: {description[:100]}")
+            if recommendation:
+                lines.append(f"      Fix: [dim]{recommendation[:100]}[/dim]")
+            lines.append("")
+    else:
+        lines.append(f"[dim]   No vulnerabilities detected.[/dim]")
+        lines.append("")
+    
+    # Recommendations
+    if data.get('recommendations'):
+        lines.append(f"[bold]💡 Recommendations[/bold]")
+        for rec in data['recommendations']:
+            lines.append(f"   {rec}")
+        lines.append("")
+    
+    lines.append(f"[bold red]════════════════════════════════════════════════════════════════[/bold red]")
+    
+    return "\n".join(lines)
+
+
+def _format_whois_rich(data: Dict) -> str:
+    """Format WHOIS results with rich detail."""
+    lines = []
+    
+    raw_result = data.get('result', '')
+    target = data.get('target', 'unknown')
+    
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    lines.append(f"[bold cyan]  🌐 WHOIS LOOKUP REPORT[/bold cyan]")
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    lines.append("")
+    
+    lines.append(f"[bold]📡 Target:[/bold] [bold white]{target}[/bold white]")
+    lines.append(f"[bold]📅 Timestamp:[/bold] [dim]{data.get('timestamp', 'N/A')}[/dim]")
+    lines.append("")
+    
+    if isinstance(raw_result, str) and raw_result:
+        lines.append(f"[bold]📄 WHOIS Data[/bold]")
+        # Parse key fields
+        for line in raw_result.split('\n'):
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith('@url:'):
+                continue  # skip markdown noise
+            if ':' in line and not line.startswith(' '):
+                lines.append(f"   {line[:120]}")
+            elif line.startswith('Domain Status'):
+                lines.append(f"   [dim]{line[:120]}[/dim]")
+        lines = lines[:25]  # cap output
+    else:
+        lines.append("[dim]   No WHOIS data available.[/dim]")
+    
+    lines.append("")
+    lines.append(f"[bold cyan]════════════════════════════════════════════════════════════════[/bold cyan]")
+    
+    return "\n".join(lines)
 
 
 def print_result(result: Dict):

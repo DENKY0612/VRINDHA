@@ -1123,6 +1123,30 @@ class Brain:
 
         return None
 
+    def _handle_improve_command(self, subcommand: str) -> Dict[str, Any]:
+        """Handle self-improvement commands: improve status, improve run, improve report."""
+        try:
+            from vrin_SOC.dev.self_improvement import get_improvement_engine
+            
+            engine = get_improvement_engine()
+            
+            if subcommand.lower() in ["status", "report"]:
+                report = engine.get_improvement_report()
+                return {"mode": "blue", "action": "improve_status", "status": "success", "message": report, "data": {}}
+            elif subcommand.lower() in ["run", "auto", "improve"]:
+                results = engine.auto_improve()
+                msg = f"🧠 Self-improvement run complete:\n" + "\n".join(f"  • {a}" for a in results["actions_taken"])
+                if results["suggestions"]:
+                    msg += "\n\n💡 Suggestions:\n" + "\n".join(f"  • {s}" for s in results["suggestions"])
+                return {"mode": "blue", "action": "improve_run", "status": "success", "message": msg, "data": results}
+            else:
+                return {"mode": "blue", "action": "improve_help", "status": "success",
+                        "message": "Usage: improve status | improve report | improve run",
+                        "data": {}}
+        except Exception as e:
+            return {"mode": "blue", "action": "improve_error", "status": "error",
+                    "message": f"Self-improvement error: {e}", "data": {}}
+
     def get_help_text(self) -> str:
         return """
 Vrindha AI SOC - Help
@@ -1186,22 +1210,7 @@ Red Team requires explicit "yes" confirmation.
 brain = Brain()
 
 
-def set_autonomy_policy(thresholds: dict) -> None:
-    """Update the brain's autonomy policy thresholds from loaded config (Phase 1).
-
-    Called once at startup from main.py after loading autonomy_policy.json.
-    """
-    if hasattr(brain, "policy") and hasattr(brain.policy, "__dict__"):
-        # Store thresholds on the brain for easy access
-        brain.autonomy_thresholds = thresholds
-        # Also apply to the policy instance if it has relevant attributes
-        for key, value in thresholds.items():
-            if hasattr(brain.policy, key.upper()):
-                setattr(brain.policy, key.upper(), value)
-    print(f"[Brain] Autonomy thresholds loaded: {thresholds}")
-
-
-    def _handle_improve_command(self, subcommand: str) -> Dict[str, Any]:
+def _handle_improve_command(self, subcommand: str) -> Dict[str, Any]:
         """Handle self-improvement commands: improve status, improve run, improve report."""
         try:
             from vrin_SOC.dev.self_improvement import get_improvement_engine
@@ -1224,3 +1233,18 @@ def set_autonomy_policy(thresholds: dict) -> None:
         except Exception as e:
             return {"mode": "blue", "action": "improve_error", "status": "error",
                     "message": f"Self-improvement error: {e}", "data": {}}
+
+
+def set_autonomy_policy(thresholds: dict) -> None:
+    """Update the brain's autonomy policy thresholds from loaded config (Phase 1).
+
+    Called once at startup from main.py after loading autonomy_policy.json.
+    """
+    if hasattr(brain, "policy") and hasattr(brain.policy, "__dict__"):
+        # Store thresholds on the brain for easy access
+        brain.autonomy_thresholds = thresholds
+        # Also apply to the policy instance if it has relevant attributes
+        for key, value in thresholds.items():
+            if hasattr(brain.policy, key.upper()):
+                setattr(brain.policy, key.upper(), value)
+    print(f"[Brain] Autonomy thresholds loaded: {thresholds}")
