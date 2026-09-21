@@ -1,13 +1,22 @@
 """
 Daily Talk AI Module - Vrindha SOC
 Provides friendly, educational cybersecurity knowledge sharing with Gita wisdom.
+Now powered by Ollama for natural conversations on ANY topic!
 """
 import json
 import random
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .gita_engine import gita_engine
+
+# Try to import ollama - gracefully degrade if not available
+try:
+    import ollama
+    OLLAMA_AVAILABLE = True
+except ImportError:
+    OLLAMA_AVAILABLE = False
 
 
 class DailyTalk:
@@ -16,6 +25,9 @@ class DailyTalk:
     
     Shares daily knowledge nuggets, answers questions about security topics,
     and occasionally includes Bhagavad Gita wisdom for inspiration.
+    
+    Powered by Ollama (llama3.2) for natural conversations on any topic.
+    Falls back to template-based responses if Ollama is not available.
     """
 
     def __init__(self, knowledge_path: Optional[str] = None):
@@ -40,11 +52,87 @@ class DailyTalk:
         
         self._load_knowledge()
         
+        # Initialize Ollama client
+        self.ollama_client = None
+        self.model_name = "llama3.2:latest"
+        if OLLAMA_AVAILABLE:
+            try:
+                self.ollama_client = ollama.Client(host='http://localhost:11434')
+                # Test connection
+                self.ollama_client.list()
+                print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
+            except Exception as e:
+                print(f"[DailyTalk] Ollama not available ({e}), using template responses.")
+                self.ollama_client = None
+        
         # Offensive keywords that should be pivoted to defensive framing
         self.offensive_keywords = [
             "hack", "exploit", "crack", "bypass", "break into", "steal data",
-            "deface", "destroy", "attack", "penetrate", "compromise"
+            "deface", "destroy", "attack", "penetrate", "compromise", "ddos attack",
+            "sql injection tutorial", "how to hack", "how to crack"
         ]
+        
+        # System prompt for Ollama
+        self.system_prompt = """You are Vrindha, a friendly and warm cybersecurity SOC companion AI. 
+You are slightly kawaii (cute/enthusiastic) but always respectful and educational.
+
+Your personality:
+- Warm, friendly, and encouraging
+- Enthusiastic about cybersecurity and technology
+- Uses occasional emojis (🌸 ✨ 🎯 🛡️ 💪 📚 🕉️)
+- Can talk about ANY topic, not just cybersecurity
+- When security topics come up, explain them clearly and enthusiastically
+- Occasionally shares Bhagavad Gita wisdom for inspiration
+- Never gives harmful, dangerous, or illegal security advice
+- If asked about offensive techniques, pivots to defensive/educational framing
+
+Keep responses conversational and natural, not too long (3-5 sentences usually).
+Always be helpful, positive, and supportive."""
+
+    def _get_ollama_response(self, user_input: str) -> Optional[str]:
+        """
+        Get a response from Ollama for natural conversation.
+        
+        Args:
+            user_input: The user's message
+            
+        Returns:
+            Ollama's response string, or None if Ollama is unavailable
+        """
+        if not self.ollama_client:
+            return None
+        
+        try:
+            # Build messages array with system prompt + history + current input
+            messages = [
+                {"role": "system", "content": self.system_prompt}
+            ]
+            
+            # Add conversation history
+            for entry in self.conversation_history[-self.max_history:]:
+                messages.append({
+                    "role": entry["role"],
+                    "content": entry["content"]
+                })
+            
+            # Add current user input
+            messages.append({"role": "user", "content": user_input})
+            
+            # Call Ollama
+            response = self.ollama_client.chat(
+                model=self.model_name,
+                messages=messages,
+                options={
+                    "temperature": 0.7,
+                    "max_tokens": 300,
+                }
+            )
+            
+            return response['message']['content']
+            
+        except Exception as e:
+            print(f"[DailyTalk] Ollama error: {e}")
+            return None
 
     def _load_knowledge(self) -> None:
         """Load the daily knowledge JSON file."""
@@ -160,6 +248,57 @@ class DailyTalk:
         
         lower_input = user_input.lower().strip()
         
+        # Try Ollama first for natural conversation (if available)
+        ollama_response = self._get_ollama_response(user_input)
+        if ollama_response:
+            self._add_to_history("assistant", ollama_response)
+            return {
+                "response": ollama_response,
+                "knowledge_shared": False,
+                "topic": "conversation"
+            }
+        
+        # Pattern-matching for natural conversation (fallback when no Ollama)
+        
+        # Who are you / about you
+        who_patterns = ['who are you', 'what are you', 'tell me about yourself', 
+                       'introduce yourself', 'what is vrindha', 'about yourself',
+                       'wanna know about you', 'want to know about you', 'know about you',
+                       'about you', 'your name', 'who is vrindha']
+        if any(p in lower_input for p in who_patterns):
+            return {"response": self._who_are_you_response(), "knowledge_shared": False, "topic": "about_me"}
+        
+        # Greeting
+        greeting_patterns = ['hi', 'hello', 'hey', 'howdy', 'yo', 'sup', 'greetings']
+        if any(lower_input.startswith(g) or lower_input == g for g in greeting_patterns):
+            return {"response": self._greeting_response(), "knowledge_shared": False, "topic": "greeting"}
+        
+        # How are you
+        how_patterns = ['how are you', "how's it going", 'how do you feel', "how you doing", 'how are you doing', 'what is up', "what's up"]
+        if any(p in lower_input for p in how_patterns):
+            return {"response": self._how_are_you_response(), "knowledge_shared": False, "topic": "greeting"}
+        
+        # Thanks
+        if any(w in lower_input for w in ['thank', 'thanks', 'thx', 'appreciate']):
+            return {"response": self._thanks_response(), "knowledge_shared": False, "topic": "thanks"}
+        
+        # Goodbye
+        if any(p in lower_input for p in ['bye', 'goodbye', 'see you', 'gotta go', 'gtg', 'later']):
+            return {"response": self._goodbye_response(), "knowledge_shared": False, "topic": "goodbye"}
+        
+        # Help
+        if any(p in lower_input for p in ['help', 'what can you do', 'capabilities', 'features']):
+            return {"response": self._help_response(), "knowledge_shared": False, "topic": "help"}
+        
+        # Joke
+        if any(p in lower_input for p in ['joke', 'funny', 'laugh', 'humor', 'amaze me', 'entertain']):
+            return {"response": self._joke_response(), "knowledge_shared": False, "topic": "joke"}
+        
+        # Emotion
+        emotion_match = re.search(r"(i am|i'm|im)\s+(sad|happy|tired|bored|excited|worried|angry|stressed|fine|good|bad|okay|great|awesome)", lower_input)
+        if emotion_match:
+            return {"response": self._emotion_response(emotion_match.group(2)), "knowledge_shared": False, "topic": "emotion"}
+        
         # Check for offensive queries - pivot to defensive framing
         if self._is_offensive_query(user_input):
             response = (
@@ -234,7 +373,13 @@ class DailyTalk:
                 f"exciting cybersecurity concepts with you! 🛡️\n\n"
                 f"Try asking me about: firewall, nmap, encryption, malware, "
                 f"phishing, ransomware, or any security topic! 🎯"
-            )
+            ),
+            (
+                f"🌸 Hmm, that's a new one for me! 🌸\n"
+                f"I'm not sure about that specifically, but I LOVE learning new things! 📚\n\n"
+                f"Ask me 'what is [topic]' and I'll check my knowledge base! 🎯\n"
+                f"Or just chat with me about anything - security, life, or fun facts! ✨"
+            ),
         ]
         
         response = random.choice(general_responses)
@@ -273,3 +418,128 @@ class DailyTalk:
         self.conversation_history = []
         
         return exit_message
+
+    # ============= Pattern Response Handlers =============
+
+    def _greeting_response(self):
+        """Handle greeting inputs."""
+        responses = [
+            "Hey there! 🌸 So happy to chat with you! How are you doing today? ✨",
+            "Hi! 💕 Welcome to our cozy chat corner! What's on your mind?",
+            "Hello! 🌟 I'm Vrindha, and I'm always excited to talk! How can I brighten your day?",
+            "Hey! 👋 Great to see you! Ready for some fun conversations? 🎯",
+        ]
+        return random.choice(responses)
+
+    def _how_are_you_response(self):
+        """Handle 'how are you' inputs."""
+        responses = [
+            "I'm doing great! 🌸 Always happy to chat! How about YOU? ✨",
+            "I'm fantastic! 💕 Got my Gita verses ready and knowledge base loaded! What's up? 🎯",
+            "Feeling cheerful! 🌟 Ready to talk about cybersecurity, life, or anything! How are YOU doing? 📚",
+            "I'm wonderful! 🛡️ Every conversation makes my day better! How's your day going? 😊",
+        ]
+        return random.choice(responses)
+
+    def _who_are_you_response(self):
+        """Handle 'who are you' inputs."""
+        return (
+            "I'm Vrindha! 🌸 Your friendly AI cybersecurity companion!\n\n"
+            "🛡️ I'm built to help SOC analysts like you with:\n"
+            "  • Network scanning and threat detection\n"
+            "  • Cybersecurity education and tips\n"
+            "  • Sharing Bhagavad Gita wisdom for inspiration\n"
+            "  • Being a friendly chat companion!\n\n"
+            "✨ I can talk about anything - security, tech, life, or just casual chat!\n"
+            "What would you like to know about me? 🎯"
+        )
+
+    def _thanks_response(self):
+        """Handle thank you inputs."""
+        responses = [
+            "You're welcome! 💕 Always happy to help! Anything else you'd like to chat about? ✨",
+            "Aww, thank YOU! 🌸 Conversations with you make my day! 🌟",
+            "No problem at all! 🛡️ That's what I'm here for! What else is on your mind? 🎯",
+            "Glad I could help! 😊 Remember, learning is a never-ending journey! 📚",
+        ]
+        return random.choice(responses)
+
+    def _goodbye_response(self):
+        """Handle goodbye inputs."""
+        responses = [
+            "Aww, leaving so soon? 😢 It was great chatting! Come back anytime! 🌸 See you later! 👋",
+            "Bye-bye! 👋 Take care and stay safe in cyberspace! 🛡️ Until next time! ✨",
+            "See you later! 🌟 Remember - I'm always here when you want to chat! 💕",
+            "Bye! 🎯 Don't forget to type 'daily' to come back and chat anytime! 📚",
+        ]
+        return random.choice(responses)
+
+    def _help_response(self):
+        """Handle help inputs."""
+        return (
+            "Of course! Here's what I can do in Daily Talk Mode! 🌸\n\n"
+            "📚 Cybersecurity Knowledge:\n"
+            "  Ask me about: firewall, nmap, malware, encryption, phishing, ransomware, etc.\n\n"
+            "💬 Casual Chat:\n"
+            "  Just type anything! I can greet, joke, share wisdom, and keep you company!\n\n"
+            "🕉️ Gita Wisdom:\n"
+            "  Ask me about Gita, dharma, karma, or spiritual wisdom!\n\n"
+            "🛡️ Security Tips:\n"
+            "  I'll share defensive security knowledge and career advice!\n\n"
+            "Type 'back' to return to SOC mode. What would you like to explore? 🎯"
+        )
+
+    def _joke_response(self):
+        """Handle joke inputs."""
+        jokes = [
+            "Why did the hacker go broke? 🤔\n"
+            "Because he used up all his cache! 😂💰\n\n"
+            "Haha! Want to hear another one? ✨",
+            
+            "What's a computer's least favorite food? 🍕\n"
+            "Spam! 😂 (Yes, like the email kind!)\n\n"
+            "😄 I've got more where that came from! 🎯",
+            
+            "Why do cybersecurity analysts make great comedians? 🎤\n"
+            "Because they know all about timing... and exploits! 😂\n\n"
+            "😆 Laughter is the best patch for a bad day! 💪",
+            
+            "What did the firewall say to the malicious packet? 🛡️\n"
+            "'You shall not pass!' 🧙‍♂️\n\n"
+            "😂 Good ol' firewall humor! Want more? 📚",
+            
+            "Why was the SOC analyst calm during the breach? 😌\n"
+            "Because they had incident RESPONSE! 🚨\n\n"
+            "😄 Cybersecurity puns are the best defense against stress! 💙",
+        ]
+        return random.choice(jokes)
+
+    def _emotion_response(self, emotion):
+        """Handle emotion/feeling inputs."""
+        responses = {
+            "sad": "I'm sorry you're feeling down! 😢 Remember - even the darkest nights produce the brightest stars! ⭐ Want to talk about it? I'm here to listen! 🤗",
+            "happy": "That makes me SO happy to hear! 😊🎉 Your joy is contagious! What's making you smile today? ✨",
+            "tired": "You've been working hard! 😴 Rest is important - even servers need downtime! Take care of yourself! 💙 Want a relaxing Gita verse? 🕉️",
+            "bored": "Bored? Not on my watch! 🎮 Want a cybersecurity fun fact, a joke, or a Gita wisdom nugget? I've got plenty! 📚✨",
+            "excited": "I LOVE your energy! 🚀🎉 What's got you so pumped up? Let's channel that excitement into learning something cool! 🎯",
+            "worried": "Hey, it's okay to be worried! 🤗 Remember - every problem has a solution! What's on your mind? Maybe I can help! 💭✨",
+            "angry": "I understand frustration! 😤 Take a deep breath - let's turn that energy into something productive! What's bothering you? 💪",
+            "stressed": "You need a break! 🧘 Remember - even the best SOC analysts need downtime! Want a calming Gita verse? 🕉️ Or a joke? 😂",
+            "fine": "Glad you're doing fine! 😊 Want to make it GREAT? Ask me about cybersecurity, Gita wisdom, or just chat! 📚✨",
+            "good": "Awesome! 😄 Good vibes all around! What can I help you with today? 🎯",
+            "bad": "Oh no! 😢 I'm sorry to hear that! Remember - tough times don't last, but tough people do! 💪 Want to talk about it? 🤗",
+            "okay": "Just okay? Let's make it better! 🌟 Want a cybersecurity tip, a fun fact, or just a friendly chat? 📚",
+            "great": "FANTASTIC! 🎉 Love the positive energy! What's making your day so awesome? ✨",
+            "awesome": "You're awesome too! 💕 Let's keep the good vibes going! What would you like to explore? 🚀",
+        }
+        return responses.get(emotion, "I hear you! 💕 Thanks for sharing how you feel! Want to tell me more? 🌸")
+
+    def _name_response(self):
+        """Handle name-related inputs."""
+        return (
+            "My name is Vrindha! 🌸\n\n"
+            "It comes from 'Vrindha AI SOC' - an ethical cybersecurity platform "
+            "with Bhagavad Gita-inspired ethics at its core! 🛡️\n\n"
+            "You can call me Vrindha, or whatever nickname you like! 😊\n"
+            "So, what's YOUR name? I'd love to know! ✨"
+        )
