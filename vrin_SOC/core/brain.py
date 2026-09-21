@@ -609,9 +609,9 @@ class Brain:
             scan_summary = ""
             if isinstance(result_data, dict):
                 if result_data.get("type") == "network_scan":
-                    scan_summary = _build_network_scan_summary(result_data)
+                    scan_summary = self._build_network_scan_summary(result_data)
                 elif result_data.get("type") == "vulnerability_scan":
-                    scan_summary = _build_vuln_scan_summary(result_data)
+                    scan_summary = self._build_vuln_scan_summary(result_data)
 
             return {
                 "mode": "red",
