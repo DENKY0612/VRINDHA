@@ -67,13 +67,26 @@ def run_nmap(target: str = "127.0.0.1", flags: list = None, scan_type: str = Non
     try:
         target = target or "127.0.0.1"
         
+        # Detect IPv6 and add -6 flag if needed
+        is_ipv6 = ":" in target and not target.startswith("[")
+        if is_ipv6:
+            # Strip brackets if present for nmap target
+            target = target.strip("[]")
+        
         # Build command
         if flags:
             cmd = ["nmap"] + flags + [target]
+            # Auto-add -6 for IPv6 if not already in flags
+            if is_ipv6 and "-6" not in flags:
+                cmd.insert(1, "-6")
         elif scan_type and scan_type in SCAN_PRESETS:
             cmd = ["nmap"] + SCAN_PRESETS[scan_type] + [target]
+            if is_ipv6 and "-6" not in SCAN_PRESETS[scan_type]:
+                cmd.insert(1, "-6")
         else:
             cmd = ["nmap", "-sT", "-T4", "--top-ports", "50", "-Pn", target]
+            if is_ipv6:
+                cmd.insert(1, "-6")
         
         if shutil.which("nmap"):
             result = tool_executor.execute(

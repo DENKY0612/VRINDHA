@@ -24,6 +24,15 @@ def run_nikto(target: str = "http://127.0.0.1") -> dict:
         if not target:
             target = "http://127.0.0.1"
         display = target if target.startswith("http") else f"http://{target}"
+        # Handle IPv6 addresses - wrap in brackets for URLs
+        if ":" in target and not target.startswith("http"):
+            # IPv6 address detected
+            display = f"http://[{target}]"
+        elif ":" in target and target.startswith("http://") and "[" not in target:
+            # IPv6 in URL without brackets
+            display = target.replace("http://", "http://[")
+            if not display.endswith("]"):
+                display += "]"
         if shutil.which("nikto"):
             result = tool_executor.execute(["nikto", "-h", display], tool_name="nikto", timeout=60)
             return {

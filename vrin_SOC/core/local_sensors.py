@@ -67,10 +67,12 @@ def utcstamp() -> str:
 
 
 def single_host(target: str) -> str:
-    """Return a single host from a target, rejecting wide CIDR ranges."""
+    """Return a single host from a target, rejecting wide CIDR ranges. Supports IPv4 and IPv6."""
     value = (target or "").strip()
     if not value:
         return "127.0.0.1"
+    # Strip brackets from IPv6
+    value = value.strip("[]")
     if "/" in value:
         try:
             network = ipaddress.ip_network(value, strict=False)
@@ -181,9 +183,19 @@ def whois_lookup(target: str) -> Dict:
 def http_probe(target: str, paths: Iterable[str] = COMMON_PATHS, timeout: float = 2.0) -> Dict:
     raw = (target or "127.0.0.1").strip()
     if not raw.startswith("http"):
-        raw = f"http://{raw}"
+        # Handle IPv6 addresses - wrap in brackets
+        if ":" in raw and not raw.startswith("["):
+            raw = f"http://[{raw}]"
+        else:
+            raw = f"http://{raw}"
     parsed = urlparse(raw)
-    base = f"{parsed.scheme}://{parsed.netloc or parsed.path}"
+    # Handle IPv6 netloc (includes brackets)
+    netloc = parsed.netloc or parsed.path
+    if netloc.startswith("["):
+        # IPv6 address in brackets
+        base = f"{parsed.scheme}://{netloc}"
+    else:
+        base = f"{parsed.scheme}://{netloc}"
     found: List[Dict] = []
     for path in paths:
         url = base.rstrip("/") + path

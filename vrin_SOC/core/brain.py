@@ -195,8 +195,13 @@ class Brain:
             return {"mode": "blue", "type": "general", "confidence": "low"}
 
     def extract_target(self, command: str) -> str:
-        """Extract target IP/domain from command"""
-        # IP regex
+        """Extract target IP/domain from command. Supports IPv4 and IPv6."""
+        # IPv6 regex (full and compressed forms)
+        ipv6_pattern = r"\b(?:[0-9a-fA-F]{1,4}:){2,7}[0-9a-fA-F]{1,4}\b|\b(?:[0-9a-fA-F]{1,4}:){1,7}:\b|\b(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}\b|\b(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}\b|\b(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}\b|\b(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}\b|\b(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}\b|\b[0-9a-fA-F]{1,4}:(?::[0-9a-fA-F]{1,4}){1,6}\b|\b::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}\b|\b::\b"
+        match = re.search(ipv6_pattern, command)
+        if match:
+            return match.group(0)
+        # IPv4 regex
         ip_pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b"
         match = re.search(ip_pattern, command)
         if match:
