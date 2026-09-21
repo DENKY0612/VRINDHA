@@ -1,13 +1,16 @@
 """
 Web Search Module - Vrindha SOC
-Provides online search capabilities for AI context enrichment.
+Provides online search via DuckDuckGo HTML endpoint for AI context enrichment.
 """
+import re
+import requests
+from bs4 import BeautifulSoup
 from typing import List, Optional
 
 
 def search(query: str, max_results: int = 5) -> List[dict]:
     """
-    Search the web via DuckDuckGo.
+    Search the web via DuckDuckGo HTML endpoint.
     
     Args:
         query: Search query string
@@ -17,16 +20,29 @@ def search(query: str, max_results: int = 5) -> List[dict]:
         List of dicts with 'title', 'url', 'description' keys
     """
     try:
-        from ddgs import DDGS
-        with DDGS() as ddgs:
-            results = []
-            for r in ddgs.text(query, max_results=max_results):
+        url = "https://html.duckduckgo.com/html/"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+        }
+        resp = requests.post(url, data={"q": query}, headers=headers, timeout=15)
+        resp.raise_for_status()
+        
+        soup = BeautifulSoup(resp.text, "lxml")
+        results = []
+        
+        for result in soup.find_all("div", class_="result", limit=max_results):
+            title_tag = result.find("a", class_="result__a")
+            snippet_tag = result.find("a", class_="result__snippet")
+            if title_tag:
                 results.append({
-                    "title": r.get("title", ""),
-                    "url": r.get("href", ""),
-                    "description": r.get("body", "")
+                    "title": title_tag.text.strip(),
+                    "url": title_tag.get("href", ""),
+                    "description": snippet_tag.text.strip() if snippet_tag else ""
                 })
-            return results
+        
+        return results if results else [{"title": "No results", "url": "", "description": f"No results for '{query}'"}]
     except Exception as e:
         return [{"title": "Search Error", "url": "", "description": f"Search failed: {e}"}]
 
@@ -34,24 +50,13 @@ def search(query: str, max_results: int = 5) -> List[dict]:
 def fetch_url(url: str, char_limit: int = 3000) -> str:
     """
     Fetch and extract readable text from a URL.
-    
-    Args:
-        url: The URL to fetch
-        char_limit: Maximum characters to return
-        
-    Returns:
-        Extracted text content
     """
     try:
-        import requests
-        from bs4 import BeautifulSoup
-        
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         resp = requests.get(url, headers=headers, timeout=10)
         resp.raise_for_status()
         
         soup = BeautifulSoup(resp.text, "lxml")
-        # Remove scripts and styles
         for tag in soup(["script", "style", "nav", "footer", "header"]):
             tag.decompose()
         text = soup.get_text(separator=" ", strip=True)
@@ -63,13 +68,6 @@ def fetch_url(url: str, char_limit: int = 3000) -> str:
 def search_context(query: str, max_results: int = 3) -> str:
     """
     Search the web and return formatted context for AI consumption.
-    
-    Args:
-        query: Search query
-        max_results: Number of results to include
-        
-    Returns:
-        Formatted string with search results
     """
     results = search(query, max_results)
     if not results:
@@ -85,5 +83,4 @@ def search_context(query: str, max_results: int = 3) -> str:
 
 
 if __name__ == "__main__":
-    # Test
-    print(search_context("cybersecurity CVE 2025"))
+    print(search_context("what is the current version of minecraft"))

@@ -149,9 +149,15 @@ class OllamaDev:
             return f"[Ollama error: {e}]"
 
     def enter(self) -> str:
-        """Return greeting message when entering dev mode."""
+        """Return greeting message when entering Daily Talk mode."""
         os.chdir(self.project_root)
         ollama_status = "✅ Connected" if self.ollama_available else "❌ Not available (using templates)"
+        
+        # Preload context on first entry
+        if not hasattr(self, '_context_preloaded'):
+            self._preload_context()
+            self._context_preloaded = True
+        
         greeting = (
             "🛡️ Vrindha Developer Assistant 🛡️\n"
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -164,6 +170,24 @@ class OllamaDev:
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         )
         return greeting
+    
+    def _preload_context(self):
+        """Preload Vrindha project context into conversation history."""
+        try:
+            from vrin_SOC.dev.context_preload import get_project_context
+            context = get_project_context()
+            # Inject as system-like context
+            self.history.append({
+                "role": "user",
+                "content": f"[SYSTEM CONTEXT - READ ONLY]\n{context}\n[END CONTEXT]"
+            })
+            self.history.append({
+                "role": "assistant",
+                "content": "I understand. I'm Vrindha, the AI companion for this cybersecurity SOC platform. I'm ready to help with code review, project management, and development tasks."
+            })
+            print("[DevAssistant] Project context preloaded~! 🌸")
+        except Exception as e:
+            print(f"[DevAssistant] Context preload skipped: {e}")
 
     def process(self, user_input: str) -> Dict[str, Any]:
         """

@@ -136,9 +136,15 @@ Always be helpful, positive, and supportive."""
             return None
         
         try:
-            # Build messages array with system prompt + history + current input
+            # Enrich with web search BEFORE building messages
+            web_context = self._try_web_search(user_input)
+            system_prompt = self.system_prompt
+            if web_context:
+                system_prompt += f"\n\nCurrent web search results:\n{web_context}"
+            
+            # Build messages array with enriched system prompt
             messages = [
-                {"role": "system", "content": self.system_prompt}
+                {"role": "system", "content": system_prompt}
             ]
             
             # Add conversation history
@@ -151,9 +157,6 @@ Always be helpful, positive, and supportive."""
             # Add current user input
             messages.append({"role": "user", "content": user_input})
             
-            # Enrich with web search if cybersecurity topic detected
-            web_context = self._try_web_search(user_input)
-            
             # Call Ollama
             response = self.ollama_client.chat(
                 model=self.model_name,
@@ -164,13 +167,7 @@ Always be helpful, positive, and supportive."""
                 }
             )
             
-            ai_response = response['message']['content']
-            
-            # Append web search note if relevant
-            if web_context and "web search" not in ai_response.lower():
-                ai_response += f"\n\n📡 (Enriched with live web search data)"
-            
-            return ai_response
+            return response['message']['content']
         except Exception as e:
             print(f"[DailyTalk] Ollama error: {e}")
             return None
@@ -263,13 +260,33 @@ Always be helpful, positive, and supportive."""
             "fun_fact": "The first computer virus was created in 1971 and was called 'Creeper'!"
         }
 
+    def _preload_context(self):
+        """Preload Vrindha project context into conversation history."""
+        try:
+            from vrin_SOC.dev.context_preload import get_project_context
+            context = get_project_context()
+            self.conversation_history.append({
+                "role": "user",
+                "content": f"[SYSTEM CONTEXT - READ ONLY]\n{context}\n[END CONTEXT]"
+            })
+            self.conversation_history.append({
+                "role": "assistant",
+                "content": "I understand. I'm Vrindha, the AI companion for this cybersecurity SOC platform. I'm ready to help with cybersecurity education and casual conversation."
+            })
+            print("[DailyTalk] Project context preloaded~! 🌸")
+        except Exception as e:
+            print(f"[DailyTalk] Context preload skipped: {e}")
+
     def enter(self) -> str:
         """
         Enter Daily Talk mode - returns greeting with a random daily nugget.
-        
-        Returns:
-            Greeting message string
+        Preloads project context on first entry for AI awareness.
         """
+        # Preload context on first entry
+        if not hasattr(self, '_context_preloaded'):
+            self._preload_context()
+            self._context_preloaded = True
+        
         nugget = self._get_random_nugget()
         verse = self.gita_engine.get_random_verse()
         
