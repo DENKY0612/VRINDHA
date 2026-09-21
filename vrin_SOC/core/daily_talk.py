@@ -89,23 +89,9 @@ class DailyTalk:
             "deface", "destroy", "attack", "penetrate", "compromise", "ddos attack",
             "sql injection tutorial", "how to hack", "how to crack"
         ]
-    
-    def _find_ollama_binary(self):
-        """Find ollama binary in common locations."""
-        from pathlib import Path
-        candidates = [
-            Path("/usr/local/bin/ollama"),
-            Path("/usr/bin/ollama"),
-            Path("/home/kali/.local/bin/ollama"),
-            Path.home() / ".local" / "bin" / "ollama",
-        ]
-        for p in candidates:
-            if p.exists() and p.is_file():
-                return p
-        return None
         
         # System prompt for Ollama
-        self.system_prompt = """You are Vrindha, a friendly and warm cybersecurity SOC companion AI. 
+        self.system_prompt = """You are Vrindha, a friendly and warm cybersecurity SOC companion AI.
 You are slightly kawaii (cute/enthusiastic) but always respectful and educational.
 
 Your personality:
@@ -120,6 +106,20 @@ Your personality:
 
 Keep responses conversational and natural, not too long (3-5 sentences usually).
 Always be helpful, positive, and supportive."""
+    
+    def _find_ollama_binary(self):
+        """Find ollama binary in common locations."""
+        from pathlib import Path
+        candidates = [
+            Path("/usr/local/bin/ollama"),
+            Path("/usr/bin/ollama"),
+            Path("/home/kali/.local/bin/ollama"),
+            Path.home() / ".local" / "bin" / "ollama",
+        ]
+        for p in candidates:
+            if p.exists() and p.is_file():
+                return p
+        return None
 
     def _get_ollama_response(self, user_input: str) -> Optional[str]:
         """
