@@ -80,6 +80,24 @@ class OllamaDev:
                 return p
         return None
 
+    def _try_web_search(self, user_message: str) -> Optional[str]:
+        """Detect if message needs web search and return context."""
+        # Keywords that trigger web search
+        web_keywords = [
+            "CVE", "exploit", "vulnerability", "news", "latest",
+            "what is", "how to protect", "best practices",
+            "zero-day", "ransomware", "threat intelligence"
+        ]
+        lower = user_message.lower()
+        if not any(k in lower for k in web_keywords):
+            return None
+        
+        try:
+            from vrin_SOC.dev.web_search import search_context
+            return search_context(user_message, max_results=3)
+        except Exception:
+            return None
+
     def _get_python_path(self) -> str:
         """Get the path to the project's Python interpreter."""
         venv_python = self.project_root / ".venv_kali" / "bin" / "python"
@@ -88,7 +106,8 @@ class OllamaDev:
         return "python3"
 
     def _ollama_chat(self, user_message: str, context: str = "") -> Optional[str]:
-        """Send a message to Ollama and return the response."""
+        """Send a message to Ollama and return the response.
+        Enriches with web search when cybersecurity topics are detected."""
         if not self.ollama_available:
             return None
         try:
@@ -98,13 +117,19 @@ class OllamaDev:
                 "Vrindha AI SOC cybersecurity project. You help with code review, "
                 "debugging, patching, and project management. Be concise, technical, "
                 "and provide exact file paths and line numbers. Use emojis sparingly. "
+                "You have access to web search for current cybersecurity information. "
                 f"Project root: {self.project_root}"
             )
             if context:
-                system_prompt += f"\n\nCurrent context:\n{context}"
+                system_prompt += f"\n\nRecent conversation:\n{context}"
+
+            # Detect cybersecurity queries and enrich with web search
+            web_context = self._try_web_search(user_message)
+            if web_context:
+                system_prompt += f"\n\nWeb search results:\n{web_context}"
 
             payload = {
-                "model": "llama3.2:latest",
+                "model": "qwen3.5:4b",
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message}

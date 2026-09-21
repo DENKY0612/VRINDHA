@@ -54,7 +54,7 @@ class DailyTalk:
         
         # Initialize Ollama client
         self.ollama_client = None
-        self.model_name = "llama3.2:latest"
+        self.model_name = "qwen3.5:4b"
         if OLLAMA_AVAILABLE:
             try:
                 self.ollama_client = ollama.Client(host='http://localhost:11434')
@@ -92,6 +92,7 @@ class DailyTalk:
         
         # System prompt for Ollama
         self.system_prompt = """You are Vrindha, a friendly and warm cybersecurity SOC companion AI.
+You have access to web search for up-to-date cybersecurity information.
 You are slightly kawaii (cute/enthusiastic) but always respectful and educational.
 
 Your personality:
@@ -150,6 +151,9 @@ Always be helpful, positive, and supportive."""
             # Add current user input
             messages.append({"role": "user", "content": user_input})
             
+            # Enrich with web search if cybersecurity topic detected
+            web_context = self._try_web_search(user_input)
+            
             # Call Ollama
             response = self.ollama_client.chat(
                 model=self.model_name,
@@ -160,10 +164,33 @@ Always be helpful, positive, and supportive."""
                 }
             )
             
-            return response['message']['content']
+            ai_response = response['message']['content']
             
+            # Append web search note if relevant
+            if web_context and "web search" not in ai_response.lower():
+                ai_response += f"\n\n📡 (Enriched with live web search data)"
+            
+            return ai_response
         except Exception as e:
             print(f"[DailyTalk] Ollama error: {e}")
+            return None
+
+    def _try_web_search(self, user_input: str) -> Optional[str]:
+        """Detect if message needs web search and return context."""
+        web_keywords = [
+            "CVE", "exploit", "vulnerability", "news", "latest",
+            "what is", "how to protect", "best practices",
+            "zero-day", "ransomware", "threat intelligence",
+            "latest threat", "new attack", "security advisory"
+        ]
+        lower = user_input.lower()
+        if not any(k in lower for k in web_keywords):
+            return None
+        
+        try:
+            from vrin_SOC.dev.web_search import search_context
+            return search_context(user_input, max_results=3)
+        except Exception:
             return None
 
     def _load_knowledge(self) -> None:
