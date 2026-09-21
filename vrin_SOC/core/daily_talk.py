@@ -62,8 +62,26 @@ class DailyTalk:
                 self.ollama_client.list()
                 print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
             except Exception as e:
-                print(f"[DailyTalk] Ollama not available ({e}), using template responses.")
-                self.ollama_client = None
+                # Server not running - try to auto-start
+                ollama_bin = self._find_ollama_binary()
+                if ollama_bin:
+                    try:
+                        import subprocess, time
+                        subprocess.Popen(
+                            [str(ollama_bin), "serve"],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                        )
+                        time.sleep(3)
+                        # Reconnect
+                        self.ollama_client = ollama.Client(host='http://localhost:11434')
+                        self.ollama_client.list()
+                        print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
+                    except Exception as e2:
+                        print(f"[DailyTalk] Ollama not available ({e2}), using template responses.")
+                        self.ollama_client = None
+                else:
+                    print(f"[DailyTalk] Ollama not available ({e}), using template responses.")
+                    self.ollama_client = None
         
         # Offensive keywords that should be pivoted to defensive framing
         self.offensive_keywords = [
@@ -71,6 +89,20 @@ class DailyTalk:
             "deface", "destroy", "attack", "penetrate", "compromise", "ddos attack",
             "sql injection tutorial", "how to hack", "how to crack"
         ]
+    
+    def _find_ollama_binary(self):
+        """Find ollama binary in common locations."""
+        from pathlib import Path
+        candidates = [
+            Path("/usr/local/bin/ollama"),
+            Path("/usr/bin/ollama"),
+            Path("/home/kali/.local/bin/ollama"),
+            Path.home() / ".local" / "bin" / "ollama",
+        ]
+        for p in candidates:
+            if p.exists() and p.is_file():
+                return p
+        return None
         
         # System prompt for Ollama
         self.system_prompt = """You are Vrindha, a friendly and warm cybersecurity SOC companion AI. 
