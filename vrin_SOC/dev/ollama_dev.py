@@ -106,20 +106,20 @@ class OllamaDev:
         return "python3"
 
     def _ollama_chat(self, user_message: str, context: str = "") -> Optional[str]:
-        """Send a message to Ollama and return the response.
-        Enriches with web search when cybersecurity topics are detected."""
+        """Send a message to Ollama with full identity + web search enrichment."""
         if not self.ollama_available:
             return None
         try:
-            import urllib.request
-            system_prompt = (
-                "You are Vrindha Dev Assistant, an AI developer partner for the "
-                "Vrindha AI SOC cybersecurity project. You help with code review, "
-                "debugging, patching, and project management. Be concise, technical, "
-                "and provide exact file paths and line numbers. Use emojis sparingly. "
-                "You have access to web search for current cybersecurity information. "
-                f"Project root: {self.project_root}"
-            )
+            # Load full identity once
+            if not hasattr(self, '_identity_prompt'):
+                try:
+                    from vrin_SOC.dev.identity import get_identity_prompt
+                    self._identity_prompt = get_identity_prompt()
+                except Exception:
+                    self._identity_prompt = get_short_identity()
+            
+            system_prompt = self._identity_prompt
+            
             if context:
                 system_prompt += f"\n\nRecent conversation:\n{context}"
 
