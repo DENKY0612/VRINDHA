@@ -1,7 +1,7 @@
 """
 Daily Talk AI Module - Vrindha SOC
 Provides friendly, educational cybersecurity knowledge sharing with Gita wisdom.
-Now powered by Ollama for natural conversations on ANY topic!
+Now powered by Ollama (qwen3.5:4b) for natural conversations on ANY topic!
 """
 import json
 import random
@@ -26,13 +26,13 @@ class DailyTalk:
     Shares daily knowledge nuggets, answers questions about security topics,
     and occasionally includes Bhagavad Gita wisdom for inspiration.
     
-    Powered by Ollama (llama3.2) for natural conversations on any topic.
-    Falls back to template-based responses if Ollama is not available.
+    Powered by Ollama (qwen3.5:4b) for natural conversations on any topic.
+    Falls back to template-based responses only if Ollama fails.
     """
 
     def __init__(self, knowledge_path: Optional[str] = None):
         """
-        Initialize DailyTalk with knowledge base and Gita engine.
+        Initialize DailyTalk with knowledge base, Gita engine, and Ollama.
         
         Args:
             knowledge_path: Optional path to daily_knowledge.json. 
@@ -41,7 +41,7 @@ class DailyTalk:
         self.gita_engine = gita_engine
         self.knowledge_base: List[Dict[str, Any]] = []
         self.conversation_history: List[Dict[str, str]] = []
-        self.max_history = 5  # Short-term memory: last 5 messages
+        self.max_history = 10  # Short-term memory: last 10 messages
         
         # Resolve knowledge file path
         if knowledge_path:
@@ -55,33 +55,16 @@ class DailyTalk:
         # Initialize Ollama client
         self.ollama_client = None
         self.model_name = "qwen3.5:4b"
+        self.ollama_status = "not_initialized"
+        
         if OLLAMA_AVAILABLE:
-            try:
-                self.ollama_client = ollama.Client(host='http://localhost:11434')
-                # Test connection
-                self.ollama_client.list()
-                print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
-            except Exception as e:
-                # Server not running - try to auto-start
-                ollama_bin = self._find_ollama_binary()
-                if ollama_bin:
-                    try:
-                        import subprocess, time
-                        subprocess.Popen(
-                            [str(ollama_bin), "serve"],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-                        )
-                        time.sleep(3)
-                        # Reconnect
-                        self.ollama_client = ollama.Client(host='http://localhost:11434')
-                        self.ollama_client.list()
-                        print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
-                    except Exception as e2:
-                        print(f"[DailyTalk] Ollama not available ({e2}), using template responses.")
-                        self.ollama_client = None
-                else:
-                    print(f"[DailyTalk] Ollama not available ({e}), using template responses.")
-                    self.ollama_client = None
+            self._init_ollama()
+        
+        # System prompt for Ollama - full identity + capabilities
+        self.system_prompt = self._build_system_prompt()
+        
+        # Preload Vrindha identity context at startup
+        self._preload_context_at_startup()
         
         # Offensive keywords that should be pivoted to defensive framing
         self.offensive_keywords = [
@@ -89,9 +72,50 @@ class DailyTalk:
             "deface", "destroy", "attack", "penetrate", "compromise", "ddos attack",
             "sql injection tutorial", "how to hack", "how to crack"
         ]
+    
+    def _init_ollama(self):
+        """Initialize Ollama client with connection testing."""
+        try:
+            self.ollama_client = ollama.Client(host='http://localhost:11434')
+            # Test connection
+            self.ollama_client.list()
+            self.ollama_status = "connected"
+            print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
+        except Exception as e:
+            # Server not running - try to auto-start
+            ollama_bin = self._find_ollama_binary()
+            if ollama_bin:
+                try:
+                    import subprocess, time
+                    subprocess.Popen(
+                        [str(ollama_bin), "serve"],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                    )
+                    time.sleep(3)
+                    # Reconnect
+                    self.ollama_client = ollama.Client(host='http://localhost:11434')
+                    self.ollama_client.list()
+                    self.ollama_status = "connected"
+                    print("[DailyTalk] Ollama connected! Ready for natural conversations~! 🌸")
+                except Exception as e2:
+                    self.ollama_status = f"error: {e2}"
+                    print(f"[DailyTalk] Ollama not available ({e2}), using template responses.")
+                    self.ollama_client = None
+            else:
+                self.ollama_status = f"not_found: {e}"
+                print(f"[DailyTalk] Ollama not available ({e}), using template responses.")
+                self.ollama_client = None
+    
+    def _build_system_prompt(self) -> str:
+        """Build the full system prompt with identity and capabilities."""
+        try:
+            from vrin_SOC.core.startup_context import get_full_prompt
+            return get_full_prompt()
+        except Exception:
+            pass
         
-        # System prompt for Ollama - full identity + capabilities
-        self.system_prompt = """You are Vrindha AI — an ethical AI SOC companion with web search, file editing, code execution, SOC operations, and cybersecurity education capabilities.
+        # Fallback system prompt
+        return """You are Vrindha AI — an ethical AI SOC companion with web search, file editing, code execution, SOC operations, and cybersecurity education capabilities.
 
 ## YOUR IDENTITY
 - Name: Vrindha AI
@@ -130,7 +154,33 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             if p.exists() and p.is_file():
                 return p
         return None
-
+    
+    def get_ollama_status(self) -> Dict[str, Any]:
+        """
+        Get current Ollama connection status.
+        
+        Returns:
+            Dict with status, model_name, and availability info.
+        """
+        status = {
+            "available": self.ollama_client is not None,
+            "status": self.ollama_status,
+            "model": self.model_name,
+            "python_ollama": OLLAMA_AVAILABLE,
+        }
+        
+        # Test connection if client exists
+        if self.ollama_client:
+            try:
+                models = self.ollama_client.list()
+                status["models"] = [m.get("name", "unknown") for m in models.get("models", [])]
+                status["connected"] = True
+            except Exception as e:
+                status["connected"] = False
+                status["error"] = str(e)
+        
+        return status
+    
     def _get_ollama_response(self, user_input: str) -> Optional[str]:
         """
         Get a response from Ollama for natural conversation.
@@ -172,7 +222,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
                 messages=messages,
                 options={
                     "temperature": 0.7,
-                    "max_tokens": 300,
+                    "max_tokens": 500,
                 }
             )
             
@@ -180,14 +230,20 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
         except Exception as e:
             print(f"[DailyTalk] Ollama error: {e}")
             return None
-
+    
     def _try_web_search(self, user_input: str) -> Optional[str]:
         """Detect if message needs web search and return context."""
         web_keywords = [
             "CVE", "exploit", "vulnerability", "news", "latest",
             "what is", "how to protect", "best practices",
             "zero-day", "ransomware", "threat intelligence",
-            "latest threat", "new attack", "security advisory"
+            "latest threat", "new attack", "security advisory",
+            "version of", "current version", "what's new",
+            "recent", "today", "update", "release",
+            "who is", "what happened", "trending",
+            "minecraft", "windows", "linux", "software",
+            "price", "weather", "stock", "crypto",
+            "bitcoin", "ethereum", "market", "economy"
         ]
         lower = user_input.lower()
         if not any(k in lower for k in web_keywords):
@@ -196,9 +252,22 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
         try:
             from vrin_SOC.dev.web_search import search_context
             return search_context(user_input, max_results=3)
-        except Exception:
+        except Exception as e:
+            # Fallback: try direct HTTP search
+            try:
+                import urllib.request
+                import urllib.parse
+                url = f"https://api.duckduckgo.com/?q={urllib.parse.quote(user_input)}&format=json&no_html=1"
+                req = urllib.request.Request(url, headers={"User-Agent": "Vrindha-AI/1.0"})
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    data = json.loads(resp.read().decode())
+                    abstract = data.get("AbstractText", "")
+                    if abstract:
+                        return f"Web search for '{user_input}':\n{abstract[:500]}"
+            except Exception:
+                pass
             return None
-
+    
     def _load_knowledge(self) -> None:
         """Load the daily knowledge JSON file."""
         try:
@@ -212,13 +281,13 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
         except Exception as e:
             print(f"[DailyTalk] Error loading knowledge: {e}")
             self.knowledge_base = []
-
+    
     def _add_to_history(self, role: str, message: str) -> None:
-        """Add a message to conversation history, keeping only last 5."""
+        """Add a message to conversation history, keeping only last N."""
         self.conversation_history.append({"role": role, "content": message})
         if len(self.conversation_history) > self.max_history:
             self.conversation_history = self.conversation_history[-self.max_history:]
-
+    
     def _get_history_context(self) -> str:
         """Get formatted conversation history for context."""
         if not self.conversation_history:
@@ -228,7 +297,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             role = "User" if entry["role"] == "user" else "Vrindha"
             lines.append(f"{role}: {entry['content']}")
         return "\n".join(lines)
-
+    
     def _find_topic(self, user_input: str) -> Optional[Dict[str, Any]]:
         """
         Search knowledge base for a topic matching user input.
@@ -252,12 +321,12 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
                 if len(word) > 2 and word in lower_input:
                     return topic
         return None
-
+    
     def _is_offensive_query(self, user_input: str) -> bool:
         """Check if user input contains offensive/harmful intent."""
         lower_input = user_input.lower()
         return any(kw in lower_input for kw in self.offensive_keywords)
-
+    
     def _get_random_nugget(self) -> Dict[str, Any]:
         """Get a random knowledge nugget from the base."""
         if self.knowledge_base:
@@ -268,40 +337,46 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "level": "beginner",
             "fun_fact": "The first computer virus was created in 1971 and was called 'Creeper'!"
         }
-
-    def _preload_context(self):
-        """Preload Vrindha project context into conversation history."""
+    
+    def _preload_context_at_startup(self):
+        """Preload Vrindha identity and project context at startup."""
         try:
-            from vrin_SOC.dev.context_preload import get_project_context
-            context = get_project_context()
+            from vrin_SOC.core.startup_context import load_identity_context, load_project_context
+            
+            identity = load_identity_context()
+            project = load_project_context()
+            
+            # Inject as system-like context
             self.conversation_history.append({
                 "role": "user",
-                "content": f"[SYSTEM CONTEXT - READ ONLY]\n{context}\n[END CONTEXT]"
+                "content": f"[SYSTEM CONTEXT - READ ONLY]\n{identity}\n\n{project}\n[END CONTEXT]"
             })
             self.conversation_history.append({
                 "role": "assistant",
-                "content": "I understand. I'm Vrindha, the AI companion for this cybersecurity SOC platform. I'm ready to help with cybersecurity education and casual conversation."
+                "content": "I understand. I'm Vrindha, the AI companion for this cybersecurity SOC platform. I'm ready to help with cybersecurity education, casual conversation, and SOC operations."
             })
-            print("[DailyTalk] Project context preloaded~! 🌸")
+            print("[DailyTalk] Identity and project context preloaded at startup~! 🌸")
         except Exception as e:
             print(f"[DailyTalk] Context preload skipped: {e}")
-
+    
     def enter(self) -> str:
         """
         Enter Daily Talk mode - returns greeting with a random daily nugget.
-        Preloads project context on first entry for AI awareness.
         """
-        # Preload context on first entry
-        if not hasattr(self, '_context_preloaded'):
-            self._preload_context()
-            self._context_preloaded = True
-        
         nugget = self._get_random_nugget()
         verse = self.gita_engine.get_random_verse()
+        
+        # Check Ollama status for greeting
+        ollama_info = ""
+        if self.ollama_client:
+            ollama_info = "🤖 Ollama: Connected (qwen3.5:4b)"
+        else:
+            ollama_info = "🤖 Ollama: Using template responses"
         
         greeting = (
             f"🌸 Welcome to Daily Talk Mode! 🌸\n"
             f"I'm Vrindha, your friendly cybersecurity companion! 🛡️✨\n"
+            f"{ollama_info}\n"
             f"Let's learn something amazing about security today!\n\n"
             f"📚 Today's Random Nugget:\n"
             f"Topic: {nugget.get('topic', 'Cybersecurity').upper()}\n"
@@ -315,33 +390,36 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
         
         self._add_to_history("assistant", greeting)
         return greeting
-
-    def chat(self, user_input: str, history: List[Dict[str, str]]) -> Dict[str, Any]:
+    
+    def chat(self, user_input: str, history: List[Dict[str, str]] = None) -> Dict[str, Any]:
         """
         Process user input in Daily Talk mode.
+        ALWAYS uses Ollama if available for natural conversation.
         
         Args:
             user_input: The user's message
-            history: Conversation history list
+            history: Optional conversation history list (uses internal if not provided)
             
         Returns:
             Dict with keys: response, knowledge_shared, topic
         """
         # Update internal history from provided history
-        self.conversation_history = history[-self.max_history:] if history else []
+        if history:
+            self.conversation_history = history[-self.max_history:] if history else []
         self._add_to_history("user", user_input)
         
         lower_input = user_input.lower().strip()
         
-        # Try Ollama first for natural conversation (if available)
-        ollama_response = self._get_ollama_response(user_input)
-        if ollama_response:
-            self._add_to_history("assistant", ollama_response)
-            return {
-                "response": ollama_response,
-                "knowledge_shared": False,
-                "topic": "conversation"
-            }
+        # ALWAYS try Ollama first for natural conversation (if available)
+        if self.ollama_client:
+            ollama_response = self._get_ollama_response(user_input)
+            if ollama_response:
+                self._add_to_history("assistant", ollama_response)
+                return {
+                    "response": ollama_response,
+                    "knowledge_shared": False,
+                    "topic": "conversation"
+                }
         
         # Pattern-matching for natural conversation (fallback when no Ollama)
         
@@ -413,7 +491,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
                 f"🌟 Ooh, great question about {topic['topic'].upper()}! 🌟\n\n",
                 f"✨ Yay! You want to learn about {topic['topic'].upper()}! ✨\n\n",
                 f"🎯 Awesome! {topic['topic'].upper()} is such an important topic! 🎯\n\n",
-                f"💫 I love talking about {topic['topic'].upper()}! Here's what I know! 💫\n\n"
+                f"💫 I love talking about {topic['topic'].upper()}! Here's what I know! 💫\n\n",
             ]
             
             response = random.choice(responses)
@@ -480,7 +558,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "knowledge_shared": False,
             "topic": "general"
         }
-
+    
     def exit(self) -> str:
         """
         Exit Daily Talk mode - returns graceful exit message.
@@ -503,9 +581,9 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
         self.conversation_history = []
         
         return exit_message
-
+    
     # ============= Pattern Response Handlers =============
-
+    
     def _greeting_response(self):
         """Handle greeting inputs."""
         responses = [
@@ -515,7 +593,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "Hey! 👋 Great to see you! Ready for some fun conversations? 🎯",
         ]
         return random.choice(responses)
-
+    
     def _how_are_you_response(self):
         """Handle 'how are you' inputs."""
         responses = [
@@ -525,7 +603,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "I'm wonderful! 🛡️ Every conversation makes my day better! How's your day going? 😊",
         ]
         return random.choice(responses)
-
+    
     def _who_are_you_response(self):
         """Handle 'who are you' inputs."""
         return (
@@ -538,7 +616,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "✨ I can talk about anything - security, tech, life, or just casual chat!\n"
             "What would you like to know about me? 🎯"
         )
-
+    
     def _thanks_response(self):
         """Handle thank you inputs."""
         responses = [
@@ -548,7 +626,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "Glad I could help! 😊 Remember, learning is a never-ending journey! 📚",
         ]
         return random.choice(responses)
-
+    
     def _goodbye_response(self):
         """Handle goodbye inputs."""
         responses = [
@@ -558,7 +636,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "Bye! 🎯 Don't forget to type 'daily' to come back and chat anytime! 📚",
         ]
         return random.choice(responses)
-
+    
     def _help_response(self):
         """Handle help inputs."""
         return (
@@ -573,7 +651,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "  I'll share defensive security knowledge and career advice!\n\n"
             "Type 'back' to return to SOC mode. What would you like to explore? 🎯"
         )
-
+    
     def _joke_response(self):
         """Handle joke inputs."""
         jokes = [
@@ -598,7 +676,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "😄 Cybersecurity puns are the best defense against stress! 💙",
         ]
         return random.choice(jokes)
-
+    
     def _emotion_response(self, emotion):
         """Handle emotion/feeling inputs."""
         responses = {
@@ -618,7 +696,7 @@ Warm, friendly, slightly kawaii (cute/enthusiastic). Passionate about cybersecur
             "awesome": "You're awesome too! 💕 Let's keep the good vibes going! What would you like to explore? 🚀",
         }
         return responses.get(emotion, "I hear you! 💕 Thanks for sharing how you feel! Want to tell me more? 🌸")
-
+    
     def _name_response(self):
         """Handle name-related inputs."""
         return (

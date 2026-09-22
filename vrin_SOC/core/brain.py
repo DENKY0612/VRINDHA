@@ -32,6 +32,7 @@ from vrin_SOC.autonomous.task_manager import task_manager
 from vrin_SOC.autonomous.models import AutonomyLevel
 from vrin_SOC.hive.coordinator import hive
 from vrin_SOC.core.daily_talk import DailyTalk
+from vrin_SOC.core.startup_context import get_full_prompt, load_identity_context, load_project_context
 from vrin_SOC.dev.ollama_dev import OllamaDev
 
 # Agents will be imported lazily to avoid circular imports
