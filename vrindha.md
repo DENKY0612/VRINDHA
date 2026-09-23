@@ -154,6 +154,91 @@ audit log.
 
 ---
 
+## 5b. SecOps-Prime: Autonomous Security Command Generation
+
+Location: [`vrin_SOC/core/secops_prime.py`](vrin_SOC/core/secops_prime.py)
+
+SecOps-Prime translates natural language security objectives into precise,
+pipeline-ready commands with automatic risk assessment and throttling.
+
+### How it works
+
+```
+Vrindha: scan vulnerabilities 192.168.1.1
+→ [HIGH] Throttled Vulnerability Scan
+→ sudo nmap -sV --script=vuln --max-rate 100 -T2 192.168.1.1 -oN vuln_scan.txt
+→ Aggressive scan throttled to prevent DoS. Uses NSE vuln scripts.
+```
+
+### Supported commands
+
+**Blue Team (Automated Defense):** `status`, `detect threats`, `show logs`, `block ip`, `firewall check`, `rootkit scan`, `ids monitor`, `anomaly detection`, `risk score`
+
+**Red Team (Manual Approval):** `scan network`, `whois`, `scan vulnerabilities`, `nikto`, `gobuster`, `dirb`, `amass`, `sublist3r`, `tcpdump`, `wireshark`, `hashcat`, `ping sweep`, `full port scan`, `dns enum`, `ssl scan`, `mail scan`, `database scan`
+
+**Intelligence:** `anomaly detection`, `dashboard`
+
+**Hive:** `hive status`, `hive agents`, `hive snapshot`, `hive tasks`, `reap stale agents`
+
+### Risk levels
+
+| Level | Behavior |
+|---|---|
+| **LOW** | Fastest, most comprehensive commands (passive recon, firewall rules) |
+| **MEDIUM** | Standard scans with default timing |
+| **HIGH** | Automatic throttling (`--max-rate`, `-T2`, `-z` delays) to prevent DoS |
+
+### AI-powered command generation
+
+SecOps-Prime uses **Google Gemini API** (primary) or **Ollama qwen3.5:4b**
+(fallback) to generate context-aware commands. When AI is unavailable, it
+falls back to rule-based parsing with the same risk assessment.
+
+---
+
+## 5c. Daily Talk AI
+
+Location: [`vrin_SOC/core/daily_talk.py`](vrin_SOC/core/daily_talk.py)
+
+Conversational mode for casual chat, cybersecurity education, and Gita wisdom.
+
+### AI Services (Priority Order)
+
+| Priority | Service | Status |
+|----------|---------|--------|
+| 1st | **Google Gemini API** | Primary (if API key set) |
+| 2nd | **Ollama qwen3.5:4b** | Fallback |
+| 3rd | **Template responses** | Last resort |
+
+### Casual greetings supported
+
+```
+"wassup" → "Hey! 🌸 Wassup? Chillin' here~!"
+"watcha doin" → "Sup! 🌸 Just hanging out~ Whatcha doin?"
+"sup" → "Hey there! 😊 I'm doing great!"
+"yo" → "Hii! 👋 Just vibing in Daily Talk mode~"
+"hiya" → "Hey! 💕 Happy to see you!"
+"yooo" → "Yo yo! 🌸 Nothing much, just being awesome~"
+"heyyy" → "Hii! 🌸 Ready to chat or learn something cool?"
+```
+
+### Features
+
+- **Casual chat:** Natural conversation matching user energy
+- **Cybersecurity education:** 18+ topics with explanations and fun facts
+- **Bhagavad Gita wisdom:** 701 verses for ethical guidance
+- **Career advice:** SOC analyst, pentesting, certifications
+
+### Setup
+
+```bash
+export GEMINI_API_KEY="your-key-here"
+```
+
+Get your free key at: https://aistudio.google.com/app/apikey
+
+---
+
 ## 6. The supporting building blocks
 
 - **Core Brain** ([`vrin_SOC/core/`](vrin_SOC/core/)) — intent analysis,
@@ -234,11 +319,14 @@ These are the project's defining values:
 - **Storage:** SQLite (incidents, knowledge, audit) + JSON files (users,
   ledger, Gita dataset).
 - **ML:** scikit-learn-style pipeline for anomaly detection & risk scoring.
+- **AI:** Google Gemini API (primary), Ollama qwen3.5:4b (fallback), template
+  responses (offline).
 - **Threat intel:** STIX 2.1, optional integrations (MISP, OpenCTI,
   VirusTotal, AbuseIPDB, NVD, TAXII, Suricata/Zeek logs).
 - **Blockchain:** Custom local SHA-256 chain, standard library only.
 - **Testing:** pytest (broad suite covering coordination, controlled response,
   blockchain, ethics, security, registration, and more).
+- **Network:** Full IPv6 support across all scanning tools.
 
 ---
 
@@ -307,12 +395,15 @@ Vrindha_SOC/
 > of ethical security analysts. It continuously watches a system, uses machine
 > learning and threat intelligence to spot and investigate attacks, correlates
 > related events, and explains every finding in plain language — clearly
-> separating facts from guesses. It never fabricates data and never takes
-> risky action on its own: low-risk events are monitored automatically, while
-> anything destructive pauses for a human's approval, defaulting to the most
-> reversible response. An ethics layer judges each action, and every decision is
-> anchored in a local blockchain ledger so the audit trail can never be
-> secretly altered.**
+> separating facts from guesses. SecOps-Prime translates natural language into
+> precise, risk-aware security commands with automatic throttling. Daily Talk AI
+> provides friendly, kawaii conversation powered by Google Gemini API + Ollama.**
+>
+> **It never fabricates data and never takes risky action on its own: low-risk
+> events are monitored automatically, while anything destructive pauses for a
+> human's approval, defaulting to the most reversible response. An ethics layer
+> judges each action, and every decision is anchored in a local blockchain
+> ledger so the audit trail can never be secretly altered.**
 
 ---
 

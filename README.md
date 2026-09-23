@@ -1,10 +1,10 @@
 # Vrindha SOC
 
-Ethical, defensive-first cybersecurity assistant with an independent threat-intelligence service.
+Ethical, defensive-first cybersecurity assistant with an independent threat-intelligence service, autonomous security command generation, and conversational AI.
 
 | Directory | What it is |
 |---|---|
-| [`vrin_SOC/`](vrin_SOC/) | CLI, FastAPI backend, dashboard, agents, tools, SIEM, ML |
+| [`vrin_SOC/`](vrin_SOC/) | CLI, FastAPI backend, dashboard, agents, tools, SIEM, ML, blockchain ledger, SecOps-Prime, Daily Talk AI |
 | [`Vrin_TI/`](Vrin_TI/) | Independent STIX 2.1 threat-intelligence service |
 | [`presentation/`](presentation/) | Competition presentation |
 
@@ -33,7 +33,98 @@ VRINDHA_RUN_OPTION=2 ./vrin_SOC/run.sh
 
 The launcher uses the same interpreter for dependency checks and Uvicorn, and accepts `API_HOST`, `API_PORT`, and `API_RELOAD` from the environment. There are no default credentials. While `vrin_SOC/database/users.json` is empty, the first `POST /register` creates the administrator.
 
-## HIVE Intelligence (coordination layer)
+## AI Services
+
+Vrindha supports multiple AI backends for natural conversation and intelligent command generation:
+
+| Service | Purpose | Priority |
+|---|---|---|
+| **Google Gemini API** | Daily Talk conversations, natural chat | Primary |
+| **Ollama (qwen3.5:4b)** | Daily Talk fallback, local inference | Secondary |
+| **Template responses** | Offline fallback | Last resort |
+
+### Setting up Gemini API (optional)
+
+```bash
+export GEMINI_API_KEY="your-key-here"
+```
+
+Get your free key at: https://aistudio.google.com/app/apikey
+
+## SecOps-Prime: Autonomous Security Command Generation
+
+`vrin_SOC/core/secops_prime.py` translates natural language into precise, risk-aware security commands. Every command includes automatic risk assessment and throttling.
+
+### How it works
+
+```
+Vrindha: scan vulnerabilities 192.168.1.1
+→ [HIGH] Throttled Vulnerability Scan
+→ sudo nmap -sV --script=vuln --max-rate 100 -T2 192.168.1.1 -oN vuln_scan.txt
+→ Aggressive scan throttled to prevent DoS. Uses NSE vuln scripts.
+```
+
+### Supported commands
+
+**Blue Team (Automated Defense):** `status`, `detect threats`, `show logs`, `block ip`, `firewall check`, `rootkit scan`, `ids monitor`, `anomaly detection`, `risk score`
+
+**Red Team (Manual Approval):** `scan network`, `whois`, `scan vulnerabilities`, `nikto`, `gobuster`, `dirb`, `amass`, `sublist3r`, `tcpdump`, `wireshark`, `hashcat`, `ping sweep`, `full port scan`, `dns enum`, `ssl scan`, `mail scan`, `database scan`
+
+**Intelligence:** `anomaly detection`, `dashboard`
+
+**Hive:** `hive status`, `hive agents`, `hive snapshot`, `hive tasks`, `reap stale agents`
+
+### Risk levels
+
+| Level | Behavior |
+|---|---|
+| **LOW** | Fastest, most comprehensive commands (passive recon, firewall rules) |
+| **MEDIUM** | Standard scans with default timing |
+| **HIGH** | Automatic throttling (`--max-rate`, `-T2`, `-z` delays) to prevent DoS |
+
+## Daily Talk AI
+
+Conversational mode with Google Gemini API + Ollama integration. Supports:
+
+- **Casual chat:** `wassup`, `watcha doin`, `sup`, `yo`, `hiya`, `heyyy`
+- **Cybersecurity education:** 18+ topics with explanations and fun facts
+- **Bhagavad Gita wisdom:** 701 verses for ethical guidance
+- **Career advice:** SOC analyst, pentesting, certifications
+
+```
+Vrindha: daily
+→ 🌸 Daily Talk Mode — Vrindha AI 🌸
+→ 🤖 AI: ✅ Gemini | ✅ Ollama
+
+Vrindha: wassup
+→ "Hey! 🌸 Wassup? Chillin' here~ What's on your mind? ✨"
+```
+
+## Network Scanning Tools
+
+All tools support IPv6, full flag coverage, and automatic throttling:
+
+| Tool | File | Key Features |
+|---|---|---|
+| **Nmap** | `vrin_SOC/tools/nmap_tool.py` | SYN/TCP/UDP/ACK/NULL/FIN/XMAS, -sV, -O, -A, -p-, --top-ports, NSE scripts, IPv6, --max-rate throttling |
+| **Nikto** | `vrin_SOC/tools/nikto_tool.py` | Web vuln scanner, Tuning, evasion, JSON output |
+| **Amass** | `vrin_SOC/tools/amass_tool.py` | Passive/active/brute subdomain enumeration |
+| **Sublist3r** | `vrin_SOC/tools/sublist3r_tool.py` | Multi-engine brute-force |
+| **Gobuster** | `vrin_SOC/tools/gobuster_tool.py` | dir/dns/vhost/s3 enumeration |
+| **Dirb** | `vrin_SOC/tools/dirb_tool.py` | Web directory scanner with delay |
+| **Hashcat** | `vrin_SOC/tools/hashcat_tool.py` | Password cracking with GPU |
+| **tcpdump** | `vrin_SOC/tools/tcpdump_tool.py` | Packet capture with BPF filters |
+| **Wireshark** | `vrin_SOC/tools/wireshark_tool.py` | Tshark protocol analysis |
+| **Snort** | `vrin_SOC/tools/snort_tool.py` | IDS/IPS with live capture |
+
+## IPv6 Support
+
+All scanning tools now support IPv6 targets (including compressed forms):
+
+```bash
+Vrindha: scan network 2606:4700:3031::ac43:b84e
+Vrindha: scan vulnerabilities 2606:4700:3031::ac43:b84e
+```
 
 `vrin_SOC/coordination/` adds a coordinated multi-agent layer on top of the
 existing SOC: **Commander AI** (orchestration + incident lifecycle) over
