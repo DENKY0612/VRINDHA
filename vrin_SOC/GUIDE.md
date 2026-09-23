@@ -1037,3 +1037,279 @@ git push -u origin main
 **True strength lies in protecting, not exploiting. 🛡️🕉️**
 
 *Vrindha AI SOC System v1.0.0 - Agentic AI Cybersecurity Platform - Startup Ready*
+
+---
+
+## Section 17: SecOps-Prime — Autonomous Security Command Generation
+
+**SecOps-Prime** is an autonomous security operations module that translates natural-language intent into auditable, context-aware security commands. It bridges the gap between analyst decision and terminal execution — reducing mean-time-to-respond (MTTR) while maintaining a full chain of custody.
+
+### Architecture Overview
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Analyst Intent  │────▶│  Intent Parser   │────▶│ Command Planner │
+│  (NL / Signal)   │     │  (LLM + Rules)   │     │  (Dry-run mode) │
+└─────────────────┘     └──────────────────┘     └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │  Executor       │
+                                                  │  (Sandboxed)    │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │  Audit Logger   │
+                                                  │  (Immutable)    │
+                                                  └─────────────────┘
+```
+
+### Command Flow Examples
+
+#### 1. Threat Containment — Isolate Host
+```
+Analyst:  "Quarantine the compromised endpoint win-dc-03 immediately"
+
+SecOps-Prime Flow:
+  [1] Intent parsed: ACTION=quarantine, TARGET=win-dc-03, PRIORITY=critical
+  [2] Risk check: Target is domain controller — confirm override (Y/n)
+  [3] Command planned:
+        netsh advfirewall set allprofiles firewallpolicy blockinbound,blockoutbound
+        + isolate from AD replication group
+        + revoke active Kerberos tickets for host
+  [4] Dry-run validated — no production dependency break
+  [5] Executor: Dispatched via Ansible Tower API with 30s timeout
+  [6] Audit: Logged with hash chain → SIEM (Splunk index=secops_prime)
+```
+
+#### 2. Log Correlation — Hunt for Lateral Movement
+```
+Analyst:  "Find all hosts that auth'd from 10.0.5.22 in the last 4 hours"
+
+SecOps-Prime Flow:
+  [1] Intent parsed: ACTION=hunt, INDICATOR=10.0.5.22, TIMEFRAME=4h
+  [2] Query translated to SPL:
+        index=windows EventCode=4624 | search Source_Network_Address="10.0.5.22"
+        | stats count by ComputerName, _time | sort -_time
+  [3] Executor: Splunk REST API — job dispatched
+  [4] Result: 14 endpoints returned — top 3 flagged for deep-dive
+  [5] Follow-up suggestion: Run `whoami /all` on flagged hosts via EDR
+```
+
+#### 3. Incident Response — Phishing Remediation
+```
+Analyst:  "A user clicked a phishing link — contain it now"
+
+SecOps-Prime Flow:
+  [1] Intent parsed: ACTION=remediate, THREAT=phishing, SCOPE=user
+  [2] Auto-enrichment: Looked up user session from EDR telemetry
+        → User: jsmith, Host: wkstn-044, IP: 10.2.1.108
+  [3] Command plan (parallel execution):
+        ┌─ Block URL at proxy (Zscaler API)
+        ┌─ Force sign-out of all O365 sessions (Graph API)
+        ┌─ Snapshot host memory (Velociraptor)
+        ┌─ Disable user in AD (temp — pending investigation)
+        └─ Create ServiceNow IR ticket INC-2024-8817
+  [4] Executor: Dispatched to 4 parallel workers
+  [5] Audit: Full command tree logged with rollback instructions
+```
+
+### Safety Guardrails
+
+| Guardrail | Description |
+|-----------|-------------|
+| **Dry-run first** | Every command executes in simulation mode before live dispatch |
+| **Scope limiter** | Prevents wildcard (`*`) targets — explicit host/list required |
+| **Rollback capture** | Auto-generates inverse commands for every destructive action |
+| **Approval gate** | Critical actions (AD disable, firewall block) require human confirmation |
+| **Rate limiter** | Max 50 commands/minute per analyst to prevent automation abuse |
+
+---
+
+## Section 18: Daily Talk AI — Conversational Cybersecurity Companion
+
+**Daily Talk AI** is the conversational layer of Vrindha SOC — a security-aware chat interface that lets analysts, executives, and ops teams interact with the SOC using natural language. It supports casual conversation, security Q&A, status queries, and on-the-fly report generation.
+
+### Core Features
+
+#### 1. Dual-LLM Architecture (Gemini + Ollama Fallback)
+
+```
+┌──────────────────────────────────────────────────────┐
+│                  Daily Talk AI                        │
+│                                                      │
+│   ┌─────────────┐    Fallback     ┌─────────────┐   │
+│   │ Gemini API   │◄──────────────►│   Ollama    │   │
+│   │ (Primary)    │   on failure   │  (Local)    │   │
+│   │ gemini-2.5   │                │  llama3.2   │   │
+│   └──────┬──────┘                └──────┬──────┘   │
+│          │                               │          │
+│          └───────────┬───────────────────┘          │
+│                      ▼                              │
+│            ┌─────────────────┐                      │
+│            │ Context Router  │                      │
+│            │ (Security-aware │                      │
+│            │  prompt injection│                      │
+│            │  detection)     │                      │
+│            └────────┬────────┘                      │
+│                     ▼                               │
+│            ┌─────────────────┐                      │
+│            │  Response Guard │                      │
+│            │  (No PII leak,  │                      │
+│            │  no raw logs)   │                      │
+│            └─────────────────┘                      │
+└──────────────────────────────────────────────────────┘
+```
+
+**Gemini API Configuration:**
+```python
+# .env
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+
+# Fallback trigger: timeout > 8s, rate limit 429, or 5xx error
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.2:latest
+```
+
+**Fallback Logic:**
+```python
+async def generate_response(prompt: str, context: dict) -> str:
+    try:
+        # Primary: Gemini API (fast, capable)
+        response = await gemini_client.generate(
+            model="gemini-2.5-flash",
+            prompt=build_security_prompt(prompt, context),
+            timeout=8.0
+        )
+        return response.text
+    except (TimeoutError, RateLimitError, APIError):
+        # Fallback: Ollama local (air-gapped capable)
+        response = await ollama_client.generate(
+            model="llama3.2:latest",
+            prompt=build_security_prompt(prompt, context),
+            timeout=30.0
+        )
+        return response["response"]
+```
+
+#### 2. Casual Greetings & Conversational Modes
+
+Daily Talk AI recognizes casual openers and responds naturally while gently steering toward security awareness:
+
+```python
+CASUAL_GREETINGS = {
+    "informal": [
+        "hey", "yo", "sup", "hiya", "howdy", "what's good",
+        "namaste", "sat sri akal", "jai shree ram", "vanakkam"
+    ],
+    "time_based": {
+        "morning": "Good morning! 🛡️ What's the threat landscape looking like today?",
+        "afternoon": "Good afternoon! 🔍 Any interesting alerts catching your eye?",
+        "evening": "Evening check-in — how's the SOC looking? 🌙",
+        "night": "Night shift mode activated! 🦉 I've got your back on watch."
+    },
+    "mood_based": {
+        "stressed": "Take a breath. Let me pull up the priority queue — we'll triage together. 🧘",
+        "tired": "Long day? Let me handle the routine checks. You focus on the critical stuff. ☕",
+        "excited": "Love the energy! Let's channel that into some proactive threat hunting! 🚀"
+    }
+}
+
+# Example interactions:
+#
+# User: "hey"
+# Daily Talk: "Hey there! 👋 Ready to defend the digital realm. What can I help you with — 
+#              alerts, reports, or just a quick status check?"
+#
+# User: "sup, anything bad happening?"
+# Daily Talk: "Hey! 🛡️ Let me check the dashboard... Right now: 3 medium-priority alerts 
+#              (all false-positive candidates), 0 critical. Wanna dive into any of them?"
+#
+# User: "namaste 🙏"
+# Daily Talk: "Namaste! 🙏 Peace to you. The SOC is calm right now — 
+#              no active incidents. Want me to run a quick health check?"
+```
+
+#### 3. Security-Specific Conversation Modes
+
+| Mode | Trigger Example | Response Style |
+|------|----------------|----------------|
+| **Status** | "How's the SOC?" | KPI dashboard: open incidents, MTTR, alert volume |
+| **Hunt** | "Hunt for C2 beacons" | Proposes Splunk/Elastic queries, EDR searches |
+| **Explain** | "What is CVE-2024-3400?" | Vuln summary + affected assets + remediation |
+| **Report** | "Weekly exec summary" | Generates board-ready PDF with trends & metrics |
+| **Remediate** | "Patch the proxy fleet" | Hands off to SecOps-Prime command pipeline |
+| **Learn** | "How does Kerberoasting work?" | Educational response with ATT&CK mapping |
+
+#### 4. Multi-Tenancy & Personality Profiles
+
+```python
+PERSONALITY_PROFILES = {
+    "analyst": {
+        "tone": "technical",
+        "detail_level": "verbose",
+        "jargon": True,
+        "emoji": False,
+        "max_response_tokens": 2048
+    },
+    "executive": {
+        "tone": "strategic",
+        "detail_level": "summary_only",
+        "jargon": False,
+        "emoji": True,
+        "max_response_tokens": 512
+    },
+    "oncall": {
+        "tone": "concise_action",
+        "detail_level": "commands_only",
+        "jargon": True,
+        "emoji": False,
+        "max_response_tokens": 256
+    }
+}
+```
+
+### Session Example
+
+```
+[Daily Talk AI — Session: analyst_jsmith_09:14 IST]
+
+User:    hey, how's things?
+Daily:   Hey! 🛡️ Quick SOC pulse:
+         • Active incidents: 2 (1 medium, 1 low)
+         • MTTR today: 14 min (goal: <30 min ✅)
+         • Alerts in queue: 7 (all triaged)
+         Want the details on the medium one?
+
+User:    yeah what's the medium about?
+Daily:   INC-2024-1142: Suspicious PowerShell execution on wkstn-027
+         → Parent: powershell.exe → encoded command → outbound to 185.220.x.x
+         → EDR flagged: AMSI bypass attempt + credential access pattern
+         → MITRE: T1059.001 + T1003.001
+         Actions taken: Host isolated, memory dump captured.
+         Want me to generate a Splunk hunt for the C2 IP across all hosts?
+
+User:    yes please, and also explain what AMSI is for my junior
+Daily:   Hunt query ready — copying to your clipboard:
+         `index=network dest_ip=185.220.* | stats count by src_ip, dest_port`
+         
+         📚 For your junior: AMSI (Antimalware Scan Interface) is Windows' 
+         script-inspection hook — it lets AV/EDR peek inside PowerShell, VBA, 
+         and JScript execution BEFORE it runs. Attackers try to patch or bypass 
+         AMSI so their malicious scripts stay invisible to scanners. Think of 
+         it as a security checkpoint that the bad guys are trying to sneak past.
+         MITRE refs: T1562.001 (Disable or Modify Tools)
+
+User:    perfect, thanks
+Daily:   Anytime! 🛡️ I'll ping you if anything escalates.
+```
+
+---
+
+**Built with Dharma:** *Karmanye vadhikaraste Ma phaleshu kadachana - Focus on duty, not results (Gita 2.47)*
+
+**True strength lies in protecting, not exploiting. 🛡️🕉️**
+
+*Vrindha AI SOC System v1.0.0 - Agentic AI Cybersecurity Platform - Startup Ready*

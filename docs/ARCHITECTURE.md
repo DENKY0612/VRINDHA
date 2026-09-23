@@ -148,4 +148,176 @@ the source and surfaced in every API/dashboard response that includes events:
 | Agent dependency missing | `run_guarded` returns `degraded` result; pipeline marks the contribution unavailable |
 | TI unreachable | `malicious: None`, explainability notes the degradation |
 | Insufficient labels for evaluation | `insufficient_data` — metrics are never fabricated |
-| Invalid raw event | Recorded rejection with reason; counted in data quality |
+|| Invalid raw event | Recorded rejection with reason; counted in data quality |
+
+## 9. SecOps-Prime: Autonomous Security Command Generation
+
+SecOps-Prime is the autonomous command-generation layer that translates natural-language
+security intents into validated, executable commands. It bridges the gap between analyst
+intent and tool execution while preserving the human-approval gate for high-impact actions.
+
+### 9.1 How it works
+
+1. **Intent parsing.** The analyst describes a goal in natural language (e.g. *"block
+   all traffic from the IP that triggered the brute-force alert"*). SecOps-Prime parses
+   the intent into a structured `SecurityCommand` with action, target, and parameters.
+2. **Command validation.** The command is validated against a schema of allowed actions
+   and parameter types. Invalid or unsafe commands are rejected with an explanation.
+3. **Risk classification.** Each command is classified by impact level (`low`, `medium`,
+   `high`, `critical`). High-impact commands (block IP, isolate host, firewall change)
+   require explicit human approval before execution.
+4. **Execution or queuing.** Low-impact commands (log query, status check) may execute
+   automatically. High-impact commands enter the `awaiting_approval` queue and are
+   surfaced to the admin for review.
+5. **Audit trail.** Every generated command — whether executed, queued, or rejected —
+   is logged with the originating intent, parsed structure, risk classification, and
+   outcome.
+
+### 9.2 Example
+
+```text
+Analyst: "Show me all failed SSH logins from 192.168.1.100 in the last hour"
+
+SecOps-Prime:
+  intent: query_logs
+  action: search
+  target: auth_log
+  parameters:
+    source_ip: 192.168.1.100
+    event_type: ssh_failed
+    time_range: 1h
+  risk: low
+  → executes immediately, returns matching log entries
+```
+
+```text
+Analyst: "Isolate the compromised host on the DMZ"
+
+SecOps-Prime:
+  intent: isolate_host
+  action: network_isolate
+  target: host
+  parameters:
+    segment: dmz
+    reason: compromised
+  risk: critical
+  → queued for admin approval (high-impact action)
+```
+
+### 9.3 Integration with the coordination layer
+
+SecOps-Prime feeds generated commands into the Commander AI's approval workflow. The
+Commander evaluates the command against active incidents, correlation data, and ethics
+constraints before presenting it to the human admin. This ensures that autonomous
+command generation never bypasses the defensive, human-controlled authority principle.
+
+## 10. Daily Talk AI
+
+Daily Talk AI is the conversational interface for casual, non-security interactions —
+greetings, general knowledge questions, and lightweight assistance. It provides a
+friendly entry point for users who are not performing security operations.
+
+### 10.1 How it works
+
+Daily Talk AI uses a three-tier response chain:
+
+1. **Gemini API** (primary). The user's input is sent to the Gemini API for a
+   natural-language response. This handles the widest range of queries with the most
+   fluent output.
+2. **Ollama** (fallback). If the Gemini API is unreachable or returns an error, the
+   system falls back to a locally-hosted Ollama model. This ensures responses remain
+   available even without external API access.
+3. **Template fallback** (last resort). If both Gemini and Ollama are unavailable,
+   the system uses pre-written template responses for common queries (greetings,
+   help requests, status checks). Templates are explicitly marked as `FALLBACK` in
+   the response metadata.
+
+### 10.2 Response metadata
+
+Every Daily Talk response includes metadata indicating which tier produced it:
+
+```json
+{
+  "response": "Hello! How can I help you today?",
+  "source": "gemini",
+  "fallback": false
+}
+```
+
+```json
+{
+  "response": "Hi there! What would you like to know?",
+  "source": "template",
+  "fallback": true
+}
+```
+
+### 10.3 Casual greetings
+
+For common greetings and pleasantries, Daily Talk AI uses a curated set of friendly
+responses. These are handled at the template tier to minimize latency and API costs:
+
+- *"Hello"* → *"Hello! How can I help you today?"*
+- *"Good morning"* → *"Good morning! Ready to assist."*
+- *"How are you?"* → *"I'm running smoothly, thanks for asking!"*
+- *"What can you do?"* → *"I can help with security operations, answer questions, or just chat."*
+
+## 11. AI Services Integration
+
+The AI Services Integration layer provides a unified interface for all AI-powered
+features across the platform. It abstracts the underlying model providers behind a
+consistent API and manages the priority chain for response generation.
+
+### 11.1 Priority chain
+
+All AI requests follow a strict priority chain:
+
+| Priority | Provider | When used |
+|---|---|---|
+| 1 (highest) | Gemini API | Default for all requests |
+| 2 | Ollama (local) | When Gemini is unreachable or errors |
+| 3 (lowest) | Templates | When both Gemini and Ollama are unavailable |
+
+### 11.2 Request flow
+
+```text
+User request
+    │
+    ▼
+AI Services Integration layer
+    │
+    ├─► Attempt Gemini API
+    │     ├─► Success → return response (source: gemini)
+    │     └─► Failure → log error, try next
+    │
+    ├─► Attempt Ollama (local)
+    │     ├─► Success → return response (source: ollama)
+    │     └─► Failure → log error, try next
+    │
+    └─► Use template fallback
+          └─► Return response (source: template, fallback: true)
+```
+
+### 11.3 Provider configuration
+
+Each provider is configured independently with its own timeout, retry policy, and
+error-handling behavior:
+
+- **Gemini API.** Configured with API key, model name, request timeout (default 30s),
+  and max retries (default 2). Errors (timeout, rate limit, auth failure) trigger
+  fallback to Ollama.
+- **Ollama.** Configured with the local endpoint URL, model name, and request timeout
+  (default 60s for local inference). Errors trigger fallback to templates.
+- **Templates.** Static, always-available responses for common queries. No external
+  dependencies; guaranteed to return a response.
+
+### 11.4 Observability
+
+Every AI request is logged with:
+- The provider that ultimately served the response
+- The number of fallback steps taken
+- Latency per provider attempt
+- Error details for failed attempts
+
+This data feeds into the platform's observability dashboard, allowing operators to
+monitor provider health, fallback rates, and response quality over time.

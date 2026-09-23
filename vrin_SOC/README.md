@@ -15,7 +15,9 @@ Vrindha is an ethical, defensive-first cybersecurity assistant with a CLI, FastA
 - **Logging and memory:** SQLite WAL storage, file logs, event correlation, and similar-case retrieval.
 - **ML layer:** anomaly detection, rule-based risk scoring, threat prediction, and CSV data export.
 - **Safety:** Dharma evaluation, intent detection, Zero Trust scoring, restricted public targets, command timeouts, and simulation fallbacks.
+- **AI Services:** Google Gemini API integration with Ollama local LLM fallback and template-based response priority for intelligent security analysis.
 - **Independent threat intelligence:** sibling `../Vrin_TI/` provides STIX 2.1 IOC storage, CISA KEV/MITRE/TAXII feeds, enrichment, sightings, graph correlation, authenticated SOC↔TI events, Redis/NATS/HTTP transports with SQLite fallback, WebSocket, CLI, dashboard pane, and systemd services without replacing the SOC.
+- **SecOps-Prime:** Autonomous security command generation with support for nmap, whois, nikto, gobuster, dirb, amass, sublist3r, tcpdump, hashcat, and Wireshark/tshark operations across LOW, MEDIUM, HIGH, and CRITICAL risk levels.
 
 ## How Vrindha works
 
@@ -280,3 +282,41 @@ Two ways to get an administrator:
 - **Environment provisioning:** `ADMIN_USERNAME` + `ADMIN_PASSWORD` in `.env` provision an administrator when the API starts.
 
 Log in through the dashboard or with the API using the created account.
+
+## Daily Talk AI
+
+Vrindha includes a conversational AI interface for casual security discussions and queries. It uses a tiered AI service approach:
+
+1. **Google Gemini API** — Primary AI service for natural language understanding and generation
+2. **Ollama (Local LLM)** — Fallback for offline or privacy-focused operation
+3. **Casual Greetings** — Built-in response templates for common interactions
+
+This allows Vrindha to provide intelligent conversational responses even when external AI services are unavailable.
+
+## Network Scanning Tools
+
+| Tool | Purpose | Wrapper |
+|------|---------|---------|
+| nmap | Network discovery and service scanning | `tools/nmap_tool.py` |
+| whois | Domain and IP registration lookups | `tools/whois_tool.py` |
+| nikto | Web server vulnerability scanning | `tools/nikto_tool.py` |
+| gobuster | Directory and DNS brute-force discovery | `tools/gobuster_tool.py` |
+| dirb | Web content directory brute-forcing | `tools/dirb_tool.py` |
+| amass | Attack surface mapping and subdomain enumeration | `tools/amass_tool.py` |
+| sublist3r | Subdomain enumeration via OSINT | `tools/sublist3r_tool.py` |
+| tcpdump | Network packet capture (50-packet limit) | `tools/tcpdump_tool.py` |
+| hashcat | Controlled password hash analysis assistant | `tools/hashcat_tool.py` |
+| Wireshark/tshark | Traffic analysis and protocol inspection | `tools/wireshark_tool.py` |
+| Snort/Suricata | Intrusion detection and prevention monitoring | `tools/snort_tool.py` |
+| rkhunter/chkrootkit | Rootkit and system integrity scanning | Integrated in endpoint security |
+
+## IPv6 Support
+
+Vrindha AI SOC fully supports IPv6 across all security operations:
+
+- **Target Validation** — IPv6 addresses and ranges are validated alongside IPv4
+- **Network Scanning** — nmap wrappers support IPv6 host discovery and service enumeration
+- **SIEM Logging** — IPv6 addresses are stored and correlated in threat logs
+- **Firewall Simulation** — IPv6 rules can be generated and validated for containment operations
+- **Threat Intelligence** — IOC matching supports IPv6 indicators from STIX/TAXII feeds
+- **DNS Reconnaissance** — AAAA records and IPv6 subdomain enumeration supported
