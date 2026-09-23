@@ -33,6 +33,7 @@ from vrin_SOC.autonomous.models import AutonomyLevel
 from vrin_SOC.hive.coordinator import hive
 from vrin_SOC.core.daily_talk import DailyTalk
 from vrin_SOC.core.startup_context import get_full_prompt, load_identity_context, load_project_context
+from vrin_SOC.core.secops_prime import secops_prime
 from vrin_SOC.dev.ollama_dev import OllamaDev
 
 # Agents will be imported lazily to avoid circular imports
@@ -522,9 +523,27 @@ class Brain:
             target = context.get("target") or self.extract_target(command) or "127.0.0.1"
             cmd_lower = command.lower()
 
-            # Lazy imports to avoid circular
+            secops_result = secops_prime.translate(command)
+            if secops_result and secops_result.get("command"):
+                risk = secops_result['risk_level']
+                tactic = secops_result.get('tactic', 'Security Command')
+                explanation = secops_result.get('explanation', '')
+                return {
+                    "mode": "red",
+                    "action": "secops_prime_command",
+                    "status": "success",
+                    "message": f"[{risk}] {tactic}\n\n{explanation}",
+                    "data": {
+                        "command": secops_result["command"],
+                        "tool": secops_result.get("tool_name", ""),
+                        "risk_level": secops_result["risk_level"],
+                        "explanation": secops_result.get("explanation", "")
+                    }
+                }
+            
+            # Fallback to original behavior if secops_prime doesn't recognize
+            pass
             from vrin_SOC.agents.recon_agent import recon_agent
-            from vrin_SOC.agents.vuln_agent import vuln_agent
             from vrin_SOC.agents.threat_agent import threat_agent
             from vrin_SOC.agents.siem_agent import siem_agent
 
