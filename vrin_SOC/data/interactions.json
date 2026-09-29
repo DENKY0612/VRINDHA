@@ -51,6 +51,32 @@
       "latency_ms": null,
       "human_feedback": null,
       "corrected_by": null
+    },
+    {
+      "timestamp": "2026-09-29T19:54:20.469946",
+      "user_input": "explain quantum encryption",
+      "response_preview": "I don't know about that",
+      "mode": "soc",
+      "category": "education",
+      "outcome": "failure",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": null,
+      "corrected_by": null
+    },
+    {
+      "timestamp": "2026-09-29T19:54:20.634025",
+      "user_input": "who are you",
+      "response_preview": "I am Vrindha",
+      "mode": "soc",
+      "category": "identity",
+      "outcome": "partial",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": null,
+      "corrected_by": null
     }
   ]
 }
