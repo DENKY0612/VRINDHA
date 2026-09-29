@@ -1,0 +1,12 @@
+{
+  "errors": [
+    {
+      "timestamp": "2026-09-29T19:49:44.627380",
+      "error_type": "ImportError",
+      "error_message": "No module named 'nonexistent'",
+      "context": "Loading module",
+      "resolution": "Use fallback",
+      "learned_from": null
+    }
+  ]
+}

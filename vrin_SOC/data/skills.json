@@ -1,0 +1,45 @@
+{
+  "skills": [
+    {
+      "name": "Nmap Scan Workflow",
+      "description": "Run nmap scan, analyze results, report findings",
+      "trigger_pattern": "scan network",
+      "steps": [
+        {
+          "description": "Validate target",
+          "tool": "target_validator",
+          "input": "target_ip"
+        },
+        {
+          "description": "Run nmap -sV -sC",
+          "tool": "nmap_tool",
+          "input": "-sV -sC -T3"
+        },
+        {
+          "description": "Analyze open ports",
+          "tool": "threat_agent",
+          "input": "port_results"
+        },
+        {
+          "description": "Build summary report",
+          "tool": "brain",
+          "input": "build_summary"
+        }
+      ],
+      "tools_required": [
+        "nmap",
+        "nmap_tool",
+        "threat_agent"
+      ],
+      "success_criteria": [
+        "Target validated",
+        "Scan completed",
+        "Report generated"
+      ],
+      "created_at": "2026-09-29T19:49:44.608957",
+      "used_count": 0,
+      "last_used": null,
+      "source_session": null
+    }
+  ]
+}

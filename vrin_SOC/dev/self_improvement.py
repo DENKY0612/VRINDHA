@@ -779,7 +779,7 @@ class SelfImprovementEngine:
         for i in self.interactions:
             category_counts[i.category] = category_counts.get(i.category, 0) + 1
 
-        unresolved_gaps = [g for g in self.knowledge_gaps if not g["resolved"]]
+        unresolved_gaps = [g for g in self.knowledge_gaps if not g.resolved]
         recent_learning = self.learning_events[-10:]
 
         lines = [
@@ -840,7 +840,7 @@ class SelfImprovementEngine:
         if categories.get("defense", 0) > total * 0.15:
             suggestions.append("Defense operations frequent — consider automated playbooks for common responses")
 
-        unresolved = [g for g in self.knowledge_gaps if not g["resolved"]]
+        unresolved = [g for g in self.knowledge_gaps if not g.resolved]
         if len(unresolved) > 5:
             suggestions.append(f"{len(unresolved)} unresolved knowledge gaps — consider web search expansion or knowledge base updates")
 

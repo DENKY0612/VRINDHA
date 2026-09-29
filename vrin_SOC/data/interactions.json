@@ -1,0 +1,30 @@
+{
+  "records": [
+    {
+      "timestamp": "2026-09-29T19:49:44.546673",
+      "user_input": "scan vulnerabilities 192.168.1.1",
+      "response_preview": "Nmap scan completed - found 5 open ports",
+      "mode": "soc",
+      "category": "reconnaissance",
+      "outcome": "partial",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": null,
+      "corrected_by": null
+    },
+    {
+      "timestamp": "2026-09-29T19:49:44.575559",
+      "user_input": "explain quantum encryption",
+      "response_preview": "I don't know about that",
+      "mode": "soc",
+      "category": "education",
+      "outcome": "failure",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": null,
+      "corrected_by": null
+    }
+  ]
+}
