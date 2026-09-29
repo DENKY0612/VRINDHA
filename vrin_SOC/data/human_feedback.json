@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "timestamp": "2026-09-29T19:52:22.558058",
+    "interaction_index": 0,
+    "original_input": "scan vulnerabilities 192.168.1.1",
+    "original_response": "Nmap scan completed - found 5 open ports",
+    "feedback": "Good answer but add more detail about cybersecurity focus",
+    "correction": "I am Vrindha, an AI cybersecurity companion who helps SOC analysts detect and respond to threats",
+    "category": "reconnaissance"
+  }
+]

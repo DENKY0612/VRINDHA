@@ -6,6 +6,32 @@
       "response_preview": "Nmap scan completed - found 5 open ports",
       "mode": "soc",
       "category": "reconnaissance",
+      "outcome": "corrected",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": "Good answer but add more detail about cybersecurity focus",
+      "corrected_by": "I am Vrindha, an AI cybersecurity companion who helps SOC analysts detect and respond to threats"
+    },
+    {
+      "timestamp": "2026-09-29T19:49:44.575559",
+      "user_input": "explain quantum encryption",
+      "response_preview": "I don't know about that",
+      "mode": "soc",
+      "category": "education",
+      "outcome": "failure",
+      "tools_used": [],
+      "tokens_estimated": 0,
+      "latency_ms": null,
+      "human_feedback": null,
+      "corrected_by": null
+    },
+    {
+      "timestamp": "2026-09-29T19:52:22.263264",
+      "user_input": "scan vulnerabilities 192.168.1.1",
+      "response_preview": "Nmap scan completed - found 5 open ports",
+      "mode": "soc",
+      "category": "reconnaissance",
       "outcome": "partial",
       "tools_used": [],
       "tokens_estimated": 0,
@@ -14,7 +40,7 @@
       "corrected_by": null
     },
     {
-      "timestamp": "2026-09-29T19:49:44.575559",
+      "timestamp": "2026-09-29T19:52:22.318909",
       "user_input": "explain quantum encryption",
       "response_preview": "I don't know about that",
       "mode": "soc",

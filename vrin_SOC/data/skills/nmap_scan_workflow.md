@@ -3,7 +3,7 @@
 **Description:** Run nmap scan, analyze results, report findings
 **Trigger:** `scan network`
 **Tools required:** nmap, nmap_tool, threat_agent
-**Created:** 2026-09-29T19:49:44.608957
+**Created:** 2026-09-29T19:52:22.375939
 **Used:** 0 time(s)
 
 ## Steps

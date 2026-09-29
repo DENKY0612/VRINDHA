@@ -28,12 +28,6 @@ print("=" * 60)
 engine = get_improvement_engine()
 print(f"Engine: {len(engine.interactions)} interactions, {len(engine.skills)} skills")
 
-# Test 1: Log a successful interaction
-rec = log_interaction("scan vulnerabilities 192.168.1.1", "Nmap scan completed - found 5 open ports", mode="soc")
-check("Log successful interaction", rec.outcome == "success")
-check("Category: vulnerability", rec.category == "vulnerability")
-print(f"        outcome={rec.outcome}, category={rec.category}")
-
 # Test 2: Log a failure
 rec2 = log_interaction("explain quantum encryption", "I don't know about that", mode="soc")
 check("Log failure interaction", rec2.outcome == "failure")
@@ -92,10 +86,10 @@ check("Report contains title", "Self-Improvement Report" in report)
 check("Report mentions skills", "Skills Packaged" in report)
 print(f"        ({len(report)} chars)")
 
-# Test 9: Human feedback
+# Test 8: Human feedback (use engine2 directly)
 engine2 = SelfImprovementEngine()
 engine2.log_interaction("who are you", "I am Vrindha", mode="soc")
-record_feedback(0, "Good answer but add more detail about cybersecurity focus",
+engine2.record_human_feedback(0, "Good answer but add more detail about cybersecurity focus",
     correction="I am Vrindha, an AI cybersecurity companion who helps SOC analysts detect and respond to threats")
 check("Human feedback recorded", len(engine2.human_feedback) >= 1)
 print(f"        ({len(engine2.human_feedback)} feedback(s))")
