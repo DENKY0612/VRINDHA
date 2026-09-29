@@ -633,6 +633,35 @@ class Brain:
                 elif result_data.get("type") == "vulnerability_scan":
                     scan_summary = self._build_vuln_scan_summary(result_data)
 
+            # === SELF-IMPROVEMENT: Log + self-correct before returning ===
+            try:
+                from vrin_SOC.dev.self_improvement import get_improvement_engine
+                si_engine = get_improvement_engine()
+
+                si_engine.log_interaction(
+                    user_input=command,
+                    response=message,
+                    mode="red",
+                    tools_used=["nmap", "threat_agent", "siem"] if "scan" in command.lower() else ["threat_agent"],
+                )
+
+                if si_engine._assess_outcome(command, message) == "failure" and si_engine.auto_correct_enabled:
+                    def _ValidateFn(resp: str) -> tuple:
+                        is_fail = si_engine._assess_outcome(command, resp) == "failure"
+                        return (not is_fail, "Response indicates inability to help" if is_fail else "")
+                    corrected_msg, was_corrected, steps = si_engine.self_correct(
+                        message, _ValidateFn, max_attempts=2, context_hint=command
+                    )
+                    if was_corrected:
+                        message = corrected_msg
+                        si_engine._log_learning_event(
+                            "correction", f"Self-corrected red team response for: {command[:60]}",
+                            f"Corrected: {corrected_msg[:150]}",
+                            {"original": message, "steps": len(steps)},
+                        )
+            except Exception:
+                pass
+
             return {
                 "mode": "red",
                 "action": "executed",
@@ -808,6 +837,33 @@ class Brain:
                         "gita_guidance": gita_engine.get_ethical_guidance("defense")
                     }
                 }
+
+            # === SELF-IMPROVEMENT: Log + self-correct ===
+            try:
+                from vrin_SOC.dev.self_improvement import get_improvement_engine
+                si_engine = get_improvement_engine()
+                si_engine.log_interaction(
+                    user_input=command,
+                    response=message,
+                    mode="blue",
+                    tools_used=["threat_agent", "risk_scoring", "evidence_analysis"],
+                )
+                if si_engine._assess_outcome(command, message) == "failure" and si_engine.auto_correct_enabled:
+                    def _VFn2(resp: str):
+                        is_fail = si_engine._assess_outcome(command, resp) == "failure"
+                        return (not is_fail, "Response indicates inability to help" if is_fail else "")
+                    corrected_msg, was_corrected, steps = si_engine.self_correct(
+                        message, _VFn2, max_attempts=2, context_hint=command
+                    )
+                    if was_corrected:
+                        message = corrected_msg
+                        si_engine._log_learning_event(
+                            "correction", f"Self-corrected blue team response for: {command[:60]}",
+                            f"Corrected: {corrected_msg[:150]}",
+                            {"steps": len(steps)},
+                        )
+            except Exception:
+                pass
 
             if "log" in cmd_lower or "siem" in cmd_lower:
                 logs = siem_agent.get_logs()
